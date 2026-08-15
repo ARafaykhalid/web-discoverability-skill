@@ -1,0 +1,22 @@
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+# Node & package manager logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

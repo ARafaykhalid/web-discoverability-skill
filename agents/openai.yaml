@@ -1,0 +1,4 @@
+interface:
+  display_name: "Universal Web Discoverability Engineering"
+  short_description: "Audit and implement search and AI discoverability"
+  default_prompt: "Use $web-discoverability-skill to audit and implement Recommended-level search and AI discoverability for this repository."

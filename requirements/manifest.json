@@ -1,0 +1,529 @@
+{
+  "schema_version": 2,
+  "requirement_count": 640,
+  "id_range": [
+    "SEO-001",
+    "SEO-640"
+  ],
+  "levels": [
+    "LITE",
+    "RECOMMENDED",
+    "EXTRA",
+    "ULTRA"
+  ],
+  "search_surfaces": [
+    "GOOGLE_SEARCH",
+    "GOOGLE_DISCOVER",
+    "GOOGLE_IMAGES",
+    "GOOGLE_VIDEO",
+    "GOOGLE_NEWS",
+    "GOOGLE_SHOPPING",
+    "BING_SEARCH",
+    "BING_COPILOT",
+    "BING_AI_PERFORMANCE",
+    "AI_SEARCH",
+    "LLM_RETRIEVAL",
+    "LOCAL_SEARCH",
+    "SOCIAL_PREVIEW"
+  ],
+  "surface_values": [
+    "RELEVANT",
+    "NOT_RELEVANT",
+    "UNKNOWN"
+  ],
+  "evidence_types": [
+    "FILE",
+    "LINE",
+    "ROUTE",
+    "HTTP_RESPONSE",
+    "HTML",
+    "HEADER",
+    "JSON_LD",
+    "SITEMAP",
+    "ROBOTS",
+    "BROWSER",
+    "BUILD",
+    "LINT",
+    "TYPECHECK",
+    "PERFORMANCE",
+    "ACCESSIBILITY",
+    "EXTERNAL_PLATFORM",
+    "MANUAL_ACTION"
+  ],
+  "allowed_statuses": [
+    "APPLICABLE",
+    "NOT_APPLICABLE",
+    "BLOCKED",
+    "ALREADY_CORRECT",
+    "IMPLEMENTED",
+    "FIXED",
+    "FAILED",
+    "NEEDS_MANUAL_ACTION"
+  ],
+  "platform_statuses": [
+    "OFFICIAL_PLATFORM_CONCEPT",
+    "ESTABLISHED_PRACTICE",
+    "INDUSTRY_TERM",
+    "EMERGING_PRACTICE",
+    "EXPERIMENTAL"
+  ],
+  "level_candidate_counts": {
+    "LITE": 124,
+    "RECOMMENDED": 400,
+    "EXTRA": 520,
+    "ULTRA": 640
+  },
+  "domains": [
+    {
+      "domain": "architecture",
+      "title": "Repository and application architecture",
+      "file": "architecture.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": []
+    },
+    {
+      "domain": "urls",
+      "title": "URL design and HTTP routing",
+      "file": "urls.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture"
+      ]
+    },
+    {
+      "domain": "metadata",
+      "title": "Document metadata and previews",
+      "file": "metadata.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "urls"
+      ]
+    },
+    {
+      "domain": "canonicals",
+      "title": "Canonicalization",
+      "file": "canonicals.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "metadata"
+      ]
+    },
+    {
+      "domain": "crawling",
+      "title": "Crawlability and crawl management",
+      "file": "crawling.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "urls"
+      ]
+    },
+    {
+      "domain": "robots",
+      "title": "Robots directives",
+      "file": "robots.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "crawling"
+      ]
+    },
+    {
+      "domain": "indexing",
+      "title": "Indexability and index lifecycle",
+      "file": "indexing.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "robots",
+        "canonicals"
+      ]
+    },
+    {
+      "domain": "sitemaps",
+      "title": "XML sitemap infrastructure",
+      "file": "sitemaps.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "canonicals",
+        "indexing"
+      ]
+    },
+    {
+      "domain": "google-search",
+      "title": "Google Search readiness",
+      "file": "google-search.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "indexing",
+        "sitemaps",
+        "structured-data"
+      ]
+    },
+    {
+      "domain": "bing-indexnow",
+      "title": "Bing, Copilot, and IndexNow readiness",
+      "file": "bing-indexnow.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "indexing",
+        "sitemaps",
+        "urls"
+      ]
+    },
+    {
+      "domain": "structured-data",
+      "title": "Structured data and rich-result eligibility",
+      "file": "structured-data.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "metadata",
+        "canonicals",
+        "entity"
+      ]
+    },
+    {
+      "domain": "entity",
+      "title": "Entity graph and site identity",
+      "file": "entity.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "metadata",
+        "canonicals"
+      ]
+    },
+    {
+      "domain": "content",
+      "title": "Content quality and answer readiness",
+      "file": "content.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "indexing"
+      ]
+    },
+    {
+      "domain": "internal-linking",
+      "title": "Internal linking and navigation",
+      "file": "internal-linking.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "content"
+      ]
+    },
+    {
+      "domain": "images",
+      "title": "Image SEO and delivery",
+      "file": "images.jsonl",
+      "activation": "has_images",
+      "count": 16,
+      "dependencies": [
+        "content",
+        "performance"
+      ]
+    },
+    {
+      "domain": "video",
+      "title": "Video SEO and accessibility",
+      "file": "video.jsonl",
+      "activation": "has_video",
+      "count": 16,
+      "dependencies": [
+        "content",
+        "images",
+        "structured-data"
+      ]
+    },
+    {
+      "domain": "discover",
+      "title": "Google Discover readiness",
+      "file": "discover.jsonl",
+      "activation": "editorial_content",
+      "count": 16,
+      "dependencies": [
+        "content",
+        "images",
+        "google-search"
+      ]
+    },
+    {
+      "domain": "ai-search",
+      "title": "AI search, AEO, GEO, LLMO, and answer discoverability",
+      "file": "ai-search.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "content",
+        "entity",
+        "structured-data"
+      ]
+    },
+    {
+      "domain": "ai-crawlers",
+      "title": "AI crawler policy",
+      "file": "ai-crawlers.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "robots",
+        "security"
+      ]
+    },
+    {
+      "domain": "llms-txt",
+      "title": "llms.txt machine-readable guidance",
+      "file": "llms-txt.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "content",
+        "ai-search"
+      ]
+    },
+    {
+      "domain": "performance",
+      "title": "Performance and Core Web Vitals",
+      "file": "performance.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "architecture"
+      ]
+    },
+    {
+      "domain": "caching",
+      "title": "HTTP caching and freshness",
+      "file": "caching.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "security"
+      ]
+    },
+    {
+      "domain": "bfcache",
+      "title": "Back-forward cache and page lifecycle",
+      "file": "bfcache.jsonl",
+      "activation": "interactive_app",
+      "count": 16,
+      "dependencies": [
+        "performance"
+      ]
+    },
+    {
+      "domain": "accessibility",
+      "title": "Accessibility and WCAG 2.2 AA readiness",
+      "file": "accessibility.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "architecture"
+      ]
+    },
+    {
+      "domain": "security",
+      "title": "SEO security and public-surface integrity",
+      "file": "security.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture"
+      ]
+    },
+    {
+      "domain": "cdn-waf",
+      "title": "CDN, WAF, edge, and bot delivery",
+      "file": "cdn-waf.jsonl",
+      "activation": "has_cdn_or_waf",
+      "count": 16,
+      "dependencies": [
+        "crawling",
+        "security",
+        "caching"
+      ]
+    },
+    {
+      "domain": "ecommerce",
+      "title": "Ecommerce, products, and shopping surfaces",
+      "file": "ecommerce.jsonl",
+      "activation": "ecommerce",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "structured-data",
+        "images"
+      ]
+    },
+    {
+      "domain": "local",
+      "title": "Local search and location entities",
+      "file": "local.jsonl",
+      "activation": "local_business",
+      "count": 16,
+      "dependencies": [
+        "entity",
+        "structured-data",
+        "content"
+      ]
+    },
+    {
+      "domain": "international",
+      "title": "International and multilingual SEO",
+      "file": "international.jsonl",
+      "activation": "multilingual_or_multiregional",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "canonicals",
+        "sitemaps"
+      ]
+    },
+    {
+      "domain": "ugc",
+      "title": "UGC, community, profiles, and moderation",
+      "file": "ugc.jsonl",
+      "activation": "ugc",
+      "count": 16,
+      "dependencies": [
+        "security",
+        "indexing",
+        "content"
+      ]
+    },
+    {
+      "domain": "paywall",
+      "title": "Paywall, subscription, and membership content",
+      "file": "paywall.jsonl",
+      "activation": "paywall_or_subscription",
+      "count": 16,
+      "dependencies": [
+        "security",
+        "indexing",
+        "structured-data"
+      ]
+    },
+    {
+      "domain": "feeds",
+      "title": "RSS, Atom, and content feeds",
+      "file": "feeds.jsonl",
+      "activation": "content_publication",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "content",
+        "canonicals"
+      ]
+    },
+    {
+      "domain": "pdf",
+      "title": "PDF and non-HTML document discovery",
+      "file": "pdf.jsonl",
+      "activation": "public_documents",
+      "count": 16,
+      "dependencies": [
+        "security",
+        "indexing"
+      ]
+    },
+    {
+      "domain": "analytics",
+      "title": "Analytics and measurement integrity",
+      "file": "analytics.jsonl",
+      "activation": "analytics_or_measurement",
+      "count": 16,
+      "dependencies": [
+        "urls",
+        "performance",
+        "security"
+      ]
+    },
+    {
+      "domain": "monitoring",
+      "title": "Search and discoverability monitoring",
+      "file": "monitoring.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "testing",
+        "google-search",
+        "bing-indexnow"
+      ]
+    },
+    {
+      "domain": "testing",
+      "title": "Verification and regression prevention",
+      "file": "testing.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture"
+      ]
+    },
+    {
+      "domain": "social-preview",
+      "title": "Social and messaging previews",
+      "file": "social-preview.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "metadata",
+        "images"
+      ]
+    },
+    {
+      "domain": "javascript-rendering",
+      "title": "JavaScript rendering and hydration",
+      "file": "javascript-rendering.jsonl",
+      "activation": "javascript_app",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "metadata",
+        "crawling"
+      ]
+    },
+    {
+      "domain": "mobile-ux",
+      "title": "Mobile search experience and SXO",
+      "file": "mobile-ux.jsonl",
+      "activation": "public_site",
+      "count": 16,
+      "dependencies": [
+        "accessibility",
+        "performance"
+      ]
+    },
+    {
+      "domain": "privacy-auth",
+      "title": "Privacy, authentication, and environment boundaries",
+      "file": "privacy-auth.jsonl",
+      "activation": "always",
+      "count": 16,
+      "dependencies": [
+        "architecture",
+        "security",
+        "robots"
+      ]
+    }
+  ]
+}
