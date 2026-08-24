@@ -1,0 +1,34 @@
+{
+  "captured_at": "2026-02-10T09:00:00Z",
+  "origin": "https://example.com",
+  "note": "Hand-written capture. raw_html and rendered_html are the same bytes because this fixture ships no client script, which is why the JavaScript-rendering checks report NOT_APPLICABLE rather than PASS.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "index.html",
+      "source_file": "index.html",
+      "indexable": true
+    },
+    {
+      "url": "/about",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "about.html",
+      "source_file": "about.html",
+      "indexable": true
+    },
+    {
+      "url": "/blog/hello",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "blog/hello.html",
+      "source_file": "blog/hello.html",
+      "indexable": true
+    }
+  ]
+}

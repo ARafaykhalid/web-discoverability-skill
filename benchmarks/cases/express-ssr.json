@@ -1,0 +1,105 @@
+{
+  "id": "express-ssr",
+  "fixture": "benchmarks/fixtures/express-ssr",
+  "title": "Server-rendered Express site whose response headers and response bodies give different instructions",
+  "level": "ULTRA",
+  "notes": "This fixture exists for the response header. No other fixture in the suite serves a page whose X-Robots-Tag and whose meta robots element give different answers, and robots-meta-noindex-unintended has two independent branches that a single fault can trip together. /internal/preview pins the second of them: the response carries meta robots \"index, follow\" while its header carries noindex, so metaSays is false, headerPresent and headerSays are true, and the disagreement branch emits once. The first branch - noindex served on a page the capture records as indexable - is held silent by \"indexable\": false on that page, which is also the honest record: exclusion from the index is intended for a staff preview route, and the defect is that the markup contradicts it. Recording the page as indexable would fire both branches from one fault and the case could no longer tell which behaviour it was measuring. robots.txt deliberately does not disallow /internal/, because a URL has to be fetchable for a header on it to be read; that also keeps crawl-index-directive-conflict a measured pass rather than a second finding about the same route. What the fixture does not prove: of the 36 checks, 31 run here and 5 are never invoked, because selection drops their requirement before the check layer is reached. content-in-initial-html (SEO-593) and client-mutates-canonical (SEO-597) are dropped as NOT_APPLICABLE - the app ships no client-side script, so the capture supplies no separate rendered document and the difference between initial and executed HTML was never measured. The three hreflang checks are dropped as UNCERTAIN, which is the honest verdict: a single-language site does not declare its language coverage anywhere a static scan can read, so the selector asks for evidence rather than deciding. Of the 31 that do run, jsonld-review-without-source is the one NOT_APPLICABLE - the site publishes no ratings - leaving 4 findings and 26 measured passes. None of those 6 non-running-or-not-applicable checks is listed as a non-finding.",
+  "declared_defects": [
+    "src/pages.mjs gives /internal/preview a meta robots value of \"index, follow\" while the /internal middleware in server.mjs sets X-Robots-Tag: noindex on the same response, so the header and the markup disagree about whether the page may be indexed (SEO-084).",
+    "public/sitemap.xml lists https://example.com/legacy-pricing, which server.mjs answers with a 301 to /pricing, so the sitemap names a hop rather than the document (SEO-055).",
+    "server.mjs builds the /pricing canonical from req.originalUrl, so a request arriving with utm_source is served a canonical carrying that parameter (SEO-052).",
+    "src/pages.mjs supplies an extraHead fragment for /guides/roof-tile-selection that repeats a <title> the layout head has already emitted, so the response serves two (SEO-033)."
+  ],
+  "expected_findings": [
+    {
+      "check_id": "robots-meta-noindex-unintended",
+      "requirement_id": "SEO-084",
+      "location": "captures/internal-preview.html"
+    },
+    {
+      "check_id": "sitemap-canonical-only",
+      "requirement_id": "SEO-055",
+      "location": "public/sitemap.xml"
+    },
+    {
+      "check_id": "canonical-no-tracking-params",
+      "requirement_id": "SEO-052",
+      "location": "captures/pricing.html"
+    },
+    {
+      "check_id": "title-element-single",
+      "requirement_id": "SEO-033",
+      "location": "captures/guides-roof-tile-selection.html"
+    }
+  ],
+  "expected_non_findings": [
+    { "check_id": "meta-description-single" },
+    { "check_id": "html-lang-present" },
+    { "check_id": "viewport-declared" },
+    { "check_id": "title-distinct-across-routes" },
+    { "check_id": "canonical-self-referencing-absolute" },
+    { "check_id": "robots-txt-present" },
+    { "check_id": "robots-sitemap-reference" },
+    { "check_id": "robots-group-contradiction" },
+    { "check_id": "crawl-index-directive-conflict" },
+    { "check_id": "sitemap-xml-wellformed" },
+    { "check_id": "sitemap-loc-same-host" },
+    { "check_id": "sitemap-size-limits" },
+    { "check_id": "sitemap-lists-noindex-url" },
+    { "check_id": "jsonld-parses" },
+    { "check_id": "jsonld-absolute-urls" },
+    { "check_id": "jsonld-duplicate-entity" },
+    { "check_id": "internal-links-resolve" },
+    { "check_id": "img-alt-attribute-present" },
+    { "check_id": "img-dimensions-declared" },
+    { "check_id": "llms-txt-plain-text" },
+    { "check_id": "llms-txt-absolute-https-links" },
+    { "check_id": "feed-wellformed" },
+    { "check_id": "feed-alternate-link-declared" },
+    { "check_id": "og-url-matches-canonical" },
+    { "check_id": "og-image-alt-present" },
+    { "check_id": "og-duplicate-properties" }
+  ],
+  "expected_safe_fixes": [
+    "SEO-033"
+  ],
+  "expected_blocked": [
+    "SEO-052",
+    "SEO-055",
+    "SEO-084"
+  ],
+  "expected_not_applicable": [
+    "SEO-418",
+    "SEO-420",
+    "SEO-466",
+    "SEO-453",
+    "SEO-455",
+    "SEO-460",
+    "SEO-484",
+    "SEO-486",
+    "SEO-073",
+    "SEO-593",
+    "SEO-597"
+  ],
+  "expected_not_applicable_rationale": "The site sells nothing, takes no contributions, charges for nothing, serves one language and has no filter parameters, so the ecommerce, ugc, paywall, locale and faceted-navigation rules have no honest subject here. SEO-593 and SEO-597 are the additions this fixture makes to that list: both are gated on client_rendered or javascript_app, and an Express app with no bundle and no client script satisfies neither, so a skill that offered them would be asking about a rendering step the project does not have.",
+  "expected_applicable": [
+    "SEO-081",
+    "SEO-082",
+    "SEO-055",
+    "SEO-084",
+    "SEO-497",
+    "SEO-498"
+  ],
+  "expected_applicable_rationale": "Each of these is the precondition for something the case asserts: the project ships robots.txt, a sitemap and an Atom feed, and it serves indexing directives from both a header and a meta element, so the crawl, sitemap, feed and indexing rules must be offered rather than deferred for evidence.",
+  "profile_expectations": {
+    "framework": "node-server",
+    "server_rendered": true,
+    "client_rendered": false,
+    "javascript_app": false,
+    "has_router": true,
+    "has_robots_txt": true,
+    "has_sitemap": true,
+    "has_llms_txt": true,
+    "has_feeds": true
+  }
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script type="module" crossorigin src="/assets/main-9f3c1b2a.js"></script>
+<link rel="stylesheet" crossorigin href="/assets/main-4d81e0c7.css">
+<title>Features — Acme Labs</title>
+<meta name="description" content="What the client-rendered fixture does after mount: writes a title, a description, a canonical, and a preview set that none of its responses contain.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://example.com/features">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Acme Labs">
+<meta property="og:title" content="Features — Acme Labs">
+<meta property="og:description" content="What the client-rendered fixture does after mount: writes a title, a description, a canonical, and a preview set that none of its responses contain.">
+<meta property="og:url" content="https://example.com/features">
+<meta property="og:image" content="https://example.com/img/features.png">
+<meta property="og:image:alt" content="A diagram of a request arriving before the script that fills it in.">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://example.com/#website",
+      "url": "https://example.com/",
+      "name": "Acme Labs",
+      "publisher": { "@id": "https://example.com/#organization" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://example.com/#organization",
+      "url": "https://example.com/",
+      "name": "Acme Labs",
+      "logo": "https://example.com/img/logo.png"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div id="root">
+<header>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/features">Features</a>
+<a href="/handbook/routing">Handbook</a>
+</nav>
+</header>
+<main>
+<article>
+<h1>What happens between the response and the paint</h1>
+<p>The response for this route is the same app shell the home route gets. Vite
+serves one entry document for both, and the client router decides which component
+to mount by reading the address bar. From the server's point of view the two URLs
+are indistinguishable, which is exactly why neither of them can carry a
+route-specific title.</p>
+<h2>The sequence</h2>
+<p>The browser receives the shell and finds one module script. It downloads that
+module, which pulls in React, the DOM renderer, the router, the shared chrome, and
+finally this component. React mounts, the effect in useDocumentHead runs, and the
+head is rewritten: a title appears, a meta description appears, a link with
+rel=canonical is appended, eight preview properties are appended, and a
+structured-data block is inserted. The document is now correct. It took four
+network round trips and an execution pass to become correct.</p>
+<img src="/img/features.png" alt="A diagram of a request arriving before the script that fills it in." width="1200" height="630">
+<h2>Why the head matters more than the body here</h2>
+<p>Missing body text degrades gracefully in the sense that a consumer sees a thin
+page. A missing title does not degrade at all: there is no fallback, and a document
+with no title is addressed by its URL in every listing that mentions it. A missing
+canonical is worse again, because the absence is not an error that anything
+reports. The engine simply picks a canonical URL itself, from whichever variants it
+happened to crawl, and the site never finds out which one it chose.</p>
+<p>None of this is a bug in React or in Vite. It is the predictable consequence of
+putting the head in an effect, and the remedy is to render the route where the
+response is produced rather than after it arrives.</p>
+</article>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</div>
+<noscript>
+<p>This application needs JavaScript to render. If your reader does not execute
+scripts, nothing below this line exists yet.</p>
+</noscript>
+</body>
+</html>

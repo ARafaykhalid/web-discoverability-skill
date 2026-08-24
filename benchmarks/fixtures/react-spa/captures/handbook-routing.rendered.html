@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://example.com/handbook/routing">
+<script type="module" crossorigin src="/assets/handbook-6a2f7c40.js"></script>
+<link rel="stylesheet" crossorigin href="/assets/main-4d81e0c7.css">
+<title>Client routing and the canonical URL — Acme Labs handbook</title>
+<meta name="description" content="Why a router that rewrites the canonical after mount leaves two different answers on record for the same URL.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Acme Labs">
+<meta property="og:title" content="Client routing and the canonical URL — Acme Labs handbook">
+<meta property="og:description" content="Why a router that rewrites the canonical after mount leaves two different answers on record for the same URL.">
+<meta property="og:url" content="https://example.com/handbook/routing">
+<meta property="og:image" content="https://example.com/img/handbook-routing.png">
+<meta property="og:image:alt" content="Two link elements with different href values, one replacing the other.">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://example.com/#website",
+      "url": "https://example.com/",
+      "name": "Acme Labs",
+      "publisher": { "@id": "https://example.com/#organization" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://example.com/#organization",
+      "url": "https://example.com/",
+      "name": "Acme Labs",
+      "logo": "https://example.com/img/logo.png"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div id="root">
+<header>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/features">Features</a>
+<a href="/handbook/routing">Handbook</a>
+</nav>
+</header>
+<main>
+<article>
+<h1>Client routing and the canonical URL</h1>
+<p>Why a router that rewrites the canonical after mount leaves two different
+answers on record for the same URL.</p>
+<div>
+<p>The handbook shell hard-codes one canonical for the whole section. Somebody
+added it in good faith: before that edit the section had no canonical at all in its
+initial response, and a single hard-coded value looked like an improvement over
+nothing. It is an improvement for exactly one URL, the section root, and it is
+wrong for every article underneath it.</p>
+<p>What a consumer records now depends on when it read the document. Fetch the URL
+without executing scripts and the answer is the section root, which asks the engine
+to fold every article into one page. Execute the scripts, wait for the effect, and
+the answer is the article's own URL, which is correct. Neither reading is
+unreasonable and the two disagree, so the site has published two conflicting
+identity claims for one document and cannot tell which one was believed.</p>
+<p>The check that reports this does not assert which value wins, because that is
+not observable from the outside. It reports the divergence and names both values,
+which is the part a person can act on. The action is to stop treating the head as
+something the client owns: whatever produces the response - a build step, a server
+render, or an edge function - has to emit the article's canonical before the bytes
+leave, and the client then has nothing left to correct.</p>
+<p>The same argument applies to the title and the description on this page, which
+also exist only after execution. The difference is that a missing title is visibly
+missing, while a wrong canonical looks like a correct one until somebody compares
+the two responses.</p>
+</div>
+<img src="/img/handbook-routing.png" alt="Two link elements with different href values, one replacing the other." width="1200" height="630">
+</article>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</div>
+<noscript>
+<p>The handbook is rendered in the browser. Without JavaScript this response
+carries no article text, no heading, and no title of its own.</p>
+</noscript>
+</body>
+</html>

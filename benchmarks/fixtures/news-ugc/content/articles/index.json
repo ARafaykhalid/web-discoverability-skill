@@ -1,0 +1,37 @@
+{
+  "note": "Build-time article manifest. The static generator reads this to emit /news, the article pages, the Atom feed, and the sitemap.",
+  "comment_policy": {
+    "open": true,
+    "moderation": "pre-publication, by a duty editor",
+    "page_size": 20
+  },
+  "articles": [
+    {
+      "slug": "harbour-dredging-delayed",
+      "section": "news",
+      "headline": "Harbour dredging pushed back to autumn after survey finds silt has shifted",
+      "author": "mara-quill",
+      "published": "2026-05-11T06:20:00+01:00",
+      "modified": "2026-05-11T17:40:00+01:00",
+      "comment_count": 34
+    },
+    {
+      "slug": "ferry-timetable-consultation",
+      "section": "news",
+      "headline": "Ferry operator opens consultation on a reduced winter timetable",
+      "author": "mara-quill",
+      "published": "2026-05-08T07:00:00+01:00",
+      "modified": "2026-05-09T08:30:00+01:00",
+      "comment_count": 11
+    },
+    {
+      "slug": "tidal-scheme-review",
+      "section": "news",
+      "headline": "Tidal Reach at the Harbour Lights, reviewed",
+      "author": "mara-quill",
+      "published": "2026-05-06T20:15:00+01:00",
+      "modified": "2026-05-06T20:15:00+01:00",
+      "comment_count": 7
+    }
+  ]
+}

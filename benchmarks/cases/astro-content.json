@@ -1,0 +1,76 @@
+{
+  "id": "astro-content",
+  "fixture": "benchmarks/fixtures/astro-content",
+  "title": "Astro 5 content collections built to static HTML with @astrojs/sitemap",
+  "level": "ULTRA",
+  "notes": "An Astro 5 site whose entire URL surface descends from one config value. `site: 'https://example.com/'` is what lets the build write absolute canonicals and absolute sitemap entries at all, and the trailing slash on it is harmless until a template joins a path onto it by string concatenation. The sitemap integration resolves the same value with URL semantics and gets it right; the collection route interpolates and gets a doubled slash. Both files were written by the same build from the same config, and they now name different addresses for the same page - which is why this fixture is scored on served bytes and not on astro.config.mjs. A check that read the config would see one origin and report nothing.\n\nThe canonical defect is deliberately confined to one requirement. BaseLayout.astro reuses the one canonical string for og:url as well, so og-url-matches-canonical inspects both values and passes: the two agree with each other and are wrong together. Had the layout computed og:url correctly, a single authoring mistake would have produced findings under two requirements, and the case could no longer say which check earned which.\n\nThe missing image alternative had to be authored as raw HTML inside the markdown body. Markdown image syntax with empty brackets compiles to alt=\"\", and an empty alt is a deliberate pass - it is how a decorative image is declared. Only an img element with no alt attribute at all is the defect this fixture means to carry, and the same element keeps its width and height so img-dimensions-declared still passes on it.\n\nThe draft entry is the pair of files that disagree. Its own document says `noindex, follow`, which is the correct handling for an unfinished page, and the capture records it indexable: false so robots-meta-noindex-unintended reads that directive as intended rather than as an accident. sitemap-lists-noindex-url does not consult that flag, so it still reports - correctly, because the defect is the absent `filter` in the integration options, not the noindex. Both checks look at the same page and only one of them should speak.\n\nsitemap-index.xml, sitemap-0.xml and rss.xml sit at the fixture root rather than in dist/, and each carries a comment saying so. `astro build` writes all three into dist/, but dist/ is in IGNORED_DIRS, so a sitemap left where the build puts it would be invisible to sitemap and feed discovery and three checks would report NOT_APPLICABLE for a project that ships a sitemap. The served HTML has no such problem: it is read directly through raw_html_path, which is why the pages are captured from dist/ and the XML is not. The bytes are the build's output in both places; only the folder differs.\n\nWhat this fixture does not establish: nothing here is server-rendered, so no adapter, redirect or request-time behaviour is exercised. It declares one language and no alternates. Only the home page is captured twice, so content-in-initial-html and client-mutates-canonical rest on that page alone - a comparison never made is not a comparison that passed.\n\nRun against the whole check set the split is 27 PASS, 5 FAIL, 4 NOT_APPLICABLE: the three hreflang checks find no rel=alternate link to inspect and jsonld-review-without-source finds no rating markup. Through the CLI audit the three hreflang checks are not offered at all, because a single-language project gives the profiler no signal either way, so `multilingual` resolves to unknown and those requirements are held as uncertain rather than decided. Neither group belongs in expected_non_findings: the false-positive rate divides by the checks that genuinely inspected something, and a check that looked at nothing - or was never asked - is not a true negative.",
+  "declared_defects": [
+    "src/content/docs/deploying.md has no `description` in its front matter, and BaseLayout.astro only emits the description meta tag when one is passed, so /docs/deploying serves no meta[name=description] (SEO-034).",
+    "src/pages/docs/[...slug].astro builds its URL as `${Astro.site}/docs/${entry.id}`, concatenating a leading slash onto a `site` value that already ends in one. Every collection page therefore serves a canonical of https://example.com//docs/<id>, which is not the path the page is served at (SEO-049) and does not match the entry @astrojs/sitemap derived for the same route through URL resolution (SEO-055). The same string is reused for og:url, so those two agree with each other and only the canonical is wrong.",
+    "src/content/docs/deploying.md embeds the pipeline diagram as raw HTML with no `alt` attribute, so /docs/deploying serves an img with no text alternative (SEO-225). Its width and height are declared, so the dimensions check still passes on the same element.",
+    "astro.config.mjs passes no `filter` to the sitemap integration, so the draft entry src/content/docs/experimental-endpoints.md is listed in sitemap-0.xml even though BaseLayout.astro serves it with `noindex, follow` on the strength of its `draft: true` flag (SEO-114)."
+  ],
+  "expected_findings": [
+    { "check_id": "meta-description-single", "requirement_id": "SEO-034", "location": "dist/docs/deploying.html" },
+    { "check_id": "canonical-self-referencing-absolute", "requirement_id": "SEO-049", "location": "dist/docs/routing.html" },
+    { "check_id": "canonical-self-referencing-absolute", "requirement_id": "SEO-049", "location": "dist/docs/deploying.html" },
+    { "check_id": "sitemap-canonical-only", "requirement_id": "SEO-055", "location": "sitemap-0.xml:16" },
+    { "check_id": "sitemap-canonical-only", "requirement_id": "SEO-055", "location": "sitemap-0.xml:19" },
+    { "check_id": "sitemap-canonical-only", "requirement_id": "SEO-055", "location": "sitemap-0.xml:22" },
+    { "check_id": "img-alt-attribute-present", "requirement_id": "SEO-225", "location": "dist/docs/deploying.html" },
+    { "check_id": "sitemap-lists-noindex-url", "requirement_id": "SEO-114", "location": "sitemap-0.xml:22" }
+  ],
+  "expected_non_findings": [
+    { "check_id": "title-element-single" },
+    { "check_id": "html-lang-present" },
+    { "check_id": "viewport-declared" },
+    { "check_id": "title-distinct-across-routes" },
+    { "check_id": "canonical-no-tracking-params" },
+    { "check_id": "robots-txt-present" },
+    { "check_id": "robots-sitemap-reference" },
+    { "check_id": "robots-group-contradiction" },
+    { "check_id": "robots-meta-noindex-unintended" },
+    { "check_id": "crawl-index-directive-conflict" },
+    { "check_id": "sitemap-xml-wellformed" },
+    { "check_id": "sitemap-loc-same-host" },
+    { "check_id": "sitemap-size-limits" },
+    { "check_id": "jsonld-parses" },
+    { "check_id": "jsonld-absolute-urls" },
+    { "check_id": "jsonld-duplicate-entity" },
+    { "check_id": "internal-links-resolve" },
+    { "check_id": "img-dimensions-declared" },
+    { "check_id": "llms-txt-plain-text" },
+    { "check_id": "llms-txt-absolute-https-links" },
+    { "check_id": "feed-wellformed" },
+    { "check_id": "feed-alternate-link-declared" },
+    { "check_id": "og-url-matches-canonical" },
+    { "check_id": "og-image-alt-present" },
+    { "check_id": "og-duplicate-properties" },
+    { "check_id": "content-in-initial-html" },
+    { "check_id": "client-mutates-canonical" }
+  ],
+  "expected_not_applicable": [
+    "SEO-418", "SEO-420",
+    "SEO-466",
+    "SEO-453", "SEO-455", "SEO-460",
+    "SEO-484", "SEO-486",
+    "SEO-073"
+  ],
+  "expected_not_applicable_rationale": "A documentation set of three markdown entries. It sells nothing, accepts nothing from readers, ships one language, gates nothing behind payment, and has no filterable listing, so none of these requirements can be satisfied without first inventing the feature they describe.",
+  "expected_applicable": [
+    "SEO-082", "SEO-116",
+    "SEO-305", "SEO-306",
+    "SEO-497", "SEO-498"
+  ],
+  "expected_applicable_rationale": "Every one of these is gated on a fact that only holds because a build artefact is where the scanner can see it: two on the sitemap, two on llms.txt, two on the feed. `astro build` writes the sitemap and the feed into dist/, which is not scanned, so had this fixture left them there the facts would read false and all six rules would be skipped without anything looking wrong. Asserting them is what makes the placement decision falsifiable rather than a matter of taste.",
+  "profile_expectations": {
+    "framework": "astro",
+    "has_robots_txt": true,
+    "has_sitemap": true,
+    "has_llms_txt": true,
+    "has_feeds": true,
+    "has_structured_data": true,
+    "static_generated": true,
+    "client_rendered": false
+  }
+}

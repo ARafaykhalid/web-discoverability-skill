@@ -1,0 +1,70 @@
+{
+  "captured_at": "2026-03-04T10:15:00Z",
+  "origin": "https://example.com",
+  "note": "Hand-authored capture of a seven-page catalogue: home, one category listing, three product pages, the cart and the checkout. Every page responds 200 with no redirect hops and no X-Robots-Tag header, so the only findings that can arise come from the markup and from sitemap.xml. The cart and the checkout serve a meta robots noindex and are recorded here as non-indexable, which is what makes that exclusion read as intended; recording them as indexable would be a CRITICAL contradiction rather than a fixture. No rendered_html_path is supplied anywhere, so rendered HTML equals raw HTML and the two JavaScript-rendering checks report NOT_APPLICABLE - the difference between initial and executed HTML was never measured here.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "index.html",
+      "source_file": "index.html",
+      "indexable": true
+    },
+    {
+      "url": "/collections/bags",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "collections/bags.html",
+      "source_file": "collections/bags.html",
+      "indexable": true
+    },
+    {
+      "url": "/products/harbour-tote-navy",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "products/harbour-tote-navy.html",
+      "source_file": "products/harbour-tote-navy.html",
+      "indexable": true
+    },
+    {
+      "url": "/products/harbour-tote-slate",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "products/harbour-tote-slate.html",
+      "source_file": "products/harbour-tote-slate.html",
+      "indexable": true
+    },
+    {
+      "url": "/products/field-satchel",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "products/field-satchel.html",
+      "source_file": "products/field-satchel.html",
+      "indexable": true
+    },
+    {
+      "url": "/cart",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "private, no-store" },
+      "redirect_chain": [],
+      "raw_html_path": "cart.html",
+      "source_file": "cart.html",
+      "indexable": false
+    },
+    {
+      "url": "/checkout",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "private, no-store" },
+      "redirect_chain": [],
+      "raw_html_path": "checkout.html",
+      "source_file": "checkout.html",
+      "indexable": false
+    }
+  ]
+}

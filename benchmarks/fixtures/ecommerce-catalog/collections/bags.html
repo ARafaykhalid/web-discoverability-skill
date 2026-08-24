@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bags — Harbour Supply</title>
+<meta name="description" content="Category listing for the ecommerce-catalog fixture. Three products, plus the sort and filter controls that generate the faceted URLs the sitemap defect refers to.">
+<link rel="canonical" href="https://example.com/collections/bags">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Harbour Supply">
+<meta property="og:title" content="Bags — Harbour Supply">
+<meta property="og:description" content="Three canvas bags, with sort and filter controls that address the same listing.">
+<meta property="og:url" content="https://example.com/collections/bags">
+<meta property="og:image" content="https://example.com/assets/collection-bags.jpg">
+<meta property="og:image:alt" content="Three canvas bags photographed together on a pale grey background.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "https://example.com/collections/bags#breadcrumbs",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://example.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Bags", "item": "https://example.com/collections/bags" }
+  ]
+}
+</script>
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/collections/bags">Bags</a>
+<a href="/cart">Cart</a>
+<a href="/checkout">Checkout</a>
+</nav>
+<main>
+<h1>Bags</h1>
+<p>Three products, all cut from the same 18oz canvas. The two totes differ only in
+colour, which is why they are a fair test of whether variant pages are distinguishable
+from each other.</p>
+<nav aria-label="Sort and filter">
+<a href="/collections/bags?sort=price-asc&amp;filter=colour-navy">Navy, cheapest first</a>
+<a href="/collections/bags?sort=price-desc">Most expensive first</a>
+</nav>
+<p>Both controls above address this same listing with query parameters. The canonical of
+this page names the parameterless address, and the parameterised form of the first one
+is also listed in sitemap.xml, which is the declared sitemap defect.</p>
+<ul>
+<li><a href="/products/harbour-tote-navy">Harbour Tote, navy</a> — 96.00 GBP
+<img src="https://example.com/assets/tote-navy.jpg" alt="Navy canvas tote with tan leather handles, standing upright." width="480" height="480"></li>
+<li><a href="/products/harbour-tote-slate">Harbour Tote, slate</a> — 96.00 GBP
+<img src="https://example.com/assets/tote-slate.jpg" alt="Slate grey canvas tote with tan leather handles, standing upright." width="480" height="480"></li>
+<li><a href="/products/field-satchel">Field Satchel</a> — 164.00 GBP
+<img src="https://example.com/assets/satchel-tan.jpg" alt="Tan canvas satchel with a buckled flap, seen from the front." width="480" height="480"></li>
+</ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{
+  "captured_at": "2026-02-10T09:20:00Z",
+  "origin": "https://example.com",
+  "note": "Hand-authored capture for a fixture whose defects are all page-level. Every page responds 200 with no redirect hops and no X-Robots-Tag, so the only findings that can arise come from the markup itself. No rendered_html_path is supplied anywhere, which means rendered HTML equals raw HTML and the two JavaScript-rendering checks correctly report NOT_APPLICABLE rather than a silent pass - the difference between initial and executed HTML was never measured here, and this fixture does not claim otherwise.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "index.html",
+      "source_file": "index.html",
+      "indexable": true
+    },
+    {
+      "url": "/about",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "about.html",
+      "source_file": "about.html",
+      "indexable": true
+    },
+    {
+      "url": "/services",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "services.html",
+      "source_file": "services.html",
+      "indexable": true
+    },
+    {
+      "url": "/contact",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "contact.html",
+      "source_file": "contact.html",
+      "indexable": true
+    },
+    {
+      "url": "/gallery",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "gallery.html",
+      "source_file": "gallery.html",
+      "indexable": true
+    },
+    {
+      "url": "/team",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "team.html",
+      "source_file": "team.html",
+      "indexable": true
+    },
+    {
+      "url": "/social",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "social.html",
+      "source_file": "social.html",
+      "indexable": true
+    },
+    {
+      "url": "/schema",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "schema.html",
+      "source_file": "schema.html",
+      "indexable": true
+    },
+    {
+      "url": "/blog",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "blog/index.html",
+      "source_file": "blog/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/blog/page-2",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" },
+      "redirect_chain": [],
+      "raw_html_path": "blog/page-2.html",
+      "source_file": "blog/page-2.html",
+      "indexable": true
+    }
+  ]
+}

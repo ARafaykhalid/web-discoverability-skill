@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example Site — hand-built fixture for discoverability checks</title>
+<meta name="description" content="The clean control fixture. Every declared defect in the other fixtures is a deliberate edit away from this baseline.">
+<link rel="canonical" href="https://example.com/">
+<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml" title="Example Site articles">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Example Site">
+<meta property="og:title" content="Example Site">
+<meta property="og:description" content="The clean control fixture.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="https://example.com/img/cover.png">
+<meta property="og:image:alt" content="The words Example Site on a plain background.">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://example.com/#website",
+      "url": "https://example.com/",
+      "name": "Example Site",
+      "publisher": { "@id": "https://example.com/#organization" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://example.com/#organization",
+      "url": "https://example.com/",
+      "name": "Example Site",
+      "logo": "https://example.com/img/logo.png"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header>
+<nav>
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/blog/hello">Hello</a>
+</nav>
+</header>
+<main>
+<h1>Example Site</h1>
+<p>This fixture exists so the benchmark has a baseline that reports nothing. It is
+deliberately unremarkable: one language, one canonical, one title, one meta
+description, absolute URLs everywhere, and no structured data that asserts a fact
+the fixture cannot substantiate.</p>
+<p>Every other fixture in <code>benchmarks/fixtures/</code> is this file with one or
+more specific defects introduced, so a finding can be attributed to the edit that
+caused it rather than to the fixture in general.</p>
+<img src="/img/cover.png" alt="The words Example Site on a plain background." width="1200" height="630">
+<h2>Where to go next</h2>
+<p>The <a href="/about">about page</a> explains who runs the site, and
+<a href="/blog/hello">the only article</a> is the one entry in the feed.</p>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</body>
+</html>

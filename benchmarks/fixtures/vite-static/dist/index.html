@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--
+  Vite entry for the home route, listed as `home` in vite.config.js.
+
+  Everything in this head is hand-written and none of it is touched by the build.
+  No client bundle is loaded: nothing hydrates, so the React runtime would be bytes
+  with no consumer. The one script in this file sits at the end of the body and is
+  progressive enhancement only. The stylesheet href below is the one thing the build
+  rewrites, into the hashed asset Vite emits.
+
+  The body holds a placeholder. `npm run build` renders src/pages/Home.jsx into it
+  and writes the result to dist/index.html, which is the document the capture in
+  snapshot.json points at.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme Docs — documentation built into finished HTML</title>
+<meta name="description" content="How the Acme documentation is built: one HTML entry per route, a hand-written head, and a body rendered to static markup before the file is written.">
+<link rel="canonical" href="https://example.com/">
+<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml" title="Acme Docs releases">
+<link rel="stylesheet" href="/assets/styles-CJ4pQ1xE.css">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Acme Docs">
+<meta property="og:title" content="Acme Docs — documentation built into finished HTML">
+<meta property="og:description" content="One HTML entry per route, a hand-written head, and a body rendered to static markup before the file is written.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="https://example.com/img/preview.png">
+<meta property="og:image:alt" content="The words Acme Docs on a plain background.">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://example.com/#website",
+      "url": "https://example.com/",
+      "name": "Acme Docs",
+      "publisher": { "@id": "https://example.com/#organization" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://example.com/#organization",
+      "url": "https://example.com/",
+      "name": "Acme",
+      "logo": "https://example.com/img/logo.png"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div id="app">
+<header>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/changelog">Changelog</a>
+</nav>
+</header>
+<main>
+<h1>Acme Docs</h1>
+<p>This site is built with Vite, and every route is a separate HTML entry named in <code>vite.config.js</code>. The head of each entry is written by hand: the title, the description, the canonical URL, the preview properties and the feed link are bytes in a file rather than values assembled at run time.</p>
+<p>The body is produced differently. It comes from a React component that <code>scripts/prerender.mjs</code> renders to static markup during the build and substitutes into the placeholder its entry left behind. By the time a document is written into <code>dist/</code> it is finished, so the first response a reader receives already carries the heading, the prose and the navigation.</p>
+<img src="/img/toolchain.png" alt="Three HTML entry files feeding a build step that writes three finished documents." width="1200" height="630"/>
+<h2>Why the distinction matters</h2>
+<p>A dependency list is not a rendering strategy. React and Vite appear in this manifest exactly as they do in the client-rendered fixture stored beside it, so a profiler that reads only the manifest reaches the same conclusion about both projects. What separates them is what the server actually sends, and the only way to know that is to look at a capture.</p>
+<p>The <a href="/about">about page</a> describes how one route becomes one file, and the <a href="/changelog">changelog</a> records what changed in each release of the toolchain.</p>
+<p class="build" data-built="30 January 2026">Built 30 January 2026</p>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</div>
+<script>
+  /*
+    The only client-side code in this fixture, and progressive enhancement rather
+    than rendering. Every word of the document above is already in the bytes the
+    server sent; this marks the root element so a stylesheet can react to scripting
+    being available, and expands one date label into a longer sentence.
+
+    That is deliberately the entire difference between the two captures of this page
+    in snapshot.json. content-in-initial-html requires the initial response to carry
+    less than half the final text before it reports anything, so a page whose only
+    client-side change is seven words is the case that proves the threshold is not
+    hair-trigger - and client-mutates-canonical gets a real before-and-after pair to
+    compare in which the canonical genuinely does not move.
+  */
+  document.documentElement.setAttribute('data-js', 'on');
+  var stamp = document.querySelector('[data-built]');
+  if (stamp) stamp.textContent = 'Built ' + stamp.getAttribute('data-built') + ', rendered to static markup during the build';
+</script>
+</body>
+</html>

@@ -23,13 +23,20 @@
 | --- | ---: |
 | Already correct | 0 |
 | Not applicable | 0 |
+| Uncertain | 0 |
 | Blocked | 0 |
 | Failed | 0 |
+| Needs runtime | 0 |
+| Unchecked applicable | 0 |
+| Errors | 0 |
 | Needs manual action | 0 |
 
 ## Findings
 
-Use `ID | STATUS | EVIDENCE | ACTION`, grouped by domain and priority. Do not repeat full requirement descriptions.
+Use `ID | STATUS | EVIDENCE | ACTION`, grouped by domain and priority. Use the
+status vocabulary from `AUDIT.md`; include `NEEDS_RUNTIME`, `UNCERTAIN`, and
+`BLOCKED` explicitly rather than treating them as passes. Do not repeat full
+requirement descriptions.
 
 ## Search-surface matrix
 
@@ -42,10 +49,7 @@ Use `ID | STATUS | EVIDENCE | ACTION`, grouped by domain and priority. Do not re
 | Google News | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Google Shopping | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Bing Search | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| Bing Copilot | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| Bing AI Performance | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| AI Search | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| LLM Retrieval | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
+| AI assistant retrieval | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Local Search | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Social Preview | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 

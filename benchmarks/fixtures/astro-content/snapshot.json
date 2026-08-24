@@ -1,0 +1,53 @@
+{
+  "captured_at": "2026-02-20T09:40:00Z",
+  "origin": "https://example.com",
+  "note": "Captured from a local preview of dist/ after `astro build`, so raw_html_path names the built document rather than the .astro or .md source. The source files hold expressions, not text, and a finding that pointed at them would name a line that never reached a reader. The origin here is the `site` value from astro.config.mjs, which is what the build substituted into every canonical and every sitemap entry. The home page is captured twice, once as served and once after its inline script ran, because it is the only route with client-side code; the difference is seven words on a build stamp. The draft entry is recorded indexable: false because the document it serves says noindex - that is the intended handling for an unfinished page, and recording it lets the sitemap check speak about the contradiction without a second finding about the directive itself.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "dist/index.html",
+      "rendered_html_path": "captures/index.rendered.html",
+      "source_file": "dist/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/about",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "dist/about.html",
+      "source_file": "dist/about.html",
+      "indexable": true
+    },
+    {
+      "url": "/docs/routing",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "dist/docs/routing.html",
+      "source_file": "dist/docs/routing.html",
+      "indexable": true
+    },
+    {
+      "url": "/docs/deploying",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "dist/docs/deploying.html",
+      "source_file": "dist/docs/deploying.html",
+      "indexable": true
+    },
+    {
+      "url": "/docs/experimental-endpoints",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "dist/docs/experimental-endpoints.html",
+      "source_file": "dist/docs/experimental-endpoints.html",
+      "indexable": false
+    }
+  ]
+}

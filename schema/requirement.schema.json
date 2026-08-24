@@ -1,0 +1,539 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ARafaykhalid/web-discoverability-skill/schema/requirement.schema.json",
+  "title": "Discoverability requirement",
+  "description": "One record of requirements/<domain>.jsonl. Generated from tools/lib/model.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "domain",
+    "title",
+    "statement",
+    "rationale",
+    "category",
+    "minimum_level",
+    "severity",
+    "impact",
+    "change_safety",
+    "evidence_tier",
+    "confidence",
+    "applies_when",
+    "implementation",
+    "verification",
+    "review"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^SEO-\\d{3,4}$",
+      "description": "Stable identifier. Never reused, even after retirement."
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "urls",
+        "metadata",
+        "canonicals",
+        "crawling",
+        "robots",
+        "indexing",
+        "sitemaps",
+        "structured-data",
+        "entity",
+        "content",
+        "internal-linking",
+        "images",
+        "video",
+        "social-preview",
+        "javascript-rendering",
+        "performance",
+        "mobile",
+        "caching",
+        "bfcache",
+        "accessibility",
+        "security",
+        "privacy-auth",
+        "cdn-waf",
+        "ai-crawlers",
+        "ai-retrieval",
+        "llms-txt",
+        "submission",
+        "feeds",
+        "discover",
+        "ecommerce",
+        "local",
+        "international",
+        "ugc",
+        "paywall",
+        "documents",
+        "analytics",
+        "operations"
+      ],
+      "description": "Must match the file the record lives in."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 120,
+      "description": "One control, imperative voice. Compound titles are rejected by the validator."
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 40,
+      "description": "The testable assertion, independent of the title."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 40,
+      "description": "Why it matters, in language the evidence tier supports."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "TECHNICAL_SEO",
+        "SEARCH_DISCOVERABILITY",
+        "STRUCTURED_DATA_ELIGIBILITY",
+        "CONTENT_QUALITY",
+        "ACCESSIBILITY",
+        "AI_CRAWLER_ACCESS",
+        "AI_RETRIEVAL",
+        "EMERGING_GEO",
+        "SECURITY_PRIVACY",
+        "OPERATIONS"
+      ],
+      "description": "Separates established technical SEO from experimental GEO/LLMO."
+    },
+    "minimum_level": {
+      "type": "string",
+      "enum": [
+        "LITE",
+        "RECOMMENDED",
+        "EXTRA",
+        "ULTRA"
+      ],
+      "description": "Lowest audit level that includes this requirement."
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "CRITICAL",
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ],
+      "description": "How bad the defect is when present."
+    },
+    "impact": {
+      "type": "string",
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "description": "Blast radius if the change is wrong. HIGH forbids SAFE_AUTOMATIC."
+    },
+    "change_safety": {
+      "type": "string",
+      "enum": [
+        "SAFE_AUTOMATIC",
+        "REVIEW_REQUIRED",
+        "BLOCKED"
+      ],
+      "description": "What an agent may do without human approval."
+    },
+    "evidence_tier": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "INTERNAL"
+      ],
+      "description": "Strength of external evidence."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ],
+      "description": "Confidence that the change produces the stated effect."
+    },
+    "applies_when": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Profile predicates gating this requirement. Unknown facts yield UNCERTAIN, never NOT_APPLICABLE.",
+      "properties": {
+        "all": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "public_site",
+              "javascript_app",
+              "client_rendered",
+              "server_rendered",
+              "static_generated",
+              "has_router",
+              "has_images",
+              "has_video",
+              "has_feeds",
+              "has_sitemap",
+              "has_robots_txt",
+              "has_llms_txt",
+              "has_structured_data",
+              "has_cdn_or_waf",
+              "has_service_worker",
+              "multilingual",
+              "ecommerce",
+              "local_business",
+              "ugc",
+              "paywall_or_subscription",
+              "authentication",
+              "content_publication",
+              "editorial_content",
+              "public_documents",
+              "analytics_or_measurement",
+              "api_driven_content",
+              "monorepo",
+              "cms",
+              "pagination",
+              "faceted_navigation",
+              "has_production_origin",
+              "runtime_available",
+              "has_client_javascript"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "any": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "public_site",
+              "javascript_app",
+              "client_rendered",
+              "server_rendered",
+              "static_generated",
+              "has_router",
+              "has_images",
+              "has_video",
+              "has_feeds",
+              "has_sitemap",
+              "has_robots_txt",
+              "has_llms_txt",
+              "has_structured_data",
+              "has_cdn_or_waf",
+              "has_service_worker",
+              "multilingual",
+              "ecommerce",
+              "local_business",
+              "ugc",
+              "paywall_or_subscription",
+              "authentication",
+              "content_publication",
+              "editorial_content",
+              "public_documents",
+              "analytics_or_measurement",
+              "api_driven_content",
+              "monorepo",
+              "cms",
+              "pagination",
+              "faceted_navigation",
+              "has_production_origin",
+              "runtime_available",
+              "has_client_javascript"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "none": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "public_site",
+              "javascript_app",
+              "client_rendered",
+              "server_rendered",
+              "static_generated",
+              "has_router",
+              "has_images",
+              "has_video",
+              "has_feeds",
+              "has_sitemap",
+              "has_robots_txt",
+              "has_llms_txt",
+              "has_structured_data",
+              "has_cdn_or_waf",
+              "has_service_worker",
+              "multilingual",
+              "ecommerce",
+              "local_business",
+              "ugc",
+              "paywall_or_subscription",
+              "authentication",
+              "content_publication",
+              "editorial_content",
+              "public_documents",
+              "analytics_or_measurement",
+              "api_driven_content",
+              "monorepo",
+              "cms",
+              "pagination",
+              "faceted_navigation",
+              "has_production_origin",
+              "runtime_available",
+              "has_client_javascript"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "implementation": {
+      "type": "string",
+      "minLength": 60,
+      "description": "Concrete, framework-aware guidance."
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "method",
+        "evidence"
+      ],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "SOURCE",
+            "RUNTIME",
+            "SOURCE_AND_RUNTIME",
+            "MANUAL_EXTERNAL"
+          ],
+          "description": "SOURCE is rejected for runtime-sensitive domains: urls, metadata, canonicals, crawling, robots, indexing, sitemaps, structured-data, social-preview, javascript-rendering, caching, cdn-waf, international, paywall."
+        },
+        "method": {
+          "type": "string",
+          "minLength": 40,
+          "description": "How to prove the requirement holds in the produced output."
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "FILE",
+              "ROUTE",
+              "RENDERED_HTML",
+              "RAW_HTML",
+              "HTTP_STATUS",
+              "HTTP_HEADER",
+              "REDIRECT_CHAIN",
+              "JSON_LD",
+              "SITEMAP",
+              "ROBOTS_TXT",
+              "FEED",
+              "BROWSER",
+              "BUILD_OUTPUT",
+              "VALIDATOR_OUTPUT",
+              "PERFORMANCE_MEASUREMENT",
+              "ACCESSIBILITY_SCAN",
+              "LOG",
+              "EXTERNAL_PLATFORM",
+              "MANUAL_ACTION"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "automated_check": {
+          "type": "string",
+          "description": "Check id in tools/lib/checks/ that provides machine evidence."
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stability",
+        "interval_days",
+        "last_verified",
+        "owner"
+      ],
+      "properties": {
+        "stability": {
+          "type": "string",
+          "enum": [
+            "STABLE",
+            "SEMI_STABLE",
+            "VOLATILE"
+          ],
+          "description": "How fast the external evidence moves."
+        },
+        "interval_days": {
+          "type": "integer",
+          "description": "Derived from stability; the validator enforces the mapping."
+        },
+        "last_verified": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 2
+        }
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "GOOGLE_SEARCH",
+          "GOOGLE_DISCOVER",
+          "GOOGLE_IMAGES",
+          "GOOGLE_VIDEO",
+          "GOOGLE_NEWS",
+          "GOOGLE_SHOPPING",
+          "BING_SEARCH",
+          "AI_ASSISTANT_RETRIEVAL",
+          "LOCAL_SEARCH",
+          "SOCIAL_PREVIEW"
+        ],
+        "description": "Evaluate here. Never implies appearance here."
+      },
+      "uniqueItems": true
+    },
+    "frameworks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "static-html",
+          "next-app-router",
+          "next-pages-router",
+          "react-spa",
+          "vite",
+          "astro",
+          "remix",
+          "sveltekit",
+          "nuxt",
+          "node-server",
+          "django",
+          "flask-fastapi",
+          "any"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "framework_notes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      },
+      "uniqueItems": true
+    },
+    "conflicts_with": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      },
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      },
+      "uniqueItems": true
+    },
+    "caution": {
+      "type": "string",
+      "description": "Required for Tier D. States what is not established."
+    },
+    "sources": {
+      "type": "array",
+      "description": "Required for evidence tiers A-D.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "url",
+          "organization",
+          "title",
+          "type",
+          "official",
+          "date_checked",
+          "tier"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "organization": {
+            "type": "string",
+            "minLength": 2
+          },
+          "title": {
+            "type": "string",
+            "minLength": 4
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SPECIFICATION",
+              "PLATFORM_DOCUMENTATION",
+              "FRAMEWORK_DOCUMENTATION",
+              "VOCABULARY",
+              "STANDARDS_BODY",
+              "PLATFORM_POLICY",
+              "EMPIRICAL_STUDY",
+              "COMMUNITY_CONVENTION"
+            ]
+          },
+          "official": {
+            "type": "boolean",
+            "description": "True only for first-party documentation from the organization that owns the behaviour."
+          },
+          "date_checked": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "INTERNAL"
+            ],
+            "description": "How strongly this source supports *this* record's claim, not how authoritative the document is in general. The same URL can legitimately be tier A where it states a behaviour directly and tier B where it only implies one."
+          },
+          "limitations": {
+            "type": "string",
+            "description": "What the source does not say. Prevents over-reading a citation."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "captured_at": "2026-08-14T08:15:00Z",
+  "origin": "https://example.com",
+  "note": "Six requests against the running Express app. The response bodies are stored under captures/ because nothing in this project has an HTML file on disk - every document is assembled from template strings in the request handler - and source_file names the capture rather than a template so that a reported line number addresses the bytes the checks actually read. No rendered_html_path is supplied: the app ships no client-side script, so the executed document is byte-identical to the initial response and claiming a measured difference would be inventing one. /legacy-pricing was recorded without following its redirect, so it has a status and a hop but no body.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=300"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "captures/home.html",
+      "source_file": "captures/home.html",
+      "indexable": true
+    },
+    {
+      "url": "/pricing?utm_source=spring-mailer",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=300"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "captures/pricing.html",
+      "source_file": "captures/pricing.html",
+      "indexable": true
+    },
+    {
+      "url": "/guides/roof-tile-selection",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=3600"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "captures/guides-roof-tile-selection.html",
+      "source_file": "captures/guides-roof-tile-selection.html",
+      "indexable": true
+    },
+    {
+      "url": "/contact",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=300"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "captures/contact.html",
+      "source_file": "captures/contact.html",
+      "indexable": true
+    },
+    {
+      "url": "/internal/preview",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+        "x-robots-tag": "noindex"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "captures/internal-preview.html",
+      "source_file": "captures/internal-preview.html",
+      "indexable": false
+    },
+    {
+      "url": "/legacy-pricing",
+      "status": 301,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "location": "/pricing"
+      },
+      "redirect_chain": [
+        { "status": 301, "url": "https://example.com/pricing" }
+      ],
+      "indexable": true
+    }
+  ]
+}

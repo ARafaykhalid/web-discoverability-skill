@@ -1,0 +1,71 @@
+{
+  "captured_at": "2026-05-12T20:00:00Z",
+  "origin": "https://example.com",
+  "note": "Seven routes from a static news build: the front page, the section index, three articles, one author profile, and page two of a comment thread. The comment page is the only one with a separate rendered document, because it is the only page the site enhances after load; that pair is what gives the javascript-rendering checks something to compare. Page one of the comment thread is in the repository but deliberately outside the capture, so link resolution has to fall back to the shipped HTML the way it would for any route a crawl did not reach.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "index.html",
+      "source_file": "index.html",
+      "indexable": true
+    },
+    {
+      "url": "/news",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "news/index.html",
+      "source_file": "news/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/news/harbour-dredging-delayed",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "news/harbour-dredging-delayed.html",
+      "source_file": "news/harbour-dredging-delayed.html",
+      "indexable": true
+    },
+    {
+      "url": "/news/ferry-timetable-consultation",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "news/ferry-timetable-consultation.html",
+      "source_file": "news/ferry-timetable-consultation.html",
+      "indexable": true
+    },
+    {
+      "url": "/news/tidal-scheme-review",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "news/tidal-scheme-review.html",
+      "source_file": "news/tidal-scheme-review.html",
+      "indexable": true
+    },
+    {
+      "url": "/authors/mara-quill",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "authors/mara-quill.html",
+      "source_file": "authors/mara-quill.html",
+      "indexable": true
+    },
+    {
+      "url": "/news/harbour-dredging-delayed/comments/page/2",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "news/harbour-dredging-delayed/comments/page/2.html",
+      "rendered_html_path": "captures/comments-page-2.rendered.html",
+      "source_file": "news/harbour-dredging-delayed/comments/page/2.html",
+      "indexable": true
+    }
+  ]
+}

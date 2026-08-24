@@ -1,0 +1,5 @@
+{
+  "captured_at": "2026-08-23T00:00:00.000Z",
+  "origin": "https://docs.example.test",
+  "pages": [{ "url": "/", "status": 200, "raw_html_path": "captures/home.html", "rendered_html_path": "captures/home.html" }]
+}

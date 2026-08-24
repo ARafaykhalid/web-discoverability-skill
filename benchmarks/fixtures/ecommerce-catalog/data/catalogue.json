@@ -1,0 +1,51 @@
+{
+  "note": "Catalogue rows the fixture's product pages are built from. The prices here are the authority; the Field Satchel page deliberately disagrees with this file in both its JSON-LD offer and its rendered price, which is the SEO-418 defect the case declares.",
+  "currency": "GBP",
+  "cart_action": "addToCart",
+  "cart_route": "/cart",
+  "checkout_route": "/checkout",
+  "collections": [
+    {
+      "handle": "bags",
+      "route": "/collections/bags",
+      "title": "Bags",
+      "facets": ["colour", "capacity"],
+      "sorts": ["price-asc", "price-desc", "newest"]
+    }
+  ],
+  "products": [
+    {
+      "handle": "harbour-tote-navy",
+      "route": "/products/harbour-tote-navy",
+      "sku": "HT-TOTE-NAVY",
+      "gtin13": "5012345678900",
+      "name": "Harbour Tote",
+      "colour": "Navy",
+      "price": "96.00",
+      "availability": "InStock",
+      "collection": "bags"
+    },
+    {
+      "handle": "harbour-tote-slate",
+      "route": "/products/harbour-tote-slate",
+      "sku": "HT-TOTE-SLATE",
+      "gtin13": "5012345678917",
+      "name": "Harbour Tote",
+      "colour": "Slate",
+      "price": "96.00",
+      "availability": "InStock",
+      "collection": "bags"
+    },
+    {
+      "handle": "field-satchel",
+      "route": "/products/field-satchel",
+      "sku": "HT-SATCHEL-01",
+      "gtin13": "5012345678924",
+      "name": "Field Satchel",
+      "colour": "Tan",
+      "price": "164.00",
+      "availability": "InStock",
+      "collection": "bags"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "multilingual-store-fixture",
+  "private": true,
+  "dependencies": { "astro": "4.10.0" }
+}

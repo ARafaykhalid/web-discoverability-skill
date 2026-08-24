@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your cart — Harbour Supply</title>
+<meta name="description" content="Cart page of the ecommerce-catalog fixture. Excluded from indexing on purpose, and recorded as non-indexable in the capture so the exclusion reads as intended rather than as a mistake.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://example.com/cart">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Harbour Supply">
+<meta property="og:title" content="Your cart — Harbour Supply">
+<meta property="og:description" content="The cart route, present so that the ecommerce profile fact rests on a real purchase path.">
+<meta property="og:url" content="https://example.com/cart">
+<meta property="og:image" content="https://example.com/assets/tote-navy.jpg">
+<meta property="og:image:alt" content="Navy canvas tote with tan leather handles, standing upright.">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/collections/bags">Bags</a>
+<a href="/cart">Cart</a>
+<a href="/checkout">Checkout</a>
+</nav>
+<main>
+<h1>Your cart</h1>
+<p>A cart holds one visitor's selection and is different for every visitor, so there is
+nothing here for a crawler to index. This page therefore serves noindex, and the capture
+records it as non-indexable. Both halves matter: a noindex on a page the capture calls
+indexable is exactly the contradiction the crawl checks are looking for, and it would be
+reported as one if only one half were written.</p>
+<p>The exclusion is a meta robots directive rather than a Disallow in robots.txt. A
+disallowed URL is never fetched, so its noindex is never read, and the two directives
+would cancel rather than reinforce each other.</p>
+<ul>
+<li>Harbour Tote, navy — 96.00 GBP
+<img src="https://example.com/assets/tote-navy.jpg" alt="Navy canvas tote with tan leather handles, standing upright." width="120" height="120"></li>
+</ul>
+<p>Continue to <a href="/checkout">checkout</a>, or back to <a href="/collections/bags">Bags</a>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# Example Site
+
+> The clean control fixture for the web-discoverability-skill benchmark. Every
+> link below is an absolute HTTPS URL, which is what the llms.txt checks require.
+
+## Pages
+
+- [Home](https://example.com/): what the fixture is for.
+- [About](https://example.com/about): who maintains it.
+- [Hello](https://example.com/blog/hello): the only article.

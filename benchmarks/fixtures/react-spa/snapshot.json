@@ -1,0 +1,37 @@
+{
+  "captured_at": "2026-02-12T11:20:00Z",
+  "origin": "https://example.com",
+  "note": "Hand-written capture of a client-rendered app. Each page supplies both halves of the comparison: raw_html_path is the response the host actually sends and rendered_html_path is the same document after React mounted. The two marketing routes share one raw file because Vite serves a single entry document for both and the client router decides which component to mount, so the bytes really are identical. The handbook route is served by the second HTML entry declared in vite.config.js, which hard-codes a section-level canonical the router then overwrites. Both rendered captures are pretty-printed rather than serialised verbatim so the prose is readable; the word counts and the head elements are what a browser would have produced.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=0, must-revalidate" },
+      "redirect_chain": [],
+      "raw_html_path": "captures/app-shell.raw.html",
+      "rendered_html_path": "captures/index.rendered.html",
+      "source_file": "src/routes/Home.jsx",
+      "indexable": true
+    },
+    {
+      "url": "/features",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=0, must-revalidate" },
+      "redirect_chain": [],
+      "raw_html_path": "captures/app-shell.raw.html",
+      "rendered_html_path": "captures/features.rendered.html",
+      "source_file": "src/routes/Features.jsx",
+      "indexable": true
+    },
+    {
+      "url": "/handbook/routing",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=0, must-revalidate" },
+      "redirect_chain": [],
+      "raw_html_path": "captures/handbook-shell.raw.html",
+      "rendered_html_path": "captures/handbook-routing.rendered.html",
+      "source_file": "src/routes/HandbookArticle.jsx",
+      "indexable": true
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+---
+// Every head element the checks read is emitted here, from props the route
+// supplies. The layout deliberately has no fallback for `description`: an entry
+// that omits it in front matter serves no meta description at all, which is the
+// behaviour src/content/docs/deploying.md relies on.
+//
+// `canonical` arrives as a finished string rather than being built here, because
+// each route knows its own address and the layout does not. That is also why a
+// route that builds the string badly cannot be corrected at this level.
+const { title, description, canonical, image, imageAlt, noindex = false, jsonld } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title="Example Docs" href="/rss.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Example Docs" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <!-- One value, two uses: og:url is the same string as the canonical, so the two
+         cannot drift apart even when the string itself is wrong. -->
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+  </head>
+  <body>
+    <header>
+      <a href="/">Example Docs</a>
+      <nav>
+        <a href="/docs/routing">Routing</a>
+        <a href="/docs/deploying">Deploying</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>Example Docs is a fixture. Its pages describe how it is built and nothing else.</p>
+    </footer>
+  </body>
+</html>

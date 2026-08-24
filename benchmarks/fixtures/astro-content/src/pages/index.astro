@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entries = (await getCollection('docs')).filter((entry) => !entry.data.draft);
+
+// `new URL` is the correct join. It resolves the path against the origin, so the
+// trailing slash `site` carries is consumed rather than doubled.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${new URL('#website', Astro.site).href}`,
+  name: 'Example Docs',
+  url: canonical,
+  publisher: {
+    '@type': 'Organization',
+    '@id': `${new URL('#org', Astro.site).href}`,
+    name: 'Example',
+    url: new URL('/about', Astro.site).href,
+    logo: new URL('/social/logo.svg', Astro.site).href,
+  },
+};
+---
+
+<BaseLayout
+  title="Content collections reference — Example Docs"
+  description="How the docs collection in this project is defined, which files it reads, and what the static build writes for each entry."
+  canonical={canonical}
+  image="https://example.com/social/home.png"
+  imageAlt="The words Example Docs above a list of the three entries in the docs collection."
+  jsonld={jsonld}
+>
+  <h1>Content collections reference</h1>
+  <p>
+    This site is one Astro content collection and three pages that read it. Nothing
+    here is fetched at request time, so every document the build writes is the
+    document a reader receives.
+  </p>
+  <img src="/diagrams/collection-graph.svg" alt="The docs collection drawn as one box feeding three output documents" width="720" height="360" />
+  <h2>Entries</h2>
+  <ul>
+    {entries.map((entry) => (
+      <li><a href={`/docs/${entry.id}`}>{entry.data.title}</a></li>
+    ))}
+  </ul>
+  <p><span id="build-stamp">Built from the docs collection.</span></p>
+  <!-- Progressive enhancement and nothing else. It marks the root element so the
+       stylesheet can tell an enhanced document from a plain one, and expands the
+       stamp above. It never touches the head, which is why the rendered capture of
+       this page is a genuine test of client-mutates-canonical rather than a
+       decorative one. -->
+  <script is:inline>
+    document.documentElement.dataset.enhanced = 'true';
+    const stamp = document.getElementById('build-stamp');
+    if (stamp) stamp.textContent = 'Built from the docs collection of three entries on 20 February 2026.';
+  </script>
+</BaseLayout>

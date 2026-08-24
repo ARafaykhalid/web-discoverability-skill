@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian — scheduled SQL reports for data teams</title>
+<meta name="description" content="Meridian runs a saved SQL query on a schedule and delivers the result to the people who asked for it. Public overview of what the service does and who operates it.">
+<link rel="canonical" href="https://example.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="Meridian — scheduled SQL reports for data teams">
+<meta property="og:description" content="A saved query, a cadence, and a list of recipients. Meridian runs the query and delivers the result.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="https://example.com/assets/og-overview.png">
+<meta property="og:image:alt" content="The Meridian schedule editor showing a weekly report and its recipients">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://example.com/#organization",
+      "name": "Meridian",
+      "url": "https://example.com/",
+      "logo": "https://example.com/assets/meridian-mark.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://example.com/#website",
+      "name": "Meridian",
+      "url": "https://example.com/",
+      "publisher": { "@id": "https://example.com/#organization" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://example.com/#application",
+      "name": "Meridian",
+      "url": "https://example.com/",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any browser",
+      "publisher": { "@id": "https://example.com/#organization" }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Overview</a>
+<a href="/pricing">Plans</a>
+<a href="/api-docs">API reference</a>
+<a href="/changelog">Release notes</a>
+<a href="/login">Sign in</a>
+</nav>
+<main>
+<h1>Scheduled SQL reports, delivered where the question was asked</h1>
+<p>Meridian holds a query, a cadence, and a list of recipients. When the cadence
+comes round it runs the query against your warehouse and sends the result as a
+table, a CSV, or a message in the channel the request came from. There is nothing
+to install and nothing to keep running.</p>
+<img src="/assets/schedule-editor.png" alt="The schedule editor with a saved query, a weekly cadence, and two named recipients" width="960" height="540">
+<h2>What this fixture is</h2>
+<p>This is a benchmark fixture, not a real service. It exists to exercise the
+boundary between a public marketing site and an authenticated application. The
+five pages reachable from the navigation above are public. Everything under
+<code>/app/</code> needs a session, is served with a noindex directive, and is
+excluded in <code>robots.txt</code> — and that pair of exclusions is one of the
+faults the case file declares, because a crawler that honours the disallow never
+fetches the page and so never reads the noindex.</p>
+<p>The declared defect list lives in <code>benchmarks/cases/saas-app.json</code>.
+Read it before changing anything here: a page that looks wrong is either a
+declared fault or an accident, and the case file is what distinguishes them.</p>
+<p><a href="/app/dashboard">Open the application</a> if you already have a
+session. Otherwise <a href="/login">sign in</a> first.</p>
+</main>
+<footer>
+<p>Operated by Meridian. Written and maintained as test data.</p>
+</footer>
+</body>
+</html>

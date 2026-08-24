@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://example.com/</id>
+  <title>Example Site guide updates</title>
+  <updated>2026-02-03T10:00:00Z</updated>
+  <link rel="alternate" href="https://example.com/"/>
+  <link rel="self" href="https://example.com/feed.xml"/>
+  <entry>
+    <id>https://example.com/guides/crawl-directives/</id>
+    <title>Crawl directives and index directives</title>
+    <updated>2026-02-03T10:00:00Z</updated>
+    <link rel="alternate" href="https://example.com/guides/crawl-directives/"/>
+    <summary>Why a disallowed URL never reads the directive that would have removed it.</summary>
+  </entry>
+</feed>

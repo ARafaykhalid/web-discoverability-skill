@@ -1,0 +1,163 @@
+{
+  "id": "react-spa",
+  "fixture": "benchmarks/fixtures/react-spa",
+  "title": "Client-rendered Vite + React app whose initial HTML is an empty shell",
+  "level": "ULTRA",
+  "declared_defects": [
+    "Every captured route is served as an app shell: an empty div#root, a module script, a stylesheet, and a short noscript note. The marketing shell (captures/app-shell.raw.html) carries 19 words of visible text and the handbook shell (captures/handbook-shell.raw.html) carries 23, while the rendered documents carry several hundred each. Every page therefore trips the word-count arm of content-in-initial-html: the initial response holds well under half the rendered text and the shortfall is far above 100 words (SEO-593).",
+    "Neither shell declares a <title>. document.title is assigned inside the effect in src/lib/useDocumentHead.js, so all three routes have a title that exists only after client-side execution — a second, separate content-in-initial-html finding on each page (SEO-593).",
+    "Neither shell contains an <h1>. The heading is rendered by the route component, so all three routes have a page heading that appears only after client-side execution — a third content-in-initial-html finding on each page (SEO-593).",
+    "index.html declares no canonical at all. useDocumentHead appends one after mount, so on / and /features the canonical exists only for consumers that execute scripts: client-mutates-canonical reports an addition on each of those two pages (SEO-597).",
+    "handbook.html hard-codes <link rel=\"canonical\" href=\"https://example.com/handbook\">, the section root, and useDocumentHead rewrites that element's href to the article's own URL. /handbook/routing therefore serves one canonical before execution and a different one after, which is the mutation arm of client-mutates-canonical (SEO-597)."
+  ],
+  "expected_findings": [
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/Home.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/Home.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/Home.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/Features.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/Features.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/Features.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/HandbookArticle.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/HandbookArticle.jsx"
+    },
+    {
+      "check_id": "content-in-initial-html",
+      "requirement_id": "SEO-593",
+      "location": "src/routes/HandbookArticle.jsx"
+    },
+    {
+      "check_id": "client-mutates-canonical",
+      "requirement_id": "SEO-597",
+      "location": "src/routes/Home.jsx"
+    },
+    {
+      "check_id": "client-mutates-canonical",
+      "requirement_id": "SEO-597",
+      "location": "src/routes/Features.jsx"
+    },
+    {
+      "check_id": "client-mutates-canonical",
+      "requirement_id": "SEO-597",
+      "location": "src/routes/HandbookArticle.jsx"
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "check_id": "title-element-single"
+    },
+    {
+      "check_id": "meta-description-single"
+    },
+    {
+      "check_id": "html-lang-present"
+    },
+    {
+      "check_id": "viewport-declared"
+    },
+    {
+      "check_id": "title-distinct-across-routes"
+    },
+    {
+      "check_id": "canonical-self-referencing-absolute"
+    },
+    {
+      "check_id": "canonical-no-tracking-params"
+    },
+    {
+      "check_id": "robots-txt-present"
+    },
+    {
+      "check_id": "robots-group-contradiction"
+    },
+    {
+      "check_id": "robots-meta-noindex-unintended"
+    },
+    {
+      "check_id": "crawl-index-directive-conflict"
+    },
+    {
+      "check_id": "internal-links-resolve"
+    },
+    {
+      "check_id": "img-alt-attribute-present"
+    },
+    {
+      "check_id": "img-dimensions-declared"
+    },
+    {
+      "check_id": "og-url-matches-canonical"
+    },
+    {
+      "check_id": "og-image-alt-present"
+    },
+    {
+      "check_id": "og-duplicate-properties"
+    },
+    {
+      "check_id": "jsonld-parses"
+    },
+    {
+      "check_id": "jsonld-absolute-urls"
+    },
+    {
+      "check_id": "jsonld-duplicate-entity"
+    }
+  ],
+  "expected_safe_fixes": [
+    "SEO-033",
+    "SEO-034"
+  ],
+  "expected_blocked": [
+    "SEO-593",
+    "SEO-597"
+  ],
+  "profile_expectations": {
+    "framework": "vite",
+    "client_rendered": true,
+    "javascript_app": true,
+    "has_router": true
+  },
+  "notes": "This is the fixture that proves the two JavaScript-rendering checks work, so it is the only one where raw_html and rendered_html are deliberately different documents. Everything else about the rendered captures is clean on purpose: one title, one meta description, one absolute self-referencing canonical, a complete Open Graph set including og:url and og:image:alt, a JSON-LD @graph whose WebSite and Organization nodes carry distinct @id values, and images with alt text and declared dimensions. If any of those were defective the fixture would emit findings unrelated to rendering and the benchmark could no longer attribute a finding to the defect that caused it. Because every check except the two rendering checks reads `rendered_html ?? raw_html`, those 20 checks are inspecting the rendered documents and reaching PASS, which is why they are listed under expected_non_findings.\n\nThe project ships public/robots.txt rather than a root robots.txt because that is where a Vite project puts it; loadSnapshot's robots discovery is depth-agnostic (it takes the shallowest match for /(^|\\/)robots\\.txt$/), so the file is found there. It deliberately ships no sitemap.xml, no llms.txt, and no feed, so the five sitemap checks, robots-sitemap-reference, the two llms.txt checks, and the two feed checks all report NOT_APPLICABLE. That is honest for an app that cannot serve its own content as HTML, and per the honesty rule those NOT_APPLICABLE checks are not padded into expected_non_findings. The three hreflang checks and jsonld-review-without-source are NOT_APPLICABLE for the same reason: nothing declares hreflang and nothing carries review markup.\n\nsource_file points at the route component rather than at index.html because raw and rendered differ, which means location() emits a bare path with no line number, and the route module is the file a person actually has to change: the content, the heading, and the head metadata all live there. The two marketing pages share one raw capture file because Vite serves a single entry document for both routes, so the served bytes really are identical.\n\nexpected_blocked names SEO-593 and SEO-597, the two requirements this fixture's findings bind to; both are REVIEW_REQUIRED in the registry, which is what stops an agent from turning \"we found it\" into \"so we rewrote the build\". expected_safe_fixes names SEO-033 and SEO-034 because the narrow remedy for the shell's missing title and description — static tags in index.html — is SAFE_AUTOMATIC in the registry and is a different piece of work from pre-rendering the routes.\n\nNo expected_not_applicable assertions here. Registry-selection negative tests belong to the monolingual static marketing fixture (vite-static), where the profile facts that gate them are settled; this fixture is scoped to the rendering axis.",
+  "expected_applicable": [
+    "SEO-593",
+    "SEO-597",
+    "SEO-039",
+    "SEO-168",
+    "SEO-596",
+    "SEO-598",
+    "SEO-022",
+    "SEO-037"
+  ],
+  "expected_applicable_rationale": "This fixture is the positive half of the JavaScript-rendering pair, and every one of these rules is gated on client_rendered or javascript_app or has_router - facts the project establishes for real by shipping one empty shell and a client router. Asserting them here is what makes the twelve findings falsifiable: a rule that was never offered could not have been reported, so proving the offer is a precondition for trusting the report."
+}

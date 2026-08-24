@@ -1,0 +1,55 @@
+{
+  "schema_version": 3,
+  "generated_at": "2026-08-22T22:20:52.254Z",
+  "requirements_total": 224,
+  "requirements_unique": 224,
+  "requirements_with_sources": 204,
+  "requirements_with_verification": 224,
+  "requirements_with_tests": 36,
+  "requirements_with_confidence": 224,
+  "duplicate_count": 0,
+  "near_duplicate_count": 0,
+  "broken_dependency_count": 0,
+  "circular_dependency_count": 0,
+  "requirements_removed": 80,
+  "requirements_deferred": 336,
+  "checks_defined": 36,
+  "check_coverage_ratio": 0.1607,
+  "registry_valid": true,
+  "validation_errors": 0,
+  "level_candidate_counts": {
+    "LITE": 56,
+    "RECOMMENDED": 223,
+    "EXTRA": 224,
+    "ULTRA": 224
+  },
+  "evidence_tier_counts": {
+    "A": 177,
+    "INTERNAL": 20,
+    "B": 23,
+    "D": 4
+  },
+  "category_counts": {
+    "TECHNICAL_SEO": 79,
+    "SEARCH_DISCOVERABILITY": 29,
+    "ACCESSIBILITY": 18,
+    "SECURITY_PRIVACY": 24,
+    "CONTENT_QUALITY": 20,
+    "STRUCTURED_DATA_ELIGIBILITY": 22,
+    "OPERATIONS": 22,
+    "AI_CRAWLER_ACCESS": 4,
+    "AI_RETRIEVAL": 2,
+    "EMERGING_GEO": 4
+  },
+  "change_safety_counts": {
+    "REVIEW_REQUIRED": 191,
+    "SAFE_AUTOMATIC": 9,
+    "BLOCKED": 24
+  },
+  "benchmark_precision": 1,
+  "benchmark_recall": 1,
+  "false_positive_rate": 0,
+  "false_negative_rate": 0,
+  "benchmark_cases": 12,
+  "benchmark_scope": "fixture projects, checked subset of the registry only"
+}

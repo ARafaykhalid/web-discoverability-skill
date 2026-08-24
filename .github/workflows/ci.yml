@@ -1,0 +1,248 @@
+name: CI
+
+# Every gate in brief section 17 maps to a step below, and the mapping is written
+# out in comments so an auditor can trace a requirement to the command that
+# enforces it rather than trusting that "CI passes" means something.
+#
+# Two things are deliberately NOT gates on a pull request:
+#
+#   check-sources      makes a live HTTP request to every cited URL. A source
+#                      being briefly unreachable says nothing about the change
+#                      under review, and a build that fails for reasons the
+#                      author cannot fix teaches people to ignore red builds.
+#   stale-requirements --strict
+#                      fails when a source's review interval has elapsed. That is
+#                      a function of the calendar, not of the diff.
+#
+# Both run on a schedule instead, where a failure is a maintenance signal aimed
+# at the maintainer rather than a blocked contributor.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Monday 07:11 UTC. Off the hour on purpose: scheduled runs across GitHub
+    # bunch up at :00 and get queued.
+    - cron: '11 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Registry integrity. Nothing here touches a fixture or runs a check; it is
+  # entirely about whether the requirement data is internally coherent.
+  # ---------------------------------------------------------------------------
+  registry:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          # No `cache: npm`: that needs a lockfile, and there is nothing to lock.
+          # See the install step below.
+
+      # There is no install step. The package declares zero dependencies and zero
+      # devDependencies, so `npm ci` would fail for want of a lockfile and would
+      # have nothing to fetch if it succeeded. Every command below is plain Node
+      # plus node:test. If an install step ever becomes necessary, that is a
+      # material change to the project's supply-chain surface and should be
+      # argued for in the pull request that adds it.
+      - name: Confirm the zero-dependency claim
+        # The claim is in README.md and SECURITY.md, so it gets checked rather
+        # than asserted. A transitive dependency cannot appear without this
+        # failing first.
+        run: |
+          node -e '
+            const pkg = require("./package.json");
+            const deps = Object.keys(pkg.dependencies ?? {});
+            const dev = Object.keys(pkg.devDependencies ?? {});
+            if (deps.length || dev.length) {
+              console.error("package.json declares dependencies:", [...deps, ...dev].join(", "));
+              console.error("The documentation states there are none. Fix one or the other.");
+              process.exit(1);
+            }
+            console.log("zero dependencies, zero devDependencies");
+          '
+
+      # Section 17: schema validation, registry integrity, duplicate detection,
+      # dependency validation, circular dependency detection, source presence,
+      # missing verification, unsupported claims. `validate` exits 1 on any error,
+      # which is what makes a pull request introducing one of these fail.
+      - name: Registry integrity
+        run: npm run validate
+
+      # Section 2 and section 18: the registry-quality report. Distinct from
+      # `validate` in that it quantifies rather than gates - near-duplicate
+      # clusters, missing metadata, requirements with no test - and fails when a
+      # quantity crosses a threshold the repository has committed to.
+      - name: Registry quality report
+        run: npm run quality
+
+      # Section 5: every externally dependent requirement resolves to a source in
+      # the manifest. Offline - this reads the registry, it does not fetch.
+      - name: Source manifest
+        run: npm run sources
+
+      # Section 16: reported, not enforced, on a pull request. Printed so the
+      # number is visible in the log of every build rather than only when the
+      # weekly job fails.
+      - name: Requirements overdue for re-verification (informational)
+        run: npm run stale
+
+      # Section 14 and 17: documentation consistency. This is the step that fails
+      # when a generated block was hand-edited, when a schema on disk no longer
+      # matches the model, or when prose contains an outcome claim the project
+      # does not support ("guarantees rankings", "production proven",
+      # "most comprehensive").
+      #
+      # It runs against the committed reports/*.json rather than regenerating
+      # them first. That ordering matters: regenerating and then checking would
+      # compare the README against numbers computed seconds earlier, which always
+      # agrees and therefore proves nothing about what a reader of the repository
+      # sees. Freshness of the committed numbers is a separate assertion, in the
+      # reports job.
+      - name: Documentation and generated artefacts
+        run: npm run docs:check
+
+  # ---------------------------------------------------------------------------
+  # Behaviour: the test suite and the benchmark scores. Matrixed across the Node
+  # versions the package claims to support, so `engines` is a tested claim.
+  # ---------------------------------------------------------------------------
+  behaviour:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # engines.node is >=20.6.0. 20.x is the floor that claim promises; if it
+        # breaks here, the floor is wrong and should be raised rather than the
+        # failure worked around.
+        node: [20.x, 22.x, 24.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # Sections 6 and 8: registry integrity tests, check unit tests, and one
+      # regression test per fixed bug. `node --test` with no positional argument
+      # discovers tests recursively; a positional directory argument fails on
+      # Node 24, which is why the script has no path in it.
+      - name: Test suite
+        run: npm test
+
+      # Section 7: score every benchmark case. `bench:check` writes nothing, so a
+      # matrix leg cannot race another leg over reports/.
+      - name: Benchmarks
+        run: npm run bench:check
+
+      # Section 21: run the shipped command against every fixture. `bench` filters
+      # checks by requirement applicability exactly as `audit` does, so the two
+      # are close - but `audit` is what a user actually invokes, and this is the
+      # only step that would catch a crash in its reporting or exit-code path.
+      # Asserting the output parses is what makes --json a supported interface
+      # rather than a debugging convenience.
+      - name: Audit every fixture
+        run: |
+          set -euo pipefail
+          failed=0
+          for dir in benchmarks/fixtures/*/; do
+            name=$(basename "$dir")
+            if ! out=$(node tools/cli.mjs audit "$dir" --json 2>/dev/null); then
+              echo "audit failed to run against $name"
+              failed=1
+              continue
+            fi
+            printf '%s' "$out" | node -e '
+              const chunks = [];
+              process.stdin.on("data", (c) => chunks.push(c));
+              process.stdin.on("end", () => {
+                const report = JSON.parse(chunks.join(""));
+                if (!Array.isArray(report.findings)) throw new Error("no findings array");
+                if (!report.profile) throw new Error("no profile");
+                console.log(`  ${report.findings.length} findings, framework ${report.profile.framework}`);
+              });
+            ' || failed=1
+            echo "audited $name"
+          done
+          exit $failed
+
+  # ---------------------------------------------------------------------------
+  # The committed reports are the numbers a reader sees without running anything.
+  # This job is the only thing standing between that and quiet rot.
+  # ---------------------------------------------------------------------------
+  reports:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+
+      # Keep what the repository ships, then compute the same thing from scratch
+      # and compare. Copying first is what makes the comparison possible at all:
+      # both commands write in place, so once they have run the committed values
+      # are gone.
+      - name: Set aside the committed reports
+        run: |
+          mkdir -p /tmp/committed
+          cp reports/metrics.json reports/benchmarks.json /tmp/committed/
+
+      - name: Regenerate
+        run: |
+          npm run metrics
+          npm run bench
+
+      # Section 18: the metrics must be generated from the repository, never typed
+      # by hand. Regenerating proves they can be; this proves the committed copies
+      # are what regeneration produces. Without it a hand-edited benchmark score
+      # would survive indefinitely, because every other job either regenerates
+      # first or reads the file it is meant to be checking.
+      - name: Committed reports match a fresh run
+        run: node .github/scripts/assert-reports-fresh.mjs /tmp/committed reports
+
+  # ---------------------------------------------------------------------------
+  # Maintenance. Scheduled only, for the reasons at the top of this file: these
+  # two fail on conditions a contributor cannot see in their own diff.
+  # ---------------------------------------------------------------------------
+  maintenance:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+
+      # Section 5. A cited source that has moved or disappeared is the failure
+      # mode this repository is most exposed to, because a requirement whose
+      # evidence has evaporated still looks fully specified from the inside.
+      - name: Cited sources are reachable
+        run: npm run check-sources
+
+      # Section 16. Fails rather than reports here, because on a schedule that is
+      # the whole point: something has to eventually insist that a rule about
+      # external behaviour gets looked at again.
+      - name: Requirements overdue for re-verification
+        run: node tools/cli.mjs stale-requirements --strict
+
+      # If a source moved or a review lapsed, the registry may still validate
+      # while being wrong about the world. Running the fast gates too means the
+      # weekly job answers "is this repository still correct?" rather than only
+      # "are its links still alive?".
+      - name: Registry integrity
+        run: npm run validate
+
+      - name: Test suite
+        run: npm test

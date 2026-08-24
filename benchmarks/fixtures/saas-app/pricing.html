@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plans — Meridian</title>
+<meta name="description" content="Three plans for Meridian, separated by how many schedules a workspace may hold and how far back the run history is kept.">
+<!-- Declared defect: this canonical names the home page, not /pricing. The page
+     is listed in sitemap.xml, so the same fault is visible from two directions -
+     the page disowns its own URL, and the sitemap asks a crawler to spend a fetch
+     on a URL the page disowns. -->
+<link rel="canonical" href="https://example.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="Plans — Meridian">
+<meta property="og:description" content="Three plans, separated by schedule count and history retention.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="https://example.com/assets/og-plans.png">
+<meta property="og:image:alt" content="A table of the three Meridian plans and their limits">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Overview</a>
+<a href="/pricing">Plans</a>
+<a href="/api-docs">API reference</a>
+<a href="/changelog">Release notes</a>
+<a href="/login">Sign in</a>
+</nav>
+<main>
+<h1>Plans</h1>
+<p>Every plan runs the same engine. What changes is how many schedules a
+workspace may hold and how long the run history is kept, because those are the
+two costs that scale with use.</p>
+<h2>Solo</h2>
+<p>Three schedules, thirty days of run history, one workspace member. Intended
+for a single analyst who wants a query to arrive on a Monday morning without
+remembering to run it.</p>
+<h2>Team</h2>
+<p>Forty schedules, one year of run history, unlimited members, and per-member
+delivery preferences. This is the plan most workspaces settle on.</p>
+<h2>Enterprise</h2>
+<p>Negotiated schedule limits, seven years of run history, an audit log of every
+run and every change to a schedule, and a named contact for incidents. Billing is
+annual and arranged directly.</p>
+<h2>What is not on this page</h2>
+<p>No figures are printed here on purpose. This is a benchmark fixture, and a
+number that no real service charges would be an invented fact sitting in test
+data where a reader could mistake it for one. The plan names and the shape of the
+limits are enough to make the page a real document with a real purpose.</p>
+<p><a href="/login">Sign in</a> to change a workspace plan, or read the
+<a href="/api-docs">API reference</a> to see what a schedule looks like over
+HTTP.</p>
+</main>
+<footer>
+<p>Operated by Meridian. Written and maintained as test data.</p>
+</footer>
+</body>
+</html>

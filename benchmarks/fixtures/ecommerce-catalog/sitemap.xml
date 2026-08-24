@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Declared defect: the last entry is a faceted-navigation URL. It carries sort and
+  filter query parameters, and the ampersand joining them is written bare instead of
+  as an entity, which is how a generated sitemap most often stops being parseable.
+  The five entries above it are correct and the check is expected to stay silent on
+  them. /cart and /checkout are absent on purpose: both serve noindex, so listing
+  them would be asking a crawler to fetch pages the pages themselves refuse.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://example.com/collections/bags</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://example.com/products/harbour-tote-navy</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://example.com/products/harbour-tote-slate</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://example.com/products/field-satchel</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://example.com/collections/bags?sort=price-asc&filter=colour-navy</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+</urlset>

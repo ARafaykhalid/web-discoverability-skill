@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About this fixture — Example Site</title>
+<meta name="description" content="Who maintains the crawl-misconfig fixture and which of its files are deliberately wrong.">
+<link rel="canonical" href="https://example.com/about/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Example Site">
+<meta property="og:title" content="About this fixture">
+<meta property="og:description" content="Who maintains the fixture and which of its files are deliberately wrong.">
+<meta property="og:url" content="https://example.com/about/">
+<meta property="og:image" content="https://example.com/img/about.png">
+<meta property="og:image:alt" content="A plain card reading About this fixture.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "@id": "https://example.com/about/#webpage",
+  "url": "https://example.com/about/",
+  "name": "About this fixture",
+  "isPartOf": { "@id": "https://example.com/#website" }
+}
+</script>
+</head>
+<body>
+<header>
+<nav>
+<a href="/">Home</a>
+<a href="/guides/">Guides</a>
+<a href="/about/">About</a>
+</nav>
+</header>
+<main>
+<h1>About this fixture</h1>
+<p>The fixture is maintained inside the benchmark suite of the discoverability skill.
+It is not deployed anywhere and the host name in every absolute URL is reserved for
+documentation, so none of the addresses here resolve to a server.</p>
+<p>Only two files are wrong on purpose. One is the crawl policy at the host root,
+which contradicts itself five separate ways and points at its own companion file with
+a path a crawler cannot resolve. The other is the URL list, which names a host that is
+not this one and includes an address the site itself declines to have listed.</p>
+<img src="/img/about.png" alt="A plain card reading About this fixture." width="600" height="400">
+<h2>How to read a finding here</h2>
+<p>Every finding should name either the crawl policy or the URL list. A finding
+against one of these four pages means the fixture has an accidental defect, and the
+case file next to it says so in as many words. Start from the
+<a href="/guides/crawl-directives/">guide</a> if the report mentions two directives
+cancelling.</p>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</body>
+</html>

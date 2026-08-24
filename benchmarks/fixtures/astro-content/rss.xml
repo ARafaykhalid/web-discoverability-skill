@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Build output, pinned here rather than in dist/ - see sitemap-index.xml. The
+     route module that produces it is src/pages/rss.xml.js. Drafts are filtered out
+     there, so the experimental entry is absent from this file even though it is
+     present in sitemap-0.xml. -->
+<rss version="2.0">
+  <channel>
+    <title>Example Docs</title>
+    <link>https://example.com/</link>
+    <description>Notes on how this documentation set is built.</description>
+    <language>en</language>
+    <item>
+      <title>Routing in content collections</title>
+      <link>https://example.com/docs/routing</link>
+      <guid>https://example.com/docs/routing</guid>
+      <description>How an entry id in the docs collection becomes an output path.</description>
+      <pubDate>Sun, 18 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Deploying a static build</title>
+      <link>https://example.com/docs/deploying</link>
+      <guid>https://example.com/docs/deploying</guid>
+      <description>What the build writes and what a host has to serve.</description>
+      <pubDate>Mon, 02 Feb 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crawl directives and index directives — Example Site</title>
+<meta name="description" content="How a Disallow rule and a noindex directive cancel each other out, and why the pair leaves a URL in an unresolvable state.">
+<link rel="canonical" href="https://example.com/guides/crawl-directives/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Example Site">
+<meta property="og:title" content="Crawl directives and index directives">
+<meta property="og:description" content="Why a disallowed URL never reads the directive that would have removed it.">
+<meta property="og:url" content="https://example.com/guides/crawl-directives/">
+<meta property="og:image" content="https://example.com/img/directives.png">
+<meta property="og:image:alt" content="Two arrows pointing at the same URL from opposite directions.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "@id": "https://example.com/guides/crawl-directives/#article",
+  "url": "https://example.com/guides/crawl-directives/",
+  "headline": "Crawl directives and index directives",
+  "image": "https://example.com/img/directives.png",
+  "isPartOf": { "@id": "https://example.com/#website" }
+}
+</script>
+</head>
+<body>
+<header>
+<nav>
+<a href="/">Home</a>
+<a href="/guides/">Guides</a>
+<a href="/about/">About</a>
+</nav>
+</header>
+<main>
+<h1>Crawl directives and index directives</h1>
+<p>Two separate mechanisms decide what happens to a URL. One decides whether the URL
+is fetched at all, and it is stated in robots.txt. The other decides whether the
+fetched document may be listed, and it is stated in the document itself or in a
+response header.</p>
+<p>The two are often treated as interchangeable, which is where the trouble starts. A
+rule that forbids fetching a URL also forbids reading anything inside it, including a
+directive placed there to keep the URL out of the listing. The two instructions look
+correct side by side and cancel each other in practice, and the state that results is
+not observable from either file alone.</p>
+<img src="/img/directives.png" alt="Two arrows pointing at the same URL from opposite directions." width="960" height="540">
+<h2>Reading order matters</h2>
+<p>Order in the file does not decide the outcome. The longest matching rule wins, and
+a tie resolves to the permissive side, so a group that forbids everything and then
+carves exceptions back out is decided by string length rather than by the order
+someone wrote the lines in. The <a href="/guides/">guides index</a> links back, and
+the <a href="/about/">about page</a> says who wrote this.</p>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</body>
+</html>

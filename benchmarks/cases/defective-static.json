@@ -1,0 +1,208 @@
+{
+  "id": "defective-static",
+  "fixture": "benchmarks/fixtures/defective-static",
+  "title": "Static site carrying one class of deliberate page-level defect per page",
+  "level": "ULTRA",
+  "notes": "The defects are partitioned by page so that a finding on the wrong page is unambiguously a false positive rather than an argument about which of several co-located faults was responsible. The crawl configuration (robots.txt, sitemap.xml) is deliberately correct here; crawl and protocol defects live in the crawl-misconfig fixture. Two control images are included on purpose: an empty alt on /gallery, which is the documented way to mark an image decorative, and a percentage width on /team, which is a layout instruction rather than an intrinsic dimension. Both must be left alone, and the case asserts that by counting three findings on each page rather than four. No rendered_html_path is supplied, so rendered HTML equals raw HTML and the two JavaScript-rendering checks report NOT_APPLICABLE - the difference between initial and executed HTML was never measured, and reporting a pass there would be a claim this capture cannot support.",
+  "declared_defects": [
+    "index.html declares two non-empty <title> elements in its head (SEO-033).",
+    "about.html declares no meta[name=description] (SEO-034).",
+    "about.html opens <html> with no lang attribute (SEO-035).",
+    "about.html declares no meta[name=viewport] (SEO-036).",
+    "blog/page-2.html declares the same <title> as blog/index.html (SEO-037).",
+    "services.html declares its canonical as the root-relative path /services instead of an absolute URL (SEO-049).",
+    "contact.html declares an absolute, self-referencing canonical that carries the campaign parameter utm_source (SEO-052).",
+    "schema.html serves a JSON-LD block with a trailing comma, so it does not parse (SEO-161).",
+    "schema.html serves a second JSON-LD block whose only node declares no @type (SEO-161).",
+    "schema.html serves an Organization whose logo is the relative path /assets/logo.png (SEO-164).",
+    "schema.html serves two Organization nodes with different @id values, so two nodes claim the same real-world entity (SEO-167).",
+    "gallery.html serves an <img> with no alt attribute at all (SEO-225).",
+    "gallery.html serves an <img> whose alt is the bare file name harbour-at-dawn.jpg (SEO-225).",
+    "gallery.html serves an <img> whose alt is the placeholder word \"image\" (SEO-225).",
+    "team.html serves an <img> that declares width but not height (SEO-227).",
+    "team.html serves an <img> that declares height but not width (SEO-227).",
+    "team.html serves an <img> that declares neither dimension (SEO-227).",
+    "social.html declares og:type, og:site_name, og:title, og:description and og:image but no og:url (SEO-577).",
+    "social.html declares og:image with no og:image:alt (SEO-579).",
+    "social.html declares og:title twice with two different values (SEO-584)."
+  ],
+  "expected_findings": [
+    {
+      "check_id": "title-element-single",
+      "requirement_id": "SEO-033",
+      "location": "index.html"
+    },
+    {
+      "check_id": "meta-description-single",
+      "requirement_id": "SEO-034",
+      "location": "about.html"
+    },
+    {
+      "check_id": "html-lang-present",
+      "requirement_id": "SEO-035",
+      "location": "about.html"
+    },
+    {
+      "check_id": "viewport-declared",
+      "requirement_id": "SEO-036",
+      "location": "about.html"
+    },
+    {
+      "check_id": "title-distinct-across-routes",
+      "requirement_id": "SEO-037",
+      "location": "blog/page-2.html"
+    },
+    {
+      "check_id": "canonical-self-referencing-absolute",
+      "requirement_id": "SEO-049",
+      "location": "services.html"
+    },
+    {
+      "check_id": "canonical-no-tracking-params",
+      "requirement_id": "SEO-052",
+      "location": "contact.html"
+    },
+    {
+      "check_id": "jsonld-parses",
+      "requirement_id": "SEO-161",
+      "location": "schema.html"
+    },
+    {
+      "check_id": "jsonld-parses",
+      "requirement_id": "SEO-161",
+      "location": "schema.html"
+    },
+    {
+      "check_id": "jsonld-absolute-urls",
+      "requirement_id": "SEO-164",
+      "location": "schema.html"
+    },
+    {
+      "check_id": "jsonld-duplicate-entity",
+      "requirement_id": "SEO-167",
+      "location": "schema.html"
+    },
+    {
+      "check_id": "img-alt-attribute-present",
+      "requirement_id": "SEO-225",
+      "location": "gallery.html"
+    },
+    {
+      "check_id": "img-alt-attribute-present",
+      "requirement_id": "SEO-225",
+      "location": "gallery.html"
+    },
+    {
+      "check_id": "img-alt-attribute-present",
+      "requirement_id": "SEO-225",
+      "location": "gallery.html"
+    },
+    {
+      "check_id": "img-dimensions-declared",
+      "requirement_id": "SEO-227",
+      "location": "team.html"
+    },
+    {
+      "check_id": "img-dimensions-declared",
+      "requirement_id": "SEO-227",
+      "location": "team.html"
+    },
+    {
+      "check_id": "img-dimensions-declared",
+      "requirement_id": "SEO-227",
+      "location": "team.html"
+    },
+    {
+      "check_id": "og-url-matches-canonical",
+      "requirement_id": "SEO-577",
+      "location": "social.html"
+    },
+    {
+      "check_id": "og-image-alt-present",
+      "requirement_id": "SEO-579",
+      "location": "social.html"
+    },
+    {
+      "check_id": "og-duplicate-properties",
+      "requirement_id": "SEO-584",
+      "location": "social.html"
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "check_id": "sitemap-canonical-only"
+    },
+    {
+      "check_id": "robots-txt-present"
+    },
+    {
+      "check_id": "robots-sitemap-reference"
+    },
+    {
+      "check_id": "robots-group-contradiction"
+    },
+    {
+      "check_id": "robots-meta-noindex-unintended"
+    },
+    {
+      "check_id": "crawl-index-directive-conflict"
+    },
+    {
+      "check_id": "sitemap-xml-wellformed"
+    },
+    {
+      "check_id": "sitemap-lists-noindex-url"
+    },
+    {
+      "check_id": "sitemap-loc-same-host"
+    },
+    {
+      "check_id": "sitemap-size-limits"
+    },
+    {
+      "check_id": "internal-links-resolve"
+    }
+  ],
+  "expected_safe_fixes": [
+    "SEO-033",
+    "SEO-034",
+    "SEO-584"
+  ],
+  "expected_blocked": [
+    "SEO-035",
+    "SEO-036",
+    "SEO-037",
+    "SEO-049",
+    "SEO-052",
+    "SEO-161",
+    "SEO-164",
+    "SEO-167",
+    "SEO-225",
+    "SEO-227",
+    "SEO-577",
+    "SEO-579"
+  ],
+  "expected_not_applicable": [
+    "SEO-418",
+    "SEO-420",
+    "SEO-466",
+    "SEO-453",
+    "SEO-455",
+    "SEO-460",
+    "SEO-484",
+    "SEO-486",
+    "SEO-073"
+  ],
+  "expected_not_applicable_rationale": "A nine-page brochure site sells nothing, accepts no submissions, serves one language, charges for nothing, and has no filter parameters. Selecting any of these would put a requirement in front of an agent that has no way to satisfy it honestly - the ecommerce pair would invite invented prices and product identifiers, the locale rules would invite hreflang pointing at pages that do not exist, and the paywall rules would invite access markup for an entitlement nobody sells. This is asserted at ULTRA, the widest level, so nothing is excluded merely by being optional. Note that SEO-086 and SEO-636 are deliberately absent from this list: they are gated on any of ugc, cms, or content_publication, and this fixture publishes a blog, so they genuinely do apply.",
+  "expected_applicable": [
+    "SEO-081",
+    "SEO-082"
+  ],
+  "expected_applicable_rationale": "The crawl rules must be offered on a project that ships a robots.txt and a sitemap, which is the precondition for the sitemap and robots findings this case declares. The feed rules are deliberately absent from this list because the fixture ships no feed, and asserting them would be asserting something the project does not establish.",
+  "profile_expectations": {
+    "framework": "static-html",
+    "has_robots_txt": true,
+    "has_sitemap": true,
+    "has_llms_txt": false
+  }
+}

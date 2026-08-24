@@ -1,20 +1,20 @@
-# Python cache & bytecode
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-# Virtual environments
-.env
-.venv
-env/
-venv/
-ENV/
-# Node & package manager logs
+# Node
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# OS & Editor files
+pnpm-debug.log*
+.npm/
+
+# Generated reports. Two are committed deliberately, because documentation cites
+# their numbers and CI regenerates them to prove the numbers are current:
+#   reports/metrics.json     - the quality metrics referenced by README.md
+#   reports/benchmarks.json  - the benchmark results referenced by BENCHMARKS.md
+reports/*
+!reports/metrics.json
+!reports/benchmarks.json
+
+# OS & editor
 .DS_Store
 Thumbs.db
 .vscode/

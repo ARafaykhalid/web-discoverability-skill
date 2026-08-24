@@ -1,0 +1,15 @@
+# Meridian crawl policy.
+#
+# The authenticated application lives under /app/ and is behind a session, so it
+# is excluded here as well as by a noindex on each app route. Belt and braces is
+# the intent; it is also the fault, because a disallowed URL is never fetched and
+# so its noindex is never read.
+#
+# The second rule was written as /a rather than /app/. robots.txt values are
+# prefixes, so it also covers /api-docs, which sitemap.xml asks crawlers to
+# fetch. Both of those contradictions are declared defects of this fixture.
+User-agent: *
+Disallow: /a
+Disallow: /login
+
+Sitemap: https://example.com/sitemap.xml

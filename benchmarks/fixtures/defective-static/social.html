@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview metadata — Example Site</title>
+<meta name="description" content="A page whose deliberate defects are an Open Graph block with no og:url, an og:image with no alternative text, and a repeated og:title.">
+<link rel="canonical" href="https://example.com/social">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Example Site">
+<meta property="og:title" content="Preview metadata — Example Site">
+<meta property="og:title" content="How this page previews elsewhere">
+<meta property="og:description" content="The Open Graph block on this page is deliberately incomplete and internally inconsistent.">
+<meta property="og:image" content="https://example.com/assets/social-card.png">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>An incomplete and self-contradicting preview block</h1>
+<p>This is the only page in the fixture that declares any preview metadata, which
+means the three social-preview checks judge this page and nothing else. Three findings
+are expected.</p>
+<p>The block declares no og:url, so a consumer that builds a card from it has no
+address to attach to the card and must guess one from the request it happened to make.
+It declares an image with no accompanying alternative text, so the card has a picture
+that nothing describes. And it declares og:title twice with two different values, so
+the one thing a card definitely needs is the one thing the page states two answers
+for.</p>
+<p>The canonical on this page is deliberately correct, and no other page carries an
+og: or twitter: property, so the preview checks have exactly one page to look at.</p>
+</main>
+</body>
+</html>

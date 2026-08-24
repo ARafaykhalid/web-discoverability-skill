@@ -1,0 +1,9 @@
+# Served from public/ by the express.static mount in server.mjs; nothing in this
+# project generates it at request time.
+#
+# /internal/ is deliberately not disallowed. Those responses carry an X-Robots-Tag
+# of noindex, and a crawler has to be able to fetch a URL to read a header on it.
+User-agent: *
+Disallow:
+
+Sitemap: https://example.com/sitemap.xml

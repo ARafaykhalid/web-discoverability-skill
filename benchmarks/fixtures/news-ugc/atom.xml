@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>The Marram Coast Record</title>
+  <subtitle>Coastal news for the Marram estuary</subtitle>
+  <link rel="alternate" type="text/html" href="https://example.com/"/>
+  <link rel="self" type="application/atom+xml" href="https://example.com/atom.xml"/>
+  <id>https://example.com/</id>
+  <updated>2026-05-11T17:40:00+01:00</updated>
+  <author>
+    <name>The Marram Coast Record</name>
+    <uri>https://example.com/</uri>
+  </author>
+  <rights>Copyright 2026 The Marram Coast Record</rights>
+
+  <entry>
+    <title>Harbour dredging pushed back to autumn after survey finds silt has shifted</title>
+    <id>https://example.com/news/harbour-dredging-delayed</id>
+    <updated>2026-05-11T17:40:00+01:00</updated>
+    <published>2026-05-11T06:20:00+01:00</published>
+    <link rel="alternate" type="text/html" href="https://example.com/news/harbour-dredging-delayed"/>
+    <author><name>Mara Quill</name></author>
+    <summary>The dredger booked for June has been released to another port after a
+    bathymetric survey found the silt bank has migrated 40 metres east.</summary>
+  </entry>
+
+  <entry>
+    <title>Ferry operator opens consultation on a reduced winter timetable</title>
+    <id>https://example.com/news/ferry-timetable-consultation</id>
+    <updated>2026-05-08T09:05:00+01:00</updated>
+    <published>2026-05-08T07:00:00+01:00</published>
+    <link rel="alternate" type="text/html" href="https://example.com/news/ferry-timetable-consultation"/>
+    <author><name>Mara Quill</name></author>
+    <summary>Four sailings a day from November to March, down from seven, with the
+    07:10 retained. The consultation runs for six weeks.</summary>
+  </entry>
+
+  <entry>
+    <title>Tidal Reach at the Harbour Lights, reviewed</title>
+    <id>https://example.com/news/tidal-scheme-review</id>
+    <updated>2026-05-06T20:15:00+01:00</updated>
+    <published>2026-05-06T20:15:00+01:00</published>
+    <link rel="alternate" type="text/html" href="https://example.com/news/tidal-scheme-review"/>
+    <author><name>Mara Quill</name></author>
+    <summary>A play about a tidal barrage should not be this funny, and the second
+    act should not be this long.</summary>
+  </entry>
+</feed>

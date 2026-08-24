@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Build output, pinned here rather than in dist/.
+
+     @astrojs/sitemap writes this file and sitemap-0.xml to dist/ during
+     `astro build`. `dist` is one of the directories scanProject refuses to walk, so
+     a copy left there would be invisible to every sitemap check and the fixture
+     would measure nothing. These are the bytes the build emits, placed where the
+     scan can read them. -->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://example.com/sitemap-0.xml</loc>
+  </sitemap>
+</sitemapindex>

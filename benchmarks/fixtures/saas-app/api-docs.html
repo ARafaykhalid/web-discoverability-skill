@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API reference — Meridian</title>
+<meta name="description" content="The four Meridian HTTP endpoints, their parameters, their error codes, and the rate limit that applies to all of them.">
+<link rel="canonical" href="https://example.com/api-docs">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="API reference — Meridian">
+<meta property="og:description" content="Four endpoints for creating, listing, running, and deleting a schedule.">
+<meta property="og:url" content="https://example.com/api-docs">
+<meta property="og:image" content="https://example.com/assets/og-api.png">
+<meta property="og:image:alt" content="A request and response pair for the schedule creation endpoint">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Overview</a>
+<a href="/pricing">Plans</a>
+<a href="/api-docs">API reference</a>
+<a href="/changelog">Release notes</a>
+<a href="/login">Sign in</a>
+</nav>
+<main>
+<h1>API reference</h1>
+<p>This page is public and is meant to be indexable: developer documentation that
+only a signed-in visitor can read is documentation nobody finds when they need it.
+It is nevertheless unreachable in this fixture, because <code>robots.txt</code>
+carries <code>Disallow: /a</code> — written for the <code>/app/</code> subtree and
+reaching this path as well. That is a declared defect, and it is the failure mode
+worth rehearsing: an over-broad crawl rule removes a public page silently, with no
+error anywhere for anyone to notice.</p>
+<img src="/assets/request-response.png" alt="A schedule creation request beside the 201 response that returns the schedule identifier" width="880" height="420">
+<h2>Endpoints</h2>
+<p>All four take and return JSON, and all four are versioned under
+<code>/v1</code>. Authentication is a bearer token issued per workspace.</p>
+<h3>POST /v1/schedules</h3>
+<p>Creates a schedule from a saved query identifier, a cadence expressed in cron
+syntax, and a list of recipients. Responds 201 with the new identifier, 409 when
+an identical cadence already exists for that query, and 422 when the cron
+expression does not parse.</p>
+<h3>GET /v1/schedules</h3>
+<p>Lists the schedules a token can see, newest first. Responds 200 with an array
+that is empty rather than absent when a workspace holds no schedules.</p>
+<h3>POST /v1/schedules/:id/runs</h3>
+<p>Runs a schedule immediately without disturbing its cadence. Responds 202, and
+the run appears in the history once the warehouse answers.</p>
+<h3>DELETE /v1/schedules/:id</h3>
+<p>Removes a schedule and keeps its run history. Responds 204, or 404 when the
+token cannot see that schedule — deliberately not 403, so the endpoint does not
+disclose which identifiers exist.</p>
+<h2>Rate limit</h2>
+<p>Sixty requests a minute per token. The limit is returned on every response so a
+client can pace itself rather than discover the ceiling by hitting it.</p>
+<p>See the <a href="/changelog">release notes</a> for changes to any of this, and
+<a href="/login">sign in</a> to issue a token.</p>
+</main>
+<footer>
+<p>Operated by Meridian. Written and maintained as test data.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example Site — deliberate defects for benchmarking</title>
+<meta name="description" content="Home page of a benchmark fixture whose only deliberate defect is a second title element in the head.">
+<link rel="canonical" href="https://example.com/">
+<title>Example Site</title>
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>A fixture that fails on purpose</h1>
+<p>Every page in this fixture carries exactly one class of deliberate defect and is
+otherwise correct. That separation is the whole point: when a check reports something
+on a page that was not supposed to trigger it, the report is a false positive rather
+than an ambiguity about which of several faults was responsible.</p>
+<p>This page declares two title elements. A document has one title, so a second one
+leaves a consumer choosing between them with no rule for doing so. Nothing else here
+is wrong — the canonical is absolute and self-referencing, the description is present
+and unique, the language and viewport are declared, and every link in the navigation
+resolves to a page the capture holds.</p>
+<p>Read the case file at <code>benchmarks/cases/defective-static.json</code> for the
+declared defect list and the findings each one is expected to produce.</p>
+</main>
+</body>
+</html>

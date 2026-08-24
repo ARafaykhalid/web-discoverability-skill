@@ -1,0 +1,658 @@
+{
+  "generated_at": "2026-08-22T22:20:50.021Z",
+  "checks_available": 36,
+  "profile_checks": [
+    {
+      "case_id": "astro-content",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "clean-static",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "crawl-misconfig",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "defective-static",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "ecommerce-catalog",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "express-ssr",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "multilingual-store",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "news-ugc",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "nextjs-app-router",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "react-spa",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "saas-app",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "case_id": "vite-static",
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "profile_checks_passed": 12,
+  "case_count": 12,
+  "cases_passed": 12,
+  "counts": {
+    "true_positives": 72,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_negatives": 254,
+    "unnecessary_findings": 0,
+    "evidence_problems": 0,
+    "safety_problems": 0,
+    "selection_problems": 0,
+    "not_measured": 0
+  },
+  "precision": 1,
+  "recall": 1,
+  "false_positive_rate": 0,
+  "false_negative_rate": 0,
+  "verification_accuracy": 1,
+  "scope": "checked subset of the registry, evaluated against fixture projects only",
+  "cases": [
+    {
+      "case_id": "astro-content",
+      "fixture": "benchmarks/fixtures/astro-content",
+      "counts": {
+        "true_positives": 8,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 27
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "meta-description-single",
+          "location": "dist/docs/deploying.html"
+        },
+        {
+          "check_id": "canonical-self-referencing-absolute",
+          "location": "dist/docs/routing.html"
+        },
+        {
+          "check_id": "canonical-self-referencing-absolute",
+          "location": "dist/docs/deploying.html"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "sitemap-0.xml:16"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "sitemap-0.xml:19"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "sitemap-0.xml:22"
+        },
+        {
+          "check_id": "img-alt-attribute-present",
+          "location": "dist/docs/deploying.html"
+        },
+        {
+          "check_id": "sitemap-lists-noindex-url",
+          "location": "sitemap-0.xml:22"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "clean-static",
+      "fixture": "benchmarks/fixtures/clean-static",
+      "counts": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 30
+      },
+      "precision": null,
+      "recall": null,
+      "false_positive_rate": 0,
+      "false_negative_rate": null,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "crawl-misconfig",
+      "fixture": "benchmarks/fixtures/crawl-misconfig",
+      "counts": {
+        "true_positives": 10,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 24
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "robots-group-contradiction",
+          "location": "robots.txt"
+        },
+        {
+          "check_id": "robots-group-contradiction",
+          "location": "robots.txt"
+        },
+        {
+          "check_id": "robots-group-contradiction",
+          "location": "robots.txt"
+        },
+        {
+          "check_id": "robots-group-contradiction",
+          "location": "robots.txt"
+        },
+        {
+          "check_id": "robots-group-contradiction",
+          "location": "robots.txt"
+        },
+        {
+          "check_id": "robots-sitemap-reference",
+          "location": "robots.txt"
+        },
+        {
+          "check_id": "crawl-index-directive-conflict",
+          "location": "search/index.html"
+        },
+        {
+          "check_id": "sitemap-loc-same-host",
+          "location": "sitemap.xml"
+        },
+        {
+          "check_id": "sitemap-lists-noindex-url",
+          "location": "sitemap.xml"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "sitemap.xml"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "defective-static",
+      "fixture": "benchmarks/fixtures/defective-static",
+      "counts": {
+        "true_positives": 20,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 11
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "title-element-single",
+          "location": "index.html"
+        },
+        {
+          "check_id": "meta-description-single",
+          "location": "about.html"
+        },
+        {
+          "check_id": "html-lang-present",
+          "location": "about.html"
+        },
+        {
+          "check_id": "viewport-declared",
+          "location": "about.html"
+        },
+        {
+          "check_id": "title-distinct-across-routes",
+          "location": "blog/page-2.html"
+        },
+        {
+          "check_id": "canonical-self-referencing-absolute",
+          "location": "services.html"
+        },
+        {
+          "check_id": "canonical-no-tracking-params",
+          "location": "contact.html"
+        },
+        {
+          "check_id": "jsonld-parses",
+          "location": "schema.html"
+        },
+        {
+          "check_id": "jsonld-parses",
+          "location": "schema.html"
+        },
+        {
+          "check_id": "jsonld-absolute-urls",
+          "location": "schema.html"
+        },
+        {
+          "check_id": "jsonld-duplicate-entity",
+          "location": "schema.html"
+        },
+        {
+          "check_id": "img-alt-attribute-present",
+          "location": "gallery.html"
+        },
+        {
+          "check_id": "img-alt-attribute-present",
+          "location": "gallery.html"
+        },
+        {
+          "check_id": "img-alt-attribute-present",
+          "location": "gallery.html"
+        },
+        {
+          "check_id": "img-dimensions-declared",
+          "location": "team.html"
+        },
+        {
+          "check_id": "img-dimensions-declared",
+          "location": "team.html"
+        },
+        {
+          "check_id": "img-dimensions-declared",
+          "location": "team.html"
+        },
+        {
+          "check_id": "og-url-matches-canonical",
+          "location": "social.html"
+        },
+        {
+          "check_id": "og-image-alt-present",
+          "location": "social.html"
+        },
+        {
+          "check_id": "og-duplicate-properties",
+          "location": "social.html"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "ecommerce-catalog",
+      "fixture": "benchmarks/fixtures/ecommerce-catalog",
+      "counts": {
+        "true_positives": 6,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 25
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "jsonld-review-without-source",
+          "location": "products/harbour-tote-navy.html"
+        },
+        {
+          "check_id": "jsonld-review-without-source",
+          "location": "products/harbour-tote-navy.html"
+        },
+        {
+          "check_id": "jsonld-review-without-source",
+          "location": "products/harbour-tote-navy.html"
+        },
+        {
+          "check_id": "title-distinct-across-routes",
+          "location": "products/harbour-tote-slate.html"
+        },
+        {
+          "check_id": "sitemap-xml-wellformed",
+          "location": "sitemap.xml"
+        },
+        {
+          "check_id": "img-alt-attribute-present",
+          "location": "products/field-satchel.html"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "express-ssr",
+      "fixture": "benchmarks/fixtures/express-ssr",
+      "counts": {
+        "true_positives": 4,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 26
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "robots-meta-noindex-unintended",
+          "location": "captures/internal-preview.html"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "public/sitemap.xml"
+        },
+        {
+          "check_id": "canonical-no-tracking-params",
+          "location": "captures/pricing.html"
+        },
+        {
+          "check_id": "title-element-single",
+          "location": "captures/guides-roof-tile-selection.html"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "multilingual-store",
+      "fixture": "benchmarks/fixtures/multilingual-store",
+      "counts": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 5
+      },
+      "precision": null,
+      "recall": null,
+      "false_positive_rate": 0,
+      "false_negative_rate": null,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true
+    },
+    {
+      "case_id": "news-ugc",
+      "fixture": "benchmarks/fixtures/news-ugc",
+      "counts": {
+        "true_positives": 6,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 24
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "jsonld-parses",
+          "location": "news/index.html"
+        },
+        {
+          "check_id": "jsonld-absolute-urls",
+          "location": "news/ferry-timetable-consultation.html"
+        },
+        {
+          "check_id": "jsonld-duplicate-entity",
+          "location": "news/harbour-dredging-delayed.html"
+        },
+        {
+          "check_id": "canonical-self-referencing-absolute",
+          "location": "news/harbour-dredging-delayed/comments/page/2.html"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "sitemap.xml"
+        },
+        {
+          "check_id": "internal-links-resolve",
+          "location": "news/harbour-dredging-delayed/comments/page/2.html"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "nextjs-app-router",
+      "fixture": "benchmarks/fixtures/nextjs-app-router",
+      "counts": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 6
+      },
+      "precision": null,
+      "recall": null,
+      "false_positive_rate": 0,
+      "false_negative_rate": null,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true
+    },
+    {
+      "case_id": "react-spa",
+      "fixture": "benchmarks/fixtures/react-spa",
+      "counts": {
+        "true_positives": 12,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 20
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/Home.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/Home.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/Home.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/Features.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/Features.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/Features.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/HandbookArticle.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/HandbookArticle.jsx"
+        },
+        {
+          "check_id": "content-in-initial-html",
+          "location": "src/routes/HandbookArticle.jsx"
+        },
+        {
+          "check_id": "client-mutates-canonical",
+          "location": "src/routes/Home.jsx"
+        },
+        {
+          "check_id": "client-mutates-canonical",
+          "location": "src/routes/Features.jsx"
+        },
+        {
+          "check_id": "client-mutates-canonical",
+          "location": "src/routes/HandbookArticle.jsx"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "saas-app",
+      "fixture": "benchmarks/fixtures/saas-app",
+      "counts": {
+        "true_positives": 6,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 24
+      },
+      "precision": 1,
+      "recall": 1,
+      "false_positive_rate": 0,
+      "false_negative_rate": 0,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [
+        {
+          "check_id": "canonical-self-referencing-absolute",
+          "location": "pricing.html:12"
+        },
+        {
+          "check_id": "sitemap-canonical-only",
+          "location": "sitemap.xml:12"
+        },
+        {
+          "check_id": "sitemap-lists-noindex-url",
+          "location": "sitemap.xml:16"
+        },
+        {
+          "check_id": "sitemap-lists-noindex-url",
+          "location": "sitemap.xml:24"
+        },
+        {
+          "check_id": "crawl-index-directive-conflict",
+          "location": "app/dashboard.html"
+        },
+        {
+          "check_id": "crawl-index-directive-conflict",
+          "location": "app/settings.html"
+        }
+      ],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    },
+    {
+      "case_id": "vite-static",
+      "fixture": "benchmarks/fixtures/vite-static",
+      "counts": {
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "true_negatives": 32
+      },
+      "precision": null,
+      "recall": null,
+      "false_positive_rate": 0,
+      "false_negative_rate": null,
+      "unnecessary_findings": 0,
+      "evidence_problems": [],
+      "safety_problems": [],
+      "not_measured": [],
+      "true_positives": [],
+      "false_negatives": [],
+      "false_positives": [],
+      "passed": true,
+      "selection_problems": []
+    }
+  ]
+}

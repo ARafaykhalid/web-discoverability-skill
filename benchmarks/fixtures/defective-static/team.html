@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who maintains this fixture — Example Site</title>
+<meta name="description" content="A page whose deliberate defects are three images with incomplete intrinsic dimensions, alongside one image sized as a percentage.">
+<link rel="canonical" href="https://example.com/team">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>Three incomplete sizes and one percentage</h1>
+<p>Every image on this page carries a descriptive alternative text, so the alternative
+text check is expected to stay silent here and any finding it emits against this page
+is a false positive. What varies is the declared size.</p>
+
+<figure>
+<img src="/assets/ana.jpg" alt="Ana Ferreira, principal engineer, at a whiteboard" width="320">
+<figcaption>Width only. A consumer cannot reserve the right box from one axis.</figcaption>
+</figure>
+
+<figure>
+<img src="/assets/bo.jpg" alt="Bo Nakamura, staff designer, reviewing a print proof" height="320">
+<figcaption>Height only, which is the same defect written the other way round.</figcaption>
+</figure>
+
+<figure>
+<img src="/assets/cy.jpg" alt="Cy Adeyemi, documentation lead, at a lectern">
+<figcaption>Neither dimension declared.</figcaption>
+</figure>
+
+<p>The next image is the control. A percentage is a layout instruction rather than an
+intrinsic dimension, and a page that sizes an image fluidly has made a deliberate
+choice the check must not second-guess, so this fixture asserts it is left alone.</p>
+<img src="/assets/team-banner.jpg" alt="The maintainers at the 2025 documentation offsite" width="100%">
+
+<p>Three findings are expected on this page, one per image with an incomplete size, and
+none for the fluid banner.</p>
+</main>
+</body>
+</html>

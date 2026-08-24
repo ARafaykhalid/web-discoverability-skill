@@ -1,0 +1,20 @@
+{
+  "name": "acme-docs-static",
+  "private": true,
+  "version": "1.4.0",
+  "type": "module",
+  "description": "Vite multi-page site that renders every route to static HTML at build time. This manifest is read by the profiler; the fixture is never installed and never built.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .ssr-build && node scripts/prerender.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8"
+  }
+}

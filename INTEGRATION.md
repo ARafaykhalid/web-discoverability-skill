@@ -1,227 +1,159 @@
-# `web-discoverability-skill` Integration & Usage Guide
+# Integration guide
 
-This guide provides step-by-step instructions for integrating, configuring, and executing **`web-discoverability-skill`** across software development workflows, web frameworks, multi-agent AI setups, and CI/CD pipelines.
+This guide covers installing the skill, running its CLI, integrating it into an
+agent workflow, and adding repository checks to CI.
 
----
+## Install with Vercel Agent Skills
 
-## 📋 Table of Contents
-
-- [Workflow Overview](#workflow-overview)
-- [Step 1: Discover & Build Project Profile](#step-1-discover--build-project-profile)
-- [Step 2: Set Execution Controls & Filter Requirements](#step-2-set-execution-controls--filter-requirements)
-- [Step 3: Framework-Specific Integration Adapters](#step-3-framework-specific-integration-adapters)
-  - [Next.js (App & Pages Router)](#nextjs-app--pages-router)
-  - [React / Vite / Single-Page Apps (SPA)](#react--vite--single-page-apps-spa)
-  - [Remix / React Router v7](#remix--react-router-v7)
-  - [Astro](#astro)
-  - [Python (Django, FastAPI, Flask)](#python-django-fastapi-flask)
-- [Step 4: Multi-Agent Parallel Audit & Implementation](#step-4-multi-agent-parallel-audit--implementation)
-- [Step 5: Verification & Final Report Generation](#step-5-verification--final-report-generation)
-- [Step 6: CI/CD Pipeline Setup](#step-6-cicd-pipeline-setup)
-- [Troubleshooting Technical Discoverability Conflicts](#troubleshooting-technical-discoverability-conflicts)
-
----
-
-## 🔄 Workflow Overview
-
-The complete `web-discoverability-skill` lifecycle operates in 4 distinct phases:
-
-```text
-┌───────────────────────────┐     ┌───────────────────────────┐
-│ 1. Profile & Activation   │ ──► │ 2. Selection & Scoping    │
-│    (Inspect repo & stack) │     │    (Filter level & domain)│
-└───────────────────────────┘     └───────────────────────────┘
-                                                │
-                                                ▼
-┌───────────────────────────┐     ┌───────────────────────────┐
-│ 4. Verification & Report  │ ◄── │ 3. Multi-Agent Audit &    │
-│    (4-tier evidence check)│     │    Implementation (Safe)  │
-└───────────────────────────┘     └───────────────────────────┘
-```
-
----
-
-## 🔍 Step 1: Discover & Build Project Profile
-
-Before selecting requirements, inspect the target repository without making file modifications and construct a `project-profile.json` file.
-
-Refer to [`references/discovery-applicability.md`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/references/discovery-applicability.md) for full details.
-
-### Example `project-profile.json`
-
-```json
-{
-  "framework": "nextjs",
-  "deployment": "vercel",
-  "application_types": ["saas", "blog"],
-  "public_site": true,
-  "javascript_app": true,
-  "has_images": true,
-  "has_video": false,
-  "ecommerce": false,
-  "local_business": false,
-  "multilingual": true,
-  "language_count": 2,
-  "ugc": false,
-  "paywall": false,
-  "blog": true,
-  "public_documents": false,
-  "analytics": true,
-  "cdn": true,
-  "waf": true
-}
-```
-
----
-
-## ⚙️ Step 2: Set Execution Controls & Filter Requirements
-
-Resolve execution parameters before running audits or code edits:
-
-- **`level`**: Select `LITE`, `RECOMMENDED` *(Default)*, `EXTRA`, or `ULTRA`.
-- **`mode`**: Select `AUDIT_ONLY`, `IMPLEMENT`, or `IMPLEMENT_AND_AUDIT` *(Default)*.
-
-### Using `scripts/select_requirements.py`
-
-Use the CLI script to preview activated domains and generate compact requirement context without loading the entire registry into agent memory:
+Project installation:
 
 ```bash
-# Preview active domains & count for Recommended level
-python scripts/select_requirements.py --level recommended --profile project-profile.json --format summary
-
-# Output selected JSONL records for specific domains
-python scripts/select_requirements.py --level recommended --domain metadata --domain sitemaps --format jsonl
-
-# Output Markdown Surface Eligibility Matrix
-python scripts/select_requirements.py --level extra --format surface-matrix
+npx skills add ARafaykhalid/web-discoverability-skill \
+  --skill web-discoverability-skill
 ```
 
----
+Global Codex installation:
 
-## 🧱 Step 3: Framework-Specific Integration Adapters
-
-Refer to [`references/framework-adapters.md`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/references/framework-adapters.md) for native implementation guidelines.
-
-### Next.js (App & Pages Router)
-
-- **Root Metadata**: Use `export const metadata: Metadata` in `app/layout.tsx` for core meta, OpenGraph, Twitter Cards, and canonical tags.
-- **Dynamic Metadata**: Implement `generateMetadata()` for dynamic product or blog routes.
-- **Sitemaps & Robots**: Implement `app/sitemap.ts` and `app/robots.ts` using Next.js native Route Handlers.
-- **Structured Data**: Inject Schema.org JSON-LD via `<script type="application/ld+json">` dangerouslySetInnerHTML inside Server Components.
-
-```tsx
-// app/layout.tsx example
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  metadataBase: new URL('https://example.com'),
-  title: { default: 'Acme SaaS', template: '%s | Acme SaaS' },
-  description: 'Enterprise workflow automation platform.',
-  alternates: { canonical: '/' },
-  robots: { index: true, follow: true },
-};
+```bash
+npx skills add ARafaykhalid/web-discoverability-skill \
+  --skill web-discoverability-skill --global --agent codex --yes
 ```
 
-### React / Vite / Single-Page Apps (SPA)
+One-time use without installation:
 
-- **Head Management**: Use `@unhead/react` or `react-helmet-async` for client metadata.
-- **Server Rendering / Prerendering**: Combine SPAs with Static Prerendering (e.g. `vite-plugin-prerender` or SSR middleware) so crawlers receive fully rendered HTML meta tags.
-- **Fallbacks**: Ensure server routing returns `200 OK` with static initial HTML metadata rather than empty root divs for non-JS bots.
-
-### Remix / React Router v7
-
-- **Route Metadata**: Export `meta` functions from route modules leveraging `loader` data.
-- **Dynamic Headers**: Return `Cache-Control` and `Link` canonical headers from server `loader` functions.
-
-```typescript
-// app/routes/blog.$slug.tsx example
-export const meta: MetaFunction<typeof loader> = ({ data }) => [
-  { title: data?.post.title },
-  { name: 'description', content: data?.post.excerpt },
-  { tagName: 'link', rel: 'canonical', href: `https://example.com/blog/${data?.post.slug}` },
-];
+```bash
+npx skills use \
+  ARafaykhalid/web-discoverability-skill@web-discoverability-skill \
+  --agent codex
 ```
 
-### Astro
+The bundled audit tools support Node.js 20.6+. The current Vercel `skills` CLI
+declares Node.js 22.20+.
 
-- **Frontmatter SEO**: Create reusable `<BaseSEO />` components accepting OpenGraph, Twitter, canonical, and structured data props.
-- **Automatic Sitemaps**: Integrate `@astrojs/sitemap` in `astro.config.mjs`.
-- **Content Collections**: Auto-generate Schema.org `Article` or `TechArticle` structured data from markdown/MDX frontmatter schema.
+## CLI quick start
 
-### Python (Django, FastAPI, Flask)
+From a checkout:
 
-- **Django**: Utilize `django.contrib.sitemaps`, custom template tags for OpenGraph/JSON-LD, and middleware for trailing slash enforcement.
-- **FastAPI / Flask**: Render Jinja2 templates containing server-side metadata, return XML sitemaps via FastAPI `Response(content=xml, media_type="application/xml")`, and set `Cache-Control` / ETag headers.
-
----
-
-## 🤖 Step 4: Multi-Agent Parallel Audit & Implementation
-
-When delegating tasks across parallel subagents, follow the isolation rules in [`references/subagents.md`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/references/subagents.md):
-
-1. **Context Isolation**: Give each subagent *only* its assigned domain JSONL file or requirement IDs, the project profile, and target file boundaries.
-2. **Single-Writer File Ownership**: Assign explicit file write ownership to one agent (e.g., `Agent-A` owns `app/sitemap.ts`, `Agent-B` owns `app/layout.tsx`).
-3. **Status Reporting**: Return compact state updates using requirement IDs:
-
-```text
-SEO-001 | FIXED | Added canonical redirect middleware in src/middleware.ts | src/middleware.ts
-SEO-014 | ALREADY_CORRECT | Existing sitemap.ts complies with schema | app/sitemap.ts
-SEO-045 | NEEDS_MANUAL_ACTION | Requires Search Console domain property verification | N/A
+```bash
+node tools/cli.mjs profile ./path/to/site
+node tools/cli.mjs select ./path/to/site --level RECOMMENDED
+node tools/cli.mjs audit ./path/to/site --level RECOMMENDED
 ```
 
----
+From an installed skill, resolve the directory containing `SKILL.md` and use:
 
-## 🔬 Step 5: Verification & Final Report Generation
+```bash
+node "$SKILL_ROOT/tools/cli.mjs" audit ./path/to/site --level RECOMMENDED
+```
 
-Verification must follow the 4-tier protocol described in [`references/verification.md`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/references/verification.md):
+`profile` describes the stack and evidence-backed facts. `select` returns
+candidate requirements. `audit` runs deterministic checks and reports evidence;
+it does not modify the target repository.
 
-- **Gate 1 (Static Inspection)**: File path, line number, syntax, and configuration validation.
-- **Gate 2 (Rendered Output Inspection)**: Rendered HTML DOM inspection, `<head>` elements, headers (`Content-Type`, `Cache-Control`, `X-Robots-Tag`).
-- **Gate 3 (Build & Command Tests)**: Run typecheckers (`tsc`), linters (`eslint`), test runners (`vitest`, `pytest`), or build scripts (`npm run build`).
-- **Gate 4 (Surface & AI Discoverability Eligibility)**: Verify Schema.org validity against Schema.org specifications and AI bot accessibility matrix.
+## Project profile overrides
 
-Generate the final output report using the template at [`assets/templates/final-report.md`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/assets/templates/final-report.md).
+Place an optional `project-profile.json` in the target root when detection cannot
+infer a fact. Use only supported profile predicates and boolean or `"unknown"`
+values. Overrides are recorded with provenance; contradictions with confident
+detection appear as profile problems instead of being hidden.
 
----
+See [references/discovery-applicability.md](references/discovery-applicability.md)
+for predicates and activation behavior.
 
-## 🚢 Step 6: CI/CD Pipeline Setup
+## Selecting requirement context
 
-Automate discoverability registry validation in GitHub Actions to prevent regressions.
+Use the selector instead of loading the whole registry:
+
+```bash
+node tools/cli.mjs select ./path/to/site \
+  --level RECOMMENDED
+
+node tools/cli.mjs select ./path/to/site \
+  --level EXTRA --domains metadata,sitemaps --json
+```
+
+The selector accepts one comma-separated `--domains` value and emits JSON with
+`--json`; unsupported flags are not a filtering or output mechanism.
+
+The generated [requirement index](requirements/registry.md) links to a complete
+Markdown page for every active requirement in `requirements/by-id/`.
+
+## Agent implementation workflow
+
+1. Profile the repository and record unknowns.
+2. Select the requested level and relevant domains.
+3. Read the generated pages for the selected requirement IDs.
+4. Classify applicability before editing.
+5. Resolve dependencies, conflicts, and shared-file ownership.
+6. Apply only changes allowed by `change_safety` and user authority.
+7. Run the target project's actual tests and inspect served output.
+8. Audit again and report evidence, blockers, and manual actions.
+
+Use [AUDIT.md](AUDIT.md) for statuses and evidence and
+[references/verification.md](references/verification.md) for verification gates.
+
+## Framework integration
+
+Use native framework ownership rather than forcing a universal file layout:
+
+- Next.js: metadata APIs, `robots.ts`, `sitemap.ts`, route handlers, and
+  server-rendered JSON-LD where supported by the installed version.
+- React/Vite SPAs: verify initial served HTML; use SSR, SSG, or prerendering when
+  search-critical content exists only after client execution.
+- Remix/React Router: route metadata, loader data, response headers, and server
+  rendering.
+- Astro: layouts, content collections, integrations, and generated resources.
+- Express/Fastify/Hono/Bun/Deno: server templates, explicit routes, headers, and
+  static-public directories.
+- Django/Flask/FastAPI: template ownership, sitemap/robots responses, middleware,
+  static files, and framework-native routing.
+- CMS/headless/monorepos: identify the source of truth and the layer that owns
+  each public response before editing.
+
+Detailed adapters are in
+[references/framework-adapters.md](references/framework-adapters.md).
+
+## CI integration
+
+The repository itself has no install step:
 
 ```yaml
-# .github/workflows/discoverability-audit.yml
-name: Technical Discoverability Registry Audit
+name: Discoverability skill checks
 
 on:
   push:
-    branches: [main]
   pull_request:
 
 jobs:
-  validate-discoverability:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: '3.11'
-
-      - name: Validate Registry & Coverage
-        run: |
-          python scripts/validate_registry.py
-          python scripts/audit_coverage.py --format report
+          node-version: 20.x
+      - run: npm run validate
+      - run: npm run quality
+      - run: npm run bench:check
+      - run: npm run docs:check
+      - run: npm test
 ```
 
----
+`npm run check-sources` performs live network requests and is better suited to a
+scheduled maintenance job. `stale-requirements --strict` is calendar-driven and
+should also run on a schedule rather than blocking unrelated pull requests.
 
-## ⚡ Troubleshooting Technical Discoverability Conflicts
+## Common conflicts
 
-| Conflict Scenario | Cause | Resolution Strategy |
-| :--- | :--- | :--- |
-| **`noindex` vs. Sitemap Inclusion** | Page is listed in XML sitemap but contains `<meta name="robots" content="noindex">`. | Remove page from sitemap OR remove `noindex` tag. Sitemaps must only list `200 OK` indexable canonical URLs. |
-| **Canonical Target vs. Redirect** | Canonical points to URL `A`, but URL `A` returns a `301` redirect to URL `B`. | Update canonical link element to point directly to final destination `URL B`. |
-| **Canonical vs. Hreflang** | Page `en-US` sets canonical to `en-GB` while hreflang claims `en-US` is self-referential. | Each language/region variant must have a **self-referential canonical tag** while listing all cross-locale alternates in `hreflang`. |
-| **Client Meta vs. Server Meta** | Meta tags created by client JS are missing in initial cURL / server HTML response. | Implement SSR, SSG, or static head prerendering so crawlers without JS render engines receive full meta tags. |
-| **WAF / CDN Blocking Bots** | WAF rule blocks `GPTBot`, `ClaudeBot`, or `PerplexityBot` with HTTP `403` / `503`. | Verify business intent; update WAF firewall rules to explicitly allow non-destructive AI retrieval bots if AI discoverability is desired. |
+| Conflict | Required resolution |
+| --- | --- |
+| `noindex` URL in a sitemap | Remove the URL from the sitemap or remove the intentional `noindex`. |
+| Canonical points to a redirect | Point directly to the final successful canonical URL. |
+| Canonical conflicts with hreflang | Keep each locale self-canonical and link the alternate cluster consistently. |
+| Client-only metadata | Move search-critical metadata into the initial server response. |
+| Public caching on personalized content | Separate public and authenticated cache behavior. |
+| WAF blocks intended crawlers | Confirm business policy, then align robots and edge rules without weakening private routes. |
+| Structured data differs from visible facts | Correct or remove the markup; never invent missing facts. |
+
+External Search Console, Bing, Merchant Center, DNS, deployment, and account
+actions remain `NEEDS_MANUAL_ACTION` unless their actual output was observed.

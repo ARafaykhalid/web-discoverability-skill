@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Satchel — Harbour Supply</title>
+<meta name="description" content="Field Satchel in tan. This page carries two deliberate defects: an offer whose price is stated without a currency and disagrees with the rendered price, and a product image with no alt attribute.">
+<link rel="canonical" href="https://example.com/products/field-satchel">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="Harbour Supply">
+<meta property="og:title" content="Field Satchel — Harbour Supply">
+<meta property="og:description" content="A buckled tan canvas satchel with a leather flap.">
+<meta property="og:url" content="https://example.com/products/field-satchel">
+<meta property="og:image" content="https://example.com/assets/satchel-tan.jpg">
+<meta property="og:image:alt" content="Tan canvas satchel with a buckled flap, seen from the front.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": "https://example.com/products/field-satchel#product",
+  "name": "Field Satchel",
+  "color": "Tan",
+  "sku": "HT-SATCHEL-01",
+  "gtin13": "5012345678924",
+  "url": "https://example.com/products/field-satchel",
+  "image": "https://example.com/assets/satchel-tan.jpg",
+  "brand": { "@type": "Brand", "name": "Harbour Supply" },
+  "offers": {
+    "@type": "Offer",
+    "url": "https://example.com/products/field-satchel",
+    "price": "148.00",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/collections/bags">Bags</a>
+<a href="/cart">Cart</a>
+<a href="/checkout">Checkout</a>
+</nav>
+<main>
+<h1>Field Satchel</h1>
+<p>164.00 GBP. A buckled satchel in tan canvas with a full-grain leather flap.</p>
+<p>The offer in the markup above states 148.00 with no currency at all, while this page
+renders 164.00 GBP and the catalogue file that both are built from also says 164.00. A
+bare number is ambiguous between currencies, and where the markup and the page disagree
+a shopper and a machine are being quoted different amounts. Which of the two figures is
+correct is a merchandising fact, not something that can be read off the page, so the
+resolution is to look it up rather than to pick one.</p>
+<p>The main product shot below carries no alt attribute. The detail shot after it does,
+so the difference between the two is the defect and not the page.</p>
+<img src="https://example.com/assets/satchel-tan.jpg" width="960" height="960">
+<img src="https://example.com/assets/satchel-buckle.jpg" alt="Close view of the brass buckle and the stitched leather strap keeper." width="480" height="480">
+<p><a href="/cart">Add to cart</a> or go straight to <a href="/checkout">checkout</a>.
+The totes are in <a href="/collections/bags">Bags</a>.</p>
+</main>
+</body>
+</html>

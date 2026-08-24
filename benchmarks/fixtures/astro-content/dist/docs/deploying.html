@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deploying a static build — Example Docs</title>
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com//docs/deploying">
+    <link rel="alternate" type="application/rss+xml" title="Example Docs" href="/rss.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Example Docs">
+    <meta property="og:title" content="Deploying a static build — Example Docs">
+    <meta property="og:url" content="https://example.com//docs/deploying">
+    <meta property="og:image" content="https://example.com/social/docs.png">
+    <meta property="og:image:alt" content="A documentation page shown beside the markdown file it was built from.">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://example.com//docs/deploying#article","headline":"Deploying a static build","url":"https://example.com//docs/deploying","dateModified":"2026-02-02","author":{"@type":"Person","name":"M. Okafor","url":"https://example.com/about"}}</script>
+  </head>
+  <body>
+    <header>
+      <a href="/">Example Docs</a>
+      <nav>
+        <a href="/docs/routing">Routing</a>
+        <a href="/docs/deploying">Deploying</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
+    <main>
+      <h1>Deploying a static build</h1>
+      <p><code>astro build</code> writes the whole site to <code>dist/</code> and exits. There is no server in the
+      output, so any host that can serve files will serve this project, and the origin the
+      build assumed is the one in <code>astro.config.mjs</code> rather than anything the host tells it
+      at request time.</p>
+      <p>The build writes one document per route, plus <code>sitemap-index.xml</code> and
+      <code>sitemap-0.xml</code> from the sitemap integration and <code>rss.xml</code> from the route module in
+      <code>src/pages</code>. Files under <code>public/</code> are copied across untouched, which is how
+      <code>robots.txt</code> and <code>llms.txt</code> reach the root of the served site.</p>
+      <img src="/diagrams/deploy-pipeline.png" width="960" height="540">
+      <p>Uploading <code>dist/</code> is the whole deployment. Nothing in the output reads an
+      environment variable, so a document that names the wrong origin names it until the
+      next build, and the fix is always a rebuild rather than a host setting.</p>
+      <p><a href="/">Back to the collection index</a></p>
+    </main>
+    <footer>
+      <p>Example Docs is a fixture. Its pages describe how it is built and nothing else.</p>
+    </footer>
+  </body>
+</html>

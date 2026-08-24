@@ -1,0 +1,24 @@
+/* Minimal stylesheet. Vite rewrites this href to a hashed file in the build,
+   which is the one visible difference between each source entry and its
+   pre-rendered counterpart in dist/. */
+
+:root {
+  --measure: 34rem;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0 auto;
+  max-width: var(--measure);
+  padding: 2rem 1rem;
+  font: 1rem/1.6 system-ui, sans-serif;
+}
+
+nav a {
+  margin-right: 1rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}

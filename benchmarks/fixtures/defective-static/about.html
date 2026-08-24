@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>About this fixture — Example Site</title>
+<link rel="canonical" href="https://example.com/about">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>Three missing declarations</h1>
+<p>This page omits three things a served document is expected to state about itself:
+the meta description, the viewport, and the language of its content. All three
+omissions are deliberate and each one belongs to a different check, so this page is
+where the metadata module is expected to report exactly three findings.</p>
+<p>The canonical is deliberately correct here. Absolute, self-referencing, and inside
+the head, so the canonical checks have nothing to say about this page and any finding
+they emit against it is a false positive.</p>
+<p>The html element opens without a lang attribute. That is not a stylistic choice —
+a consumer that does not know the language of a document cannot pick a segmenter, a
+stemmer, or a voice for it, and it cannot tell a monolingual page from one member of
+a translated set.</p>
+</main>
+</body>
+</html>

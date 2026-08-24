@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in — Meridian</title>
+<meta name="description" content="Sign in to a Meridian workspace. This page exists only to start a session and holds no content of its own.">
+<link rel="canonical" href="https://example.com/login">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="Sign in — Meridian">
+<meta property="og:description" content="Start a session on a Meridian workspace.">
+<meta property="og:url" content="https://example.com/login">
+<meta property="og:image" content="https://example.com/assets/og-signin.png">
+<meta property="og:image:alt" content="The Meridian sign-in form with an email field and a workspace selector">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Overview</a>
+<a href="/pricing">Plans</a>
+<a href="/api-docs">API reference</a>
+<a href="/changelog">Release notes</a>
+<a href="/login">Sign in</a>
+</nav>
+<main>
+<h1>Sign in</h1>
+<p>This is the door to the application, not a document. It holds no content a
+search result could usefully show, and it is the page every unauthenticated
+request to <code>/app/</code> is redirected to.</p>
+<form method="post" action="/login">
+<label for="email">Work email</label>
+<input id="email" name="email" type="email" autocomplete="username" required>
+<label for="workspace">Workspace</label>
+<input id="workspace" name="workspace" type="text" autocomplete="organization" required>
+<button type="submit">Send a sign-in link</button>
+</form>
+<h2>Why this page is a declared defect here</h2>
+<p>It is served indexable, with no noindex directive, and it is listed in
+<code>sitemap.xml</code> — while <code>robots.txt</code> disallows it. The sitemap
+asks a crawler to fetch a URL the crawl policy forbids, so the two files give
+opposite instructions about the same path and neither one is obviously the wrong
+half. Which of the three signals should change is a judgement about intent, which
+is why the bound requirement is not automatically fixable.</p>
+<p>Nothing here is a working authentication flow. The form posts to itself and the
+fixture ships no handler; the session guard that would consume the result is at
+<code>middleware/session.js</code>.</p>
+<p>Return to the <a href="/">overview</a> or read the
+<a href="/api-docs">API reference</a> to see what a token can do without a browser
+session at all.</p>
+</main>
+<footer>
+<p>Operated by Meridian. Written and maintained as test data.</p>
+</footer>
+</body>
+</html>

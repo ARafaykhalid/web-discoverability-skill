@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lists the five public marketing routes. /app/dashboard and /app/settings are
+     absent on purpose: they need a session, and a sitemap entry for them would be
+     a third contradicting signal. /login and /api-docs are present and should not
+     be, which is what two of this fixture's declared defects are about. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2026-02-02</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/pricing</loc>
+    <lastmod>2026-02-02</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/api-docs</loc>
+    <lastmod>2026-01-28</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/changelog</loc>
+    <lastmod>2026-02-05</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/login</loc>
+    <lastmod>2026-01-14</lastmod>
+  </url>
+</urlset>

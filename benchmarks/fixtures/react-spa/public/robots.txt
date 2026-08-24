@@ -1,0 +1,12 @@
+# Crawl policy for the client-rendered fixture.
+#
+# One group, so there is nothing for the group-contradiction check to merge.
+# The hashed build output under /assets/ is disallowed because those files are
+# JavaScript and CSS, not pages, and no captured route falls under that prefix.
+#
+# There is no Sitemap: line on purpose. This project ships no sitemap, and
+# declaring a URL that returns 404 would be a worse defect than omitting the
+# line: robots-sitemap-reference reads the value, not the response.
+
+User-agent: *
+Disallow: /assets/

@@ -1,0 +1,18 @@
+{
+  "id": "nextjs-app-router",
+  "fixture": "benchmarks/fixtures/nextjs-app-router",
+  "title": "Next.js app-router export with server-authored public metadata",
+  "level": "ULTRA",
+  "notes": "The fixture is authored as a static export capture: the package manifest identifies Next.js, while snapshot.json is the served evidence. It intentionally contains no planted defect; the case measures silent checks on a public documentation route.",
+  "declared_defects": [],
+  "expected_findings": [],
+  "expected_non_findings": [
+    { "check_id": "title-element-single" },
+    { "check_id": "meta-description-single" },
+    { "check_id": "canonical-self-referencing-absolute" },
+    { "check_id": "html-lang-present" },
+    { "check_id": "robots-txt-present" },
+    { "check_id": "sitemap-xml-wellformed" }
+  ],
+  "profile_expectations": { "framework": "next-app-router", "public_site": true, "has_sitemap": true, "has_robots_txt": true }
+}

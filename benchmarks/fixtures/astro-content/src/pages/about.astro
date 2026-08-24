@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${new URL('#org', Astro.site).href}`,
+  name: 'Example',
+  url: canonical,
+  logo: new URL('/social/logo.svg', Astro.site).href,
+};
+---
+
+<BaseLayout
+  title="About this documentation set — Example Docs"
+  description="Who publishes Example Docs, how the pages are produced, and what the site deliberately leaves out."
+  canonical={canonical}
+  image="https://example.com/social/about.png"
+  imageAlt="A single page of documentation shown beside the markdown file it was built from."
+  jsonld={jsonld}
+>
+  <h1>About this documentation set</h1>
+  <p>
+    Example Docs exists to describe its own build. Each page is a markdown file in
+    one collection, rendered by one layout, written to disk by one command. There is
+    no editor, no database and no request-time work of any kind.
+  </p>
+  <p>
+    The pages carry no advertising, no comment form and no reader accounts, so a
+    reader arriving from anywhere sees the same bytes. That is a deliberate limit
+    rather than an omission: the narrower the site, the easier it is to say exactly
+    what each published file contains.
+  </p>
+  <p>
+    Corrections belong in the markdown file the page was built from. The entry ids
+    under <a href="/docs/routing">Routing</a> name the files directly, so a reader
+    who spots an error can find the source without searching for it.
+  </p>
+</BaseLayout>

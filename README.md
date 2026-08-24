@@ -1,167 +1,350 @@
 # Universal Web Discoverability Engineering Skill (`web-discoverability-skill`)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Requirements: 640 Records](https://img.shields.io/badge/Requirements-640%20Stable%20IDs-green.svg)](requirements/registry.md)
-[![Domains: 42 Specialized](https://img.shields.io/badge/Domains-42%20Domains-orange.svg)](requirements/manifest.json)
-[![Antigravity Compatible](https://img.shields.io/badge/Antigravity-2.0%20Ready-purple.svg)](SKILL.md)
+[![Stable IDs: 640 Allocated](https://img.shields.io/badge/Stable%20IDs-640%20Allocated-green.svg)](requirements/registry.md)
+[![Domains: 37](https://img.shields.io/badge/Domains-37-orange.svg)](requirements/manifest.json)
+[![Agent Skills Compatible](https://img.shields.io/badge/Agent%20Skills-Compatible-purple.svg)](SKILL.md)
 
-**`web-discoverability-skill`** is an exhaustive, evidence-based web discoverability, traditional search discoverability, AI search discoverability (AEO/GEO/LLMO), technical SEO, structured data, entity graph, media, performance, accessibility, security, and search-platform auditing and implementation engine for modern web repositories.
+An agent skill for auditing web discoverability, built around a machine-readable
+requirement registry, a profile-driven applicability engine, deterministic checks
+that read served output, and a benchmark harness that scores the checks against
+fixture projects with planted defects.
 
-It is engineered for autonomous AI agents—including **Google Antigravity**, **Claude Code**, **Cursor**, **Windsurf**, **Copilot Workspace**, and **OpenAI Agent Frameworks**—as well as human software engineers and technical web specialists.
+It is designed to be used by a coding agent — Claude Code, Codex, Cursor, Copilot
+Workspace, Antigravity — and by people, from the command line.
 
----
+Its purpose is to answer six questions about any recommendation it makes:
 
-## 📚 Documentation Index
+| Question | Where the answer comes from |
+| :--- | :--- |
+| Why did you recommend this? | the requirement's `statement` and `rationale` |
+| What evidence supports it? | its `sources[]`, each with an evidence tier |
+| Does this apply to this site? | the detected profile and the requirement's `applies_when` |
+| What changed? | the finding's `location` and its captured evidence |
+| How do we know the change worked? | `verification.level` and `verification.method` |
+| How confident are we? | `evidence_tier` and `confidence`, which are independent |
 
-- 🚀 **[Quick Start & User Guide](INTEGRATION.md)** – Step-by-step instructions on integrating `web-discoverability-skill` into your repository, web framework, or AI workflow.
-- 🏗️ **[System Architecture](ARCHITECTURE.md)** – In-depth breakdown of the 4-stage pipeline, applicability engine, data model, and multi-tier verification gates.
-- 🤝 **[Contributing Guide](CONTRIBUTING.md)** – How to add or update registry requirements, modify helper scripts, and submit pull requests.
-- 🔒 **[Security & Ethics Policy](SECURITY.md)** – Security guardrails, crawler policy safety, and ethical AI/SEO compliance standards.
-- 📋 **[Requirement Registry Index](requirements/registry.md)** – Complete domain inventory, record counts, and level candidate breakdown.
-- 📜 **[Changelog](CHANGELOG.md)** – Version history, milestone updates, and schema migrations.
+## What it does not do
 
----
+It does not improve search rankings, and nothing in this repository is evidence
+that it could. It does not cause a page to be indexed, or cited by an AI answer
+engine. Crawling, indexing, ranking, and citation are decided by platforms whose
+behaviour this repository cannot observe and does not model.
 
-## ✨ Key Capabilities
+What it does is narrower and checkable: it identifies places where a site's
+served output contradicts documented, published expectations of search engines
+and crawlers, cites the document it is relying on, and states what would have to
+be observed for the problem to be considered fixed.
 
-### 1. Stable-ID Requirement Registry
-Operates against a machine-readable registry of **640 stable-ID requirements** (`SEO-001` to `SEO-640`) spanning **42 specialized technical domains**. Each record defines explicit triggers, implementation guidance, verification methods, evidence requirements, dependencies, and search surface eligibility.
+Read [LIMITATIONS.md](LIMITATIONS.md) before relying on any of it. It is not a
+disclaimer appendix; it is a list of things this repository genuinely cannot tell
+you.
 
-### 2. Multi-Level Execution Matrix
-Configurable execution levels allow balancing speed vs. exhaustive coverage:
+## Current state, generated from the repository
 
-| Level | Purpose & Scope | Candidate Requirement Count |
-| :--- | :--- | :--- |
-| **`LITE`** | Minimum foundational requirements for fast audits and core fixes. | **150+** |
-| **`RECOMMENDED`** *(Default)* | Production-grade requirements for modern web applications. | **350+** |
-| **`EXTRA`** | Advanced requirements including conditional profile-activated domains. | **500+** |
-| **`ULTRA`** | Exhaustive evaluation of all 640 registry records in domain batches. | **640** |
+<!-- GENERATED:metrics -->
+<!-- All numbers below are generated by `npm run docs -- --write` from the registry and the last benchmark run. -->
 
-### 3. Flexible Execution Modes
-- **`AUDIT_ONLY`**: Evaluates codebase against active requirements and generates an evidence-backed audit report without modifying any files.
-- **`IMPLEMENT`**: Implements required fixes and enhancements in dependency order.
-- **`IMPLEMENT_AND_AUDIT`** *(Default)*: Executes non-destructive code changes followed by empirical verification and final report generation.
+| Registry | Value |
+| --- | --- |
+| Active requirements | 224 |
+| Distinct titles | 224 |
+| With a citation | 204 |
+| With a verification method | 224 |
+| With a deterministic check | 36 (16%) |
+| With a confidence rating | 224 |
+| Duplicate titles | 0 |
+| Near-duplicate title pairs | 0 |
+| Broken dependencies | 0 |
+| Circular dependencies | 0 |
+| Retired IDs (never reused) | 80 |
+| Deferred IDs | 336 |
+| Deterministic checks | 36 |
 
-### 4. Comprehensive Framework & Stack Support
-Native implementation strategies and adapters for:
-- **Frameworks**: Next.js (App Router & Pages Router), React, Remix, Astro, Vite, Nuxt, SvelteKit, Gatsby, Express, Node.js.
-- **Backend / APIs**: Python (Django, FastAPI, Flask), Ruby on Rails, Go, PHP, GraphQL, REST.
-- **Architectures**: SSR, SSG, SPA, Hybrid, Headless CMS, Monorepos, Edge/Serverless Functions.
-- **Application Types**: Ecommerce, SaaS, Marketplaces, Blogs, Documentation, News/Media, Local Business, International, UGC, Paywall/Subscription, Interactive/3D WebGL.
+| Benchmark (fixtures, checked subset only) | Value |
+| --- | --- |
+| Benchmark cases | 12/12 passing |
+| Precision | 1 |
+| Recall | 1 |
+| False-positive rate | 0 |
+| False-negative rate | 0 |
+| Verification accuracy | 1 |
 
-### 5. Traditional & AI Search Discoverability Matrix
-Covers traditional search engines alongside emerging AI answer engines and crawlers:
-- **Search Engines**: Google Search, Bing, Yahoo, Yandex, DuckDuckGo, Baidu.
-- **AI Engines & Answer Systems**: ChatGPT / OpenAI Search, Claude, Perplexity AI, Bing Copilot, Google Gemini / AI Overviews, Apple Intelligence.
-- **AI Crawlers & Bot Policy**: Explicit policy management for `GPTBot`, `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`, `Applebot`, `Bytespider`, `Amazonbot`.
-- **AI Protocols**: Machine-readable guidance (`llms.txt`, `llms-full.txt`), `data-nosnippet`, `indexifembedded`.
+Benchmarks measure the checked subset of the registry against fixture projects with planted defects.
+They do not measure search rankings or AI answer inclusion, and are not evidence of either. See [BENCHMARKS.md](BENCHMARKS.md).
+<!-- /GENERATED:metrics -->
 
----
+Regenerate with `npm run bench && npm run docs -- --write`. No number in that
+table is typed by hand, and `npm run ci` fails if any of them drifts.
 
-## ⚡ Quick Start
+## Install
 
-### 1. Antigravity IDE & `agy` CLI
-`web-discoverability-skill` is automatically detected by Google Antigravity. To invoke it during pair programming:
+The bundled audit tooling supports Node.js 20.6 or newer and has no dependencies
+or build step. Vercel's `skills` CLI has its own Node requirement; its current
+release requires Node.js 22.20 or newer.
+
+### Install as a Vercel Agent Skill
+
+This repository is compatible with Vercel's open `skills` CLI. The root
+`SKILL.md` is the canonical skill entry, so install it directly from GitHub:
+
+```bash
+npx skills add ARafaykhalid/web-discoverability-skill \
+  --skill web-discoverability-skill
+```
+
+The CLI detects installed agents automatically. To install globally for Codex
+without prompts, use:
+
+```bash
+npx skills add ARafaykhalid/web-discoverability-skill \
+  --skill web-discoverability-skill --global --agent codex --yes
+```
+
+To use the skill for one task without installing it:
+
+```bash
+npx skills use ARafaykhalid/web-discoverability-skill@web-discoverability-skill \
+  --agent codex
+```
+
+The equivalent full URL is
+`https://github.com/ARafaykhalid/web-discoverability-skill`.
+
+```bash
+git clone https://github.com/ARafaykhalid/web-discoverability-skill
+cd web-discoverability-skill
+npm test
+```
+
+The skill install and the CLI are separate concerns. The Vercel `skills` command
+installs the instructions and bundled references for an agent; the repository
+itself declares no `dependencies` or `devDependencies`, and every tool is plain
+ESM run by `node`. `npm link` puts the `wds` command on your path if you want the
+audit tooling outside this directory.
+
+## Use it from the command line
+
+```bash
+node tools/cli.mjs profile ./path/to/site      # what kind of site is this?
+node tools/cli.mjs select ./path/to/site       # which rules apply, and why
+node tools/cli.mjs audit ./path/to/site        # run the checks, report findings
+```
+
+`profile`, `select`, and `audit` never modify the project they inspect. With
+`--write` they may persist reports under `reports/`. Registry-maintenance
+commands are separate: `docs --write` regenerates derived documentation and
+schemas, while the `bench` and `metrics` npm scripts refresh their reports.
+
+Registry maintenance and self-checks:
+
+```bash
+npm run validate        # registry integrity; exits 1 on any error
+npm run quality         # duplicates, dependencies, missing metadata
+npm run metrics         # the machine-readable metrics report
+npm run stale           # requirements overdue for source re-verification
+npm run sources         # the source manifest, one row per citation
+npm run check-sources   # live reachability of every cited URL
+npm run bench           # score the fixture cases, record the result
+npm run docs:check       # fail if any generated artifact has drifted
+npm run ci              # all of the above that do not need the network
+```
+
+To regenerate derived Markdown, schemas, and indexes after editing canonical
+records, run `npm run docs -- --write`. Plain `npm run docs` is read-only.
+
+## The three modes, and which of them is code
+
+**Audit.** Implemented in this repository, as `tools/cli.mjs audit`. Detects the
+profile, selects applicable requirements, runs the deterministic checks against a
+snapshot of served output, and reports findings with evidence and locations. This
+is the mode with test coverage and benchmark scores.
+
+**Verification.** Also implemented, and not separable from audit: every check
+declares whether it reads source files, runtime output, or both, and a check that
+needs runtime output it does not have reports `NEEDS_RUNTIME` rather than
+guessing. A source file containing a `<meta>` tag is not accepted as evidence
+that the served document contains it.
+
+**Implementation.** Performed by the agent, following [SKILL.md](SKILL.md), not
+by the tooling. There is no `apply` or `fix` command, and adding one is not on
+the near-term list. What the registry contributes is the `change_safety`
+classification that governs what an agent may change without asking:
+
+| `change_safety` | Meaning |
+| :--- | :--- |
+| `SAFE_AUTOMATIC` | deterministic, reversible, and cannot affect indexing directives, URLs, or business facts; an agent may just do it |
+| `REVIEW_REQUIRED` | could affect content, URLs, indexing, redirects, canonicalisation, structured data, or application behaviour; propose a diff and wait for approval |
+| `BLOCKED` | needs credentials, external platform access, a business decision, or facts the repository does not contain; report it, never implement it |
+
+A requirement whose `impact` is `HIGH` can never be `SAFE_AUTOMATIC`; the
+validator rejects that combination. The existence of a requirement is not a
+reason to change a site: see [AUDIT.md](AUDIT.md) for the intended workflow, the
+per-requirement outcome vocabulary, and the safety model in full.
+
+## Evidence tiers
+
+Every requirement that makes an externally checkable claim cites at least one
+source, and each citation carries a tier describing how strongly that source
+supports *this* claim:
+
+| Tier | Meaning |
+| :--- | :--- |
+| **A** | official specification or platform documentation — Google Search Central, Bing, schema.org, an RFC, a framework's own docs, an official crawler reference |
+| **B** | strong technical consensus among practitioners, without an official document saying it |
+| **C** | empirical or observational — someone measured it, and the measurement is public |
+| **D** | experimental or speculative; a hypothesis, not a finding |
+| `INTERNAL` | a rule about this repository's own conventions, which needs no external source |
+
+A requirement's own `evidence_tier` must appear among the tiers of its citations,
+so a record cannot claim tier A support while citing only tier C material. Tier
+D records may not carry `HIGH` confidence and must carry an explicit `caution`.
+The tier describes the *support*, not the document's prestige: the same URL can
+legitimately be tier A for a claim it states outright and tier B for a claim it
+merely implies.
+
+Confidence is a separate axis. A tier A source can support a rule we are
+nonetheless unsure how to apply, and a tier C observation can be one we are
+confident about.
+
+The full manifest, with the date each citation was last checked, is
+[EVIDENCE.md](EVIDENCE.md) and `reports/sources.json`.
+
+## Established search engineering versus emerging practice
+
+The registry keeps these apart on purpose, because they are not equally
+supported:
+
+| Category | What it covers |
+| :--- | :--- |
+| `TECHNICAL_SEO` | crawlability, canonicalisation, URLs, status codes, sitemaps, robots |
+| `SEARCH_DISCOVERABILITY` | metadata and signals search engines document reading |
+| `STRUCTURED_DATA_ELIGIBILITY` | markup that makes a page *eligible* for a rich result |
+| `CONTENT_QUALITY` | clarity, accuracy, attribution, and dates |
+| `ACCESSIBILITY` | accessibility work that also affects machine readability |
+| `SECURITY_PRIVACY` | keeping private things private and unindexed |
+| `OPERATIONS` | monitoring, review intervals, and change management |
+| `AI_CRAWLER_ACCESS` | documented behaviour of named AI crawlers |
+| `AI_RETRIEVAL` | making content parseable by retrieval systems |
+| `EMERGING_GEO` | experimental generative-engine practice, labelled as such |
+
+Only `EMERGING_GEO` is treated as experimental by the validator. `AI_CRAWLER_ACCESS`
+is not, because crawler user-agent strings and their documented directives are
+published facts, and a rule about them can cite a tier A source.
+
+Specifically, this repository does not claim that publishing `llms.txt` makes a
+site visible to an AI assistant, that allowing a crawler causes inclusion, that
+structured data affects ranking, or that semantic HTML produces citations. Where
+a practice is plausible but unconfirmed, the record says so and carries a tier D
+citation and a caution.
+
+## Supported frameworks and site types
+
+Support is uneven, and the table says how. "Fixture" means a benchmark project
+exists and the checks are scored against it; "adapter" means there is
+framework-specific implementation guidance in
+[references/framework-adapters.md](references/framework-adapters.md); "detected"
+means the profiler recognises the framework and applies generic guidance.
+
+| Stack | Status |
+| :--- | :--- |
+| Static HTML | fixture, detected |
+| Vite (prerendered and client-rendered) | fixture, detected |
+| React SPA | fixture, detected |
+| Next.js (App Router and Pages Router) | adapter, detected |
+| Astro | adapter, detected |
+| Nuxt, SvelteKit, Remix, Gatsby | adapter, detected |
+| Express and other plain Node servers | adapter, detected |
+| Django, Flask, FastAPI, Rails, Laravel | detected only |
+| Anything else | generic guidance; the profiler reports `unknown` and says so |
+
+Site types the applicability model distinguishes — ecommerce, SaaS, editorial and
+news, documentation, local business, multilingual, user-generated content,
+paywall and subscription — gate requirements on detected facts rather than on a
+declared site category. Where the profiler cannot tell, it reports the fact as
+unknown and the requirement as `UNCERTAIN`, which means *ask for evidence*, not
+*change the file anyway*.
+
+Which of those site types has a benchmark fixture is recorded in
+[benchmarks/README.md](benchmarks/README.md), including the ones that do not.
+
+## Repository layout
 
 ```text
-/skill load web-discoverability-skill
-Audit and implement RECOMMENDED discoverability for this Next.js project.
+requirements/     canonical JSONL file per domain, plus removed.jsonl and deferred.jsonl
+  manifest.json   generated index: domain counts, level candidates
+  registry.md     generated human-readable index
+  by-id/          generated Markdown page for every active requirement
+schema/           generated JSON Schema for records, ledgers, and benchmark cases
+tools/
+  cli.mjs         the wds command; every subcommand lives here
+  lib/            registry, validator, profiler, selector, reporter, docs generator
+  lib/checks/     the deterministic checks, one module per domain
+benchmarks/
+  cases/          one JSON case per fixture: declared defects and expectations
+  fixtures/       the fixture projects themselves
+tests/            node:test suites: registry, tools, checks, regression
+references/       deep reference documents the agent reads on demand
+assets/templates/ report templates
+agents/           agent-framework definitions
+reports/          generated; not authoritative, and safe to delete
+SKILL.md          the agent orchestrator instructions
 ```
 
-Or specify custom execution controls directly in your prompt:
+Generated files carry a header saying so. Editing one is pointless — `npm run
+docs -- --write` overwrites it, and `npm run ci` fails while it disagrees with
+the registry.
 
-```text
-Run web-discoverability-skill at level=ULTRA mode=AUDIT_ONLY for the ecommerce domain.
-```
+## Safety model
 
-### 2. Claude Code & Cursor / Windsurf
-Copy or reference `SKILL.md` in your project's agent skills directory (`.claude/skills/web-discoverability-skill` or `.cursor/rules/web-discoverability-skill`). 
+1. **Findings are not permission.** A finding says a requirement is unsatisfied.
+   Whether to change anything is governed by `change_safety`, by `impact`, and by
+   the person running the tool.
+2. **Uncertainty blocks, it does not default.** An unknown profile fact yields
+   `UNCERTAIN`, never `NOT_APPLICABLE` and never a change. The agent is required
+   to ask for evidence.
+3. **Nothing is fabricated.** Reviews, ratings, aggregate ratings, authorship,
+   organisation details, and dates must come from real data. The requirements
+   covering them are `BLOCKED`, which means an agent may report them and may not
+   act on them.
+4. **Verification reads output, not intent.** Checks in runtime-sensitive
+   domains may not be satisfied by source inspection alone.
+5. **High impact means slow.** Canonicals, redirects, robots directives,
+   `noindex`, sitemap behaviour, URL structure, pagination, hreflang,
+   authentication boundaries, and structured data describing real-world entities
+   are all classified `HIGH` impact, and none of them can be `SAFE_AUTOMATIC`.
 
-### 3. OpenAI Agent Frameworks
-Use the pre-configured Agent Definition in [`agents/openai.yaml`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/agents/openai.yaml):
+[SECURITY.md](SECURITY.md) covers the prohibitions — cloaking, doorway pages,
+fabricated markup, keyword stuffing, paywall and authentication bypass.
 
-```yaml
-name: web-discoverability-skill-agent
-description: Universal web discoverability, AI discoverability, and technical audit agent.
-instructions_file: SKILL.md
-```
+## Benchmarks
 
----
+`npm run bench` runs every case in `benchmarks/cases/` and reports precision,
+recall, false-positive rate, false-negative rate, and verification accuracy.
 
-## 🛠️ Python Helper Scripts
+These are measurements of the checked subset of the registry against fixture
+projects containing defects we planted. They are a regression harness. They are
+not a measurement of real-world outcomes, and a perfect score on them says only
+that the checks behave as their cases declare.
 
-`web-discoverability-skill` includes a suite of command-line tools in [`scripts/`](file:///c:/Users/rocky/OneDrive/Desktop/seo-skill/scripts/):
+The methodology, the definition of each denominator, and the reason a check that
+could not run is counted as neither a hit nor a miss are all in
+[BENCHMARKS.md](BENCHMARKS.md).
 
-- **`select_requirements.py`**: Pre-filters applicable requirements based on execution level and project profile to keep agent prompt contexts compact.
-  ```bash
-  python scripts/select_requirements.py --level recommended --format summary
-  ```
-- **`validate_registry.py`**: Validates registry JSONL integrity, schema completeness, contiguous stable IDs, and documentation cross-links.
-  ```bash
-  python scripts/validate_registry.py
-  ```
-- **`audit_coverage.py`**: Audits taxonomy mapping against `requirements/coverage-map.json` and flags potential gaps.
-  ```bash
-  python scripts/audit_coverage.py --format report
-  ```
-- **`build_registry.py`**: Re-indexes stable requirement IDs and compiles the manifest index.
-  ```bash
-  python scripts/build_registry.py
-  ```
+## Documentation
 
----
+- [SKILL.md](SKILL.md) — the agent orchestrator instructions
+- [AUDIT.md](AUDIT.md) — the audit workflow, statuses, and safety model
+- [LIMITATIONS.md](LIMITATIONS.md) — what this repository cannot tell you
+- [BENCHMARKS.md](BENCHMARKS.md) — benchmark methodology and how to read a score
+- [EVIDENCE.md](EVIDENCE.md) — generated: every citation, tier, and check date
+- [ARCHITECTURE.md](ARCHITECTURE.md) — data model, pipeline, and module boundaries
+- [INTEGRATION.md](INTEGRATION.md) — using the skill from an agent or from CI
+- [CONTRIBUTING.md](CONTRIBUTING.md) — adding or changing a requirement
+- [requirements/registry.md](requirements/registry.md) — generated: domain index
+- [references/](references/) — crawler policy, taxonomy, adapters, verification
+- [CHANGELOG.md](CHANGELOG.md) — version history, including breaking changes
 
-## 📂 Repository Structure
+## License
 
-```text
-web-discoverability-skill/
-├── SKILL.md                         # Main Agent Orchestrator Instructions
-├── README.md                        # Project Overview & Quick Start
-├── CONTRIBUTING.md                  # Development & Contribution Guide
-├── INTEGRATION.md                   # Detailed Usage & Framework Integration Manual
-├── ARCHITECTURE.md                  # System Architecture & Technical Specifications
-├── SECURITY.md                      # Security, Privacy & Ethical Guardrails
-├── CHANGELOG.md                     # Versioning & Release History
-├── CODE_OF_CONDUCT.md               # Community Standards
-├── agents/
-│   └── openai.yaml                  # OpenAI Agent Specification
-├── assets/
-│   └── templates/                   # Report & Record Templates
-│       ├── audit-report.md          # Output template for AUDIT_ONLY mode
-│       ├── final-report.md          # Output template for IMPLEMENT_AND_AUDIT mode
-│       └── requirement-record.md    # Compact requirement state template
-├── references/                      # Deep Reference Documentation
-│   ├── ai-crawler-policy-matrix.md # AI bot user-agent & policy reference
-│   ├── ai-taxonomy.md               # AI search vocabulary & evidence boundaries
-│   ├── discovery-applicability.md  # Profile discovery & domain activation rules
-│   ├── framework-adapters.md        # Stack-specific implementation patterns
-│   ├── search-surface-matrix.md     # Surface eligibility & crawler guidelines
-│   ├── subagents.md                 # Multi-agent role contracts & isolation rules
-│   └── verification.md              # 4-tier verification protocol & gates
-├── requirements/                    # Machine-Readable Requirement Registry
-│   ├── manifest.json                # Global index, domain counts, & levels
-│   ├── coverage-map.json            # Taxonomy completeness map
-│   ├── registry.md                  # Human-readable domain index
-│   └── *.jsonl                      # 42 domain JSONL files (640 total records)
-└── scripts/                         # Python Helper & Validation Tools
-    ├── audit_coverage.py            # Coverage gap audit script
-    ├── build_registry.py            # Registry builder & ID re-indexer
-    ├── select_requirements.py       # Context-filtering selector
-    ├── test_profiles.py             # Profile test runner
-    └── validate_registry.py         # Integrity & schema validator
-```
-
----
-
-## 🛡️ Guardrails & Safety Policy
-
-1. **Evidence-Based Verification**: `web-discoverability-skill` never claims an external indexation, rich result, or AI citation without empirical code/HTTP evidence.
-2. **Non-Destructive Implementation**: Preserves application design, business logic, authentication boundaries, and existing infrastructure.
-3. **Single-Writer Safety**: Appoints single-agent ownership for modified files to eliminate merge conflicts during parallel audits.
-4. **Ethical SEO & Discoverability**: Explicitly forbids cloaking, doorway pages, fake Schema.org markup, keyword stuffing, or security/paywall bypasses.
-
----
-
-## 📄 License
-
-This repository is licensed under the [MIT License](LICENSE).
+[MIT](LICENSE).

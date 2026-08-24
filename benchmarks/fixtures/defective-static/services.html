@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What this fixture covers — Example Site</title>
+<meta name="description" content="A page whose single deliberate defect is a canonical URL written as a root-relative path instead of an absolute URL.">
+<link rel="canonical" href="/services">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>A relative canonical</h1>
+<p>The canonical on this page is written as <code>/services</code> rather than as a
+full URL. A canonical is consumed away from the response that carried it, so the
+protocol and host have to be explicit; a path on its own names a document only for a
+reader that still remembers where it came from.</p>
+<p>Exactly one finding is expected here. The path portion of the canonical agrees with
+the page's own path, so there is no cross-canonical to report, and the check stops at
+the first fault per element rather than describing the same tag twice.</p>
+<p>Everything else on this page is deliberately correct: one title, one description,
+the language and viewport declared, and no images, structured data, or preview
+metadata at all.</p>
+</main>
+</body>
+</html>

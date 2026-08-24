@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('docs');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+// The defect this fixture exists for.
+//
+// `Astro.site` stringifies to the value in astro.config.mjs, which ends in a slash.
+// Interpolating a path that begins with one produces `https://example.com//docs/...`
+// - a URL that still parses, still resolves in a browser, and no longer names the
+// path this page is served at. `new URL(`/docs/${entry.id}`, Astro.site)` is the
+// join that would have collapsed the pair; the pages under src/pages use it and
+// this route does not.
+//
+// The string is used everywhere this route needs its own address, so the canonical,
+// og:url and the JSON-LD identifier all carry the same doubled slash and none of
+// them disagrees with the others. Only the sitemap, which the integration builds
+// with its own URL resolution, states the path the page is actually served at.
+const canonical = `${Astro.site}/docs/${entry.id}`;
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${canonical}#article`,
+  headline: entry.data.title,
+  url: canonical,
+  dateModified: entry.data.updated.toISOString().slice(0, 10),
+  author: {
+    '@type': 'Person',
+    name: 'M. Okafor',
+    url: new URL('/about', Astro.site).href,
+  },
+};
+---
+
+<BaseLayout
+  title={`${entry.data.title} — Example Docs`}
+  description={entry.data.description}
+  canonical={canonical}
+  image="https://example.com/social/docs.png"
+  imageAlt="A documentation page shown beside the markdown file it was built from."
+  noindex={entry.data.draft}
+  jsonld={jsonld}
+>
+  <h1>{entry.data.title}</h1>
+  <Content />
+  <p><a href="/">Back to the collection index</a></p>
+</BaseLayout>

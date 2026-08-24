@@ -1,0 +1,14 @@
+# Crawl policy for the vite-static benchmark fixture.
+#
+# Stored in public/ because that is where a Vite project keeps files that must be
+# served verbatim: the build copies this directory into dist/ untouched, so the
+# file a crawler fetches from /robots.txt is these exact bytes.
+#
+# One group, one disallowed prefix that no captured page falls under, and an
+# absolute Sitemap URL as the sitemap protocol requires. Nothing here is meant to
+# trip a check; this fixture is a control.
+
+User-agent: *
+Disallow: /internal/
+
+Sitemap: https://example.com/sitemap.xml

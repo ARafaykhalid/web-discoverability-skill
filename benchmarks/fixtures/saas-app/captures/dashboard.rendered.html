@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report schedules — Meridian workspace</title>
+<meta name="description" content="The schedules a workspace holds, their cadence, and the outcome of their last run. Requires a session.">
+<link rel="canonical" href="https://example.com/app/dashboard">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<nav aria-label="Application">
+<a href="/app/dashboard">Schedules</a>
+<a href="/app/settings">Workspace settings</a>
+<a href="/">Public site</a>
+</nav>
+<main>
+<h1>Report schedules</h1>
+<p>This is the first response the server sends for an authenticated dashboard: the
+navigation, the heading, and the explanation below arrive in the initial HTML, and
+the table of schedules is filled in afterwards from the workspace API once the
+session is confirmed in the browser.</p>
+<p>The split is deliberate in this fixture, and it is shaped to be unremarkable: the
+initial response already carries the title, the heading, and most of the words, and
+the canonical is byte-identical before and after execution. Nothing measures that
+here - the two JavaScript-rendering requirements are gated on a client-rendered or
+JavaScript application, and this is static HTML - so the pair exists to make the
+initial and executed documents genuinely different strings, not to earn a pass. A
+shell that carried none of that content would be a different fault, and it belongs
+in a different fixture rather than being smuggled in here.</p>
+<p>Nothing on this page is public. It requires a session, the guard at
+<code>middleware/session.js</code> redirects an unauthenticated request to
+<a href="/login">the sign-in page</a>, and the capture records it as not
+indexable so that the noindex above is read as intent rather than as an accident.</p>
+<section id="schedules">
+<table>
+<caption>Schedules in this workspace</caption>
+<thead>
+<tr><th scope="col">Name</th><th scope="col">Cadence</th><th scope="col">Last run</th></tr>
+</thead>
+<tbody>
+<tr><td>Weekly revenue summary</td><td>Mondays 07:00 Europe/London</td><td>Delivered</td></tr>
+<tr><td>Daily signup count</td><td>Every day 06:00 UTC</td><td>Delivered</td></tr>
+<tr><td>Warehouse cost by team</td><td>First of the month</td><td>Warehouse timeout</td></tr>
+</tbody>
+</table>
+</section>
+</main>
+<footer>
+<p>Meridian workspace. Benchmark fixture data.</p>
+</footer>
+</body>
+</html>

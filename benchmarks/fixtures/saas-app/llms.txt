@@ -1,0 +1,21 @@
+# Meridian
+
+Meridian turns a saved SQL query into a report that arrives on a schedule. The
+marketing pages below are public. The application itself is behind a session and
+is not listed here, because a URL that returns a sign-in redirect to anyone who
+has not authenticated is not a document anything can read.
+
+## Pages
+
+- [Product overview](https://example.com/): what Meridian does and who runs it.
+- [Plans](https://example.com/pricing): the three tiers and what separates them.
+- [API reference](https://example.com/api-docs): the four endpoints, their
+  parameters, and their error codes.
+- [Release notes](https://example.com/changelog): dated entries, newest first.
+
+## Notes
+
+- Rate limits and authentication for the API are documented on the API reference
+  page rather than repeated here.
+- Questions that these pages do not answer go to the address published on the
+  product overview.

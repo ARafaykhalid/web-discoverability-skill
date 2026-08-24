@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://example.com/</id>
+  <title>Acme Docs releases</title>
+  <updated>2026-01-30T09:00:00Z</updated>
+  <link rel="alternate" href="https://example.com/changelog"/>
+  <link rel="self" href="https://example.com/feed.xml"/>
+  <entry>
+    <id>https://example.com/changelog#v1-4-0</id>
+    <title>1.4.0</title>
+    <updated>2026-01-30T09:00:00Z</updated>
+    <link rel="alternate" href="https://example.com/changelog"/>
+    <summary>The build now writes every route to its own finished document.</summary>
+  </entry>
+  <entry>
+    <id>https://example.com/changelog#v1-3-0</id>
+    <title>1.3.0</title>
+    <updated>2025-12-11T09:00:00Z</updated>
+    <link rel="alternate" href="https://example.com/changelog"/>
+    <summary>Each route became a separate HTML entry with its own hand-written head.</summary>
+  </entry>
+</feed>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find a guide — Example Site</title>
+<meta name="description" content="The on-site lookup form. Recorded in the capture as not intended for listing, which is why the capture marks it accordingly.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://example.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Example Site">
+<meta property="og:title" content="Find a guide">
+<meta property="og:description" content="The on-site lookup form.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="https://example.com/img/cover.png">
+<meta property="og:image:alt" content="The words Example Site set on a plain background.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SearchResultsPage",
+  "@id": "https://example.com/search/#webpage",
+  "url": "https://example.com/search/",
+  "name": "Find a guide",
+  "isPartOf": { "@id": "https://example.com/#website" }
+}
+</script>
+</head>
+<body>
+<header>
+<nav>
+<a href="/">Home</a>
+<a href="/guides/">Guides</a>
+<a href="/about/">About</a>
+</nav>
+</header>
+<main>
+<h1>Find a guide</h1>
+<p>This route answers a lookup against the guide titles. It produces a different
+document for every distinct query, none of which is worth listing on its own, so the
+served page asks not to be listed and names the home page as the address that should
+be treated as canonical instead.</p>
+<p>Three separate signals therefore describe this one URL, and the fixture states all
+three so the interaction between them can be measured: the crawl policy forbids
+fetching it, the document asks not to be listed, and the URL list nevertheless
+includes it.</p>
+<img src="/img/cover.png" alt="The words Example Site set on a plain background." width="1200" height="630">
+<h2>Nothing is stored here</h2>
+<p>No result is kept and no form on this page writes anything. Return to the
+<a href="/guides/">guides index</a> to read the guide directly.</p>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</body>
+</html>

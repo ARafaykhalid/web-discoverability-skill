@@ -1,0 +1,36 @@
+# Crawl policy for the crawl-misconfig fixture.
+#
+# Every fault below is deliberate and is declared in
+# benchmarks/cases/crawl-misconfig.json. The file still parses as robots.txt and
+# still names a user agent, so robots-txt-present has something valid to pass on;
+# what is wrong here is the policy, not the syntax.
+
+# Fault 1: this rule precedes every User-agent line, so it joins no group and is
+# discarded. The path it names is therefore not protected by anything.
+Disallow: /admin/
+
+User-agent: *
+Disallow: /internal/
+# Fault 2: one group naming the same path twice with opposite verbs. The tie
+# resolves to Allow, so the Disallow is inert.
+Disallow: /guides/drafts/
+Allow: /guides/drafts/
+
+# Fault 3: a second group for the same user agent. Crawlers merge the two, so the
+# effective policy is the union and neither block is what it appears to be.
+User-agent: *
+Disallow: /search/
+
+# Fault 4: everything forbidden, then one path handed back. Which rule applies is
+# decided by match length rather than by the order these lines were written in.
+User-agent: AhrefsBot
+Disallow: /
+Allow: /about/
+
+# Fault 5: Nofollow is not a robots.txt field. Unrecognised lines are skipped in
+# silence, so whatever this was meant to achieve is not happening.
+Nofollow: /private/
+
+# Fault 6: robots.txt is fetched without page context, so a root-relative value
+# has nothing to resolve against.
+Sitemap: /sitemap.xml

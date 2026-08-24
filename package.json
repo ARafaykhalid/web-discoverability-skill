@@ -1,0 +1,50 @@
+{
+  "name": "web-discoverability-skill",
+  "version": "3.0.0",
+  "description": "Evidence-tiered web and AI discoverability requirement registry, applicability engine, deterministic checks, and benchmark harness for autonomous coding agents.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ARafaykhalid/web-discoverability-skill.git"
+  },
+  "homepage": "https://github.com/ARafaykhalid/web-discoverability-skill#readme",
+  "bugs": {
+    "url": "https://github.com/ARafaykhalid/web-discoverability-skill/issues"
+  },
+  "keywords": [
+    "agent-skills",
+    "technical-seo",
+    "web-discoverability",
+    "ai-discoverability",
+    "aeo",
+    "geo",
+    "llmo",
+    "structured-data",
+    "search-indexing"
+  ],
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "bin": {
+    "wds": "./tools/cli.mjs"
+  },
+  "scripts": {
+    "validate": "node tools/cli.mjs validate",
+    "quality": "node tools/cli.mjs quality",
+    "metrics": "node tools/cli.mjs metrics --write",
+    "stale": "node tools/cli.mjs stale-requirements",
+    "sources": "node tools/cli.mjs sources",
+    "check-sources": "node tools/cli.mjs check-sources",
+    "select": "node tools/cli.mjs select",
+    "profile": "node tools/cli.mjs profile",
+    "audit": "node tools/cli.mjs audit",
+    "bench": "node tools/cli.mjs bench --write",
+    "bench:check": "node tools/cli.mjs bench",
+    "docs": "node tools/cli.mjs docs",
+    "docs:check": "node tools/cli.mjs docs --check",
+    "test": "node --test",
+    "ci": "npm run validate && npm run quality && npm run bench && npm run metrics && npm run docs:check && npm test"
+  }
+}

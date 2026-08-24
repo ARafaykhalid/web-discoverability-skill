@@ -1,0 +1,16 @@
+{
+  "name": "ridgeline-roofing-site",
+  "version": "1.4.0",
+  "private": true,
+  "description": "Server-rendered brochure site for a roofing contractor. No build step: every response is assembled from template strings at request time.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

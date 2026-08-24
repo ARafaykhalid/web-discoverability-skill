@@ -1,0 +1,8 @@
+{
+  "captured_at": "2026-08-23T00:00:00.000Z",
+  "origin": "https://shop.example.test",
+  "pages": [
+    { "url": "/en/", "status": 200, "raw_html_path": "captures/en.html", "rendered_html_path": "captures/en.html" },
+    { "url": "/fr/", "status": 200, "raw_html_path": "captures/fr.html", "rendered_html_path": "captures/fr.html" }
+  ]
+}

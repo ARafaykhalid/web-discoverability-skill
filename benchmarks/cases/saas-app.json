@@ -1,0 +1,112 @@
+{
+  "id": "saas-app",
+  "fixture": "benchmarks/fixtures/saas-app",
+  "title": "SaaS site whose defects all sit on the boundary between the public pages and the authenticated subtree",
+  "level": "ULTRA",
+  "notes": "Every defect here sits on the seam between the five public pages and the two-page authenticated /app/ subtree, because that seam is where an autonomous agent can do the most damage in either direction: making a session-gated route indexable, or making a public route unreachable. Both mistakes are present, in opposite directions, from a single over-broad rule. robots.txt is otherwise well formed - one group, no blanket disallow, no Allow line, a Sitemap reference - so the robots and sitemap structural checks stay in the measured set and pass rather than being knocked out by a syntax fault. The two /app/ pages are captured with indexable: false, which is the honest statement that their exclusion is intended; without it the noindex they serve would be read as an accident and a second, contradictory finding would appear on the same markup. Those two pages are also the only ones with a separate rendered capture, and that capture is deliberately unremarkable: the executed document adds a filled-in panel and nothing else, so the initial response still carries the title, the heading and most of the words, and the canonical is byte-identical before and after. It buys one observable thing and not the thing an author would expect. It does not put the two JavaScript-rendering checks into the measured set - SEO-593 and SEO-597 are gated on client_rendered or javascript_app, both FALSE on a static-html project, so those checks are never offered here no matter what the capture contains, and this case makes no claim about them. What it does buy is the raw/rendered distinction being real, which is why the two SEO-094 findings are located at a bare file path while the SEO-049 finding carries a line number: the location helper attaches a line only when raw and rendered HTML are the same string, and for these two pages they are not. What this fixture does not test: any protocol or status behaviour (everything answers 200 with no redirect hops and no X-Robots-Tag), any page-level metadata fault, and anything about the sign-in flow itself, which ships no handler.",
+  "declared_defects": [
+    "robots.txt declares \"Disallow: /a\", written as a truncation of the /app/ subtree it was meant to cover; the same prefix also matches the public /api-docs page, which is listed in the sitemap (SEO-114).",
+    "login.html is served with no noindex directive and is listed in sitemap.xml, while robots.txt disallows /login; the sitemap asks for a fetch the crawl policy forbids (SEO-114).",
+    "pricing.html declares its canonical as https://example.com/ rather than its own URL, and is listed in the sitemap under /pricing (SEO-049, SEO-055).",
+    "app/dashboard.html serves \"noindex, nofollow\" on a path robots.txt disallows, so the disallow prevents the fetch that would have read the directive (SEO-094).",
+    "app/settings.html carries the same pairing as app/dashboard.html (SEO-094)."
+  ],
+  "expected_findings": [
+    {
+      "check_id": "canonical-self-referencing-absolute",
+      "requirement_id": "SEO-049",
+      "location": "pricing.html:12"
+    },
+    {
+      "check_id": "sitemap-canonical-only",
+      "requirement_id": "SEO-055",
+      "location": "sitemap.xml:12"
+    },
+    {
+      "check_id": "sitemap-lists-noindex-url",
+      "requirement_id": "SEO-114",
+      "location": "sitemap.xml:16"
+    },
+    {
+      "check_id": "sitemap-lists-noindex-url",
+      "requirement_id": "SEO-114",
+      "location": "sitemap.xml:24"
+    },
+    {
+      "check_id": "crawl-index-directive-conflict",
+      "requirement_id": "SEO-094",
+      "location": "app/dashboard.html"
+    },
+    {
+      "check_id": "crawl-index-directive-conflict",
+      "requirement_id": "SEO-094",
+      "location": "app/settings.html"
+    }
+  ],
+  "expected_non_findings": [
+    { "check_id": "robots-txt-present" },
+    { "check_id": "robots-sitemap-reference" },
+    { "check_id": "robots-group-contradiction" },
+    { "check_id": "robots-meta-noindex-unintended" },
+    { "check_id": "sitemap-xml-wellformed" },
+    { "check_id": "sitemap-loc-same-host" },
+    { "check_id": "sitemap-size-limits" },
+    { "check_id": "canonical-no-tracking-params" },
+    { "check_id": "internal-links-resolve" },
+    { "check_id": "title-element-single" },
+    { "check_id": "title-distinct-across-routes" },
+    { "check_id": "meta-description-single" },
+    { "check_id": "html-lang-present" },
+    { "check_id": "viewport-declared" },
+    { "check_id": "og-url-matches-canonical" },
+    { "check_id": "og-image-alt-present" },
+    { "check_id": "og-duplicate-properties" },
+    { "check_id": "jsonld-parses" },
+    { "check_id": "jsonld-absolute-urls" },
+    { "check_id": "jsonld-duplicate-entity" },
+    { "check_id": "img-alt-attribute-present" },
+    { "check_id": "img-dimensions-declared" },
+    { "check_id": "llms-txt-plain-text" },
+    { "check_id": "llms-txt-absolute-https-links" }
+  ],
+  "expected_blocked": [
+    "SEO-049",
+    "SEO-055",
+    "SEO-094",
+    "SEO-114"
+  ],
+  "expected_not_applicable": [
+    "SEO-418",
+    "SEO-420",
+    "SEO-466",
+    "SEO-453",
+    "SEO-455",
+    "SEO-460",
+    "SEO-484",
+    "SEO-486",
+    "SEO-073"
+  ],
+  "expected_not_applicable_rationale": "This site sells no catalogue, accepts no contributions, serves one language, and gates nothing on payment, so the ecommerce, ugc, international and paywall rules must not be offered. Each would invite an invented fact: product identifiers for products that do not exist, hreflang pointing at locale pages that were never written, access markup for an entitlement nobody sells. The paywall pair is the one worth spelling out, because a pricing page is easy to mistake for a paywall. Nothing in this fixture is withheld pending payment - the /app/ subtree is gated on a session, not on an entitlement - and treating a session gate as a paywall is exactly the confusion that would put subscription access markup on an application screen. SEO-073 needs a filter or sort parameter and there is none. The bfcache rule is intentionally not listed here: bfcache is a browser-document concern and now applies to static HTML when authentication is present. Of these nine, six resolve to NOT_APPLICABLE and the three locale rules resolve to UNCERTAIN, because a single lang attribute is evidence of one declared language rather than proof that no other exists; the assertion this list makes is the one that matters either way, that none of them is offered as applicable. Asserted at ULTRA, so nothing is excluded merely for being optional.",
+  "expected_applicable": [
+    "SEO-098",
+    "SEO-339",
+    "SEO-391",
+    "SEO-394",
+    "SEO-592",
+    "SEO-628",
+    "SEO-630",
+    "SEO-632",
+    "SEO-361"
+  ],
+  "expected_applicable_rationale": "The authentication fact is the point of this fixture, so the rules that depend on it must actually be offered. It is established by evidence in the project rather than by assertion: middleware/session.js exports getServerSession and withAuth, middleware/protected-routes.js enumerates which paths need a session and which do not, and login.html is the route the guard redirects to. These eight are the requirements an agent needs in front of it when it touches a public/private boundary - keeping authenticated routes out of the index, keeping private responses out of shared caches, refusing redirect targets the application does not own, keeping user input out of indexing directives and out of preview metadata, keeping preview URLs excluded, keeping consent state out of crawler access decisions, and returning neutral metadata on an unauthorized response. None of the eight has a deterministic check behind it in this tool - all eight appear in the audit's unchecked_applicable list - so they are asserted here to prove selection offers them for manual verification, not to claim anything about them was measured. SEO-361 is the tenth authentication-gated requirement at ULTRA and is deliberately in the not-applicable list instead, for the domain reason recorded there.",
+  "profile_expectations": {
+    "framework": "static-html",
+    "authentication": true,
+    "has_robots_txt": true,
+    "has_sitemap": true,
+    "has_llms_txt": true,
+    "ecommerce": false,
+    "ugc": false,
+    "paywall_or_subscription": false
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "id": "news-ugc",
+  "fixture": "benchmarks/fixtures/news-ugc",
+  "title": "News publication with reader comments: dated article routes, an author profile, and a paginated comment thread",
+  "level": "ULTRA",
+  "declared_defects": [
+    "news/index.html emits its breadcrumb trail as the second @graph member with no @type, so the node cannot be matched to a vocabulary and is discarded (SEO-161).",
+    "news/ferry-timetable-consultation.html declares NewsArticle.image as the root-relative path /media/ferry-pontoon.jpg, which has no base URL to resolve against once the markup is read away from the page (SEO-164).",
+    "news/ferry-timetable-consultation.html declares a JSON-LD headline (\"Winter ferry timetable consultation opens\") that disagrees with both the <title> and the <h1> the page publishes. No check in the suite compares the three, so this defect is recorded here and deliberately absent from expected_findings; it is a coverage gap, not a passing page.",
+    "news/harbour-dredging-delayed.html carries two Person nodes for the same reporter - one nested in NewsArticle.author with an @id, one emitted as its own block by the byline widget with no @id - so nothing ties them together and nothing says which is authoritative (SEO-167).",
+    "news/harbour-dredging-delayed/comments/page/2.html canonicalises to page one of the comment thread instead of to itself, so the address that serves comments 21 to 34 disowns them (SEO-049).",
+    "sitemap.xml lists /news/harbour-dredging-delayed/comments/page/2, which the served page canonicalises away to page one (SEO-055).",
+    "news/harbour-dredging-delayed/comments/page/2.html publishes a reader comment linking to /news/harbour-survey-leaked, a story that was withdrawn; the moderation queue passed the comment without checking the target and the path now resolves to nothing (SEO-212)."
+  ],
+  "expected_findings": [
+    {
+      "check_id": "jsonld-parses",
+      "requirement_id": "SEO-161",
+      "location": "news/index.html"
+    },
+    {
+      "check_id": "jsonld-absolute-urls",
+      "requirement_id": "SEO-164",
+      "location": "news/ferry-timetable-consultation.html"
+    },
+    {
+      "check_id": "jsonld-duplicate-entity",
+      "requirement_id": "SEO-167",
+      "location": "news/harbour-dredging-delayed.html"
+    },
+    {
+      "check_id": "canonical-self-referencing-absolute",
+      "requirement_id": "SEO-049",
+      "location": "news/harbour-dredging-delayed/comments/page/2.html"
+    },
+    {
+      "check_id": "sitemap-canonical-only",
+      "requirement_id": "SEO-055",
+      "location": "sitemap.xml"
+    },
+    {
+      "check_id": "internal-links-resolve",
+      "requirement_id": "SEO-212",
+      "location": "news/harbour-dredging-delayed/comments/page/2.html"
+    }
+  ],
+  "expected_non_findings": [
+    { "check_id": "title-element-single" },
+    { "check_id": "meta-description-single" },
+    { "check_id": "html-lang-present" },
+    { "check_id": "viewport-declared" },
+    { "check_id": "canonical-no-tracking-params" },
+    { "check_id": "robots-txt-present" },
+    { "check_id": "robots-sitemap-reference" },
+    { "check_id": "robots-group-contradiction" },
+    { "check_id": "robots-meta-noindex-unintended" },
+    { "check_id": "crawl-index-directive-conflict" },
+    { "check_id": "sitemap-xml-wellformed" },
+    { "check_id": "sitemap-loc-same-host" },
+    { "check_id": "sitemap-size-limits" },
+    { "check_id": "sitemap-lists-noindex-url" },
+    { "check_id": "jsonld-review-without-source" },
+    { "check_id": "img-alt-attribute-present" },
+    { "check_id": "img-dimensions-declared" },
+    { "check_id": "llms-txt-plain-text" },
+    { "check_id": "llms-txt-absolute-https-links" },
+    { "check_id": "feed-wellformed" },
+    { "check_id": "feed-alternate-link-declared" },
+    { "check_id": "og-url-matches-canonical" },
+    { "check_id": "og-image-alt-present" },
+    { "check_id": "og-duplicate-properties" }
+  ],
+  "expected_safe_fixes": ["SEO-033", "SEO-034", "SEO-498", "SEO-584"],
+  "expected_blocked": ["SEO-049", "SEO-167", "SEO-173", "SEO-212"],
+  "expected_applicable": ["SEO-086", "SEO-200", "SEO-258", "SEO-261", "SEO-263", "SEO-275", "SEO-288"],
+  "expected_not_applicable": ["SEO-241", "SEO-418", "SEO-422", "SEO-424", "SEO-451"],
+  "profile_expectations": {
+    "framework": "static-html",
+    "content_publication": true,
+    "editorial_content": true,
+    "ugc": true,
+    "pagination": true,
+    "has_feeds": true,
+    "ecommerce": false,
+    "paywall_or_subscription": false
+  },
+  "notes": "This fixture exists to make the content-publication and UGC halves of the profile true at the same time and to check that the selector then offers editorial rules. content_publication and editorial_content come from the article manifest at content/articles/index.json plus the NewsArticle markup and the /news/ route family; ugc comes from the comment form and the DiscussionForumPosting nodes, which is two independent signals rather than one. expected_applicable names seven rules about dates, headlines, bylines, corrections, sourcing and user-generated link marking: all of them are inert on a project with no publication signal, so their presence here is the positive half of the selection test that expected_not_applicable only covers negatively. What the fixture deliberately does not test: it is monolingual, so the three hreflang checks report NOT_APPLICABLE and are not listed as true negatives; it sells nothing, so the ecommerce rules are asserted absent rather than exercised; and it ships no service worker, analytics, or CMS. Page one of the comment thread is present in the repository but outside the capture, so link resolution has to fall back to shipped HTML the way it would for any route a crawl did not reach. Two candidate defect classes were written into the fixture as prose but produce no finding, and both are recorded in declared_defects for that reason: a JSON-LD headline that disagrees with the title and h1, and - separately - the fact that jsonld-review-without-source cannot detect an uncorroborated ratingValue, because the corroboration search reads the whole served document including the JSON-LD block that supplied the value. The review markup on news/tidal-scheme-review.html is therefore well formed and states its rating count, so that check inspects an editorial review and stays silent instead of reporting NOT_APPLICABLE. Three checks that inspect this fixture and pass when run directly are absent from expected_non_findings because the scored path never reaches them: title-distinct-across-routes (SEO-037) is gated on has_router, and content-in-initial-html and client-mutates-canonical (SEO-593, SEO-597) are gated on the JavaScript-app facts, all three of which are false for a static publication. The fixture still supplies a separate rendered document for the comment page so that the raw-versus-rendered pair exists for whoever revisits those gates."
+}

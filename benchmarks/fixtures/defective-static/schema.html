@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Structured data — Example Site</title>
+<meta name="description" content="A page whose deliberate defects are an unparseable JSON-LD block, an untyped node, a relative logo reference, and two Organization nodes.">
+<link rel="canonical" href="https://example.com/schema">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Structured data",
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "name": "A node that declares no type",
+  "description": "This node parses and carries a context, but nothing says what kind of thing it is, so no vocabulary can be applied to its properties."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://example.com/#org-primary",
+  "name": "Example Site",
+  "url": "https://example.com/",
+  "logo": "/assets/logo.png"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://example.com/#org-secondary",
+  "name": "Example Site Publishing",
+  "url": "https://example.com/about"
+}
+</script>
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>Four blocks, four different faults</h1>
+<p>The first block has a trailing comma, so it does not parse and every entity inside
+it is invisible. The second block parses and carries a context but declares no type, so
+its properties resolve to no vocabulary. Those two faults belong to the same check and
+two findings are expected from it.</p>
+<p>The third block is a well-formed Organization whose logo is written as a path. A
+graph is consumed away from the document that served it, so a relative reference in it
+cannot be resolved by the consumer that reads it. One finding is expected from the
+absolute-URL check, and only one — every other URL-bearing property in this page is
+already absolute.</p>
+<p>The fourth block is a second Organization with a different identifier. Two nodes of
+a type that names one real-world entity claim to describe the same thing, and nothing
+in the graph says which of them is authoritative. One finding is expected from the
+duplicate-entity check.</p>
+<p>No block on this page carries review or rating markup, which is deliberate: the
+review check should report that it had nothing to inspect rather than passing silently.</p>
+</main>
+</body>
+</html>

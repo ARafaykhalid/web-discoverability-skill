@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Build output, pinned here rather than in dist/ - see sitemap-index.xml.
+
+     Every entry is the URL the integration derived from `site` and the route, joined
+     with URL resolution, so no entry carries the doubled slash the collection route's
+     canonical does. The draft entry is listed because the integration was given no
+     filter. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+  </url>
+  <url>
+    <loc>https://example.com/about</loc>
+  </url>
+  <url>
+    <loc>https://example.com/docs/routing</loc>
+  </url>
+  <url>
+    <loc>https://example.com/docs/deploying</loc>
+  </url>
+  <url>
+    <loc>https://example.com/docs/experimental-endpoints</loc>
+  </url>
+</urlset>

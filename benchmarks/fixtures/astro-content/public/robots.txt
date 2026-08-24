@@ -1,0 +1,6 @@
+# Every published route is crawlable. The draft entry asks not to be indexed in its
+# own head rather than here, so that a crawler can read the directive it serves.
+User-agent: *
+Allow: /
+
+Sitemap: https://example.com/sitemap-index.xml

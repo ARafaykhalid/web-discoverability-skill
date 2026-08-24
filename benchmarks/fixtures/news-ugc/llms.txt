@@ -1,0 +1,16 @@
+# The Marram Coast Record
+
+Independent daily coverage of the Marram estuary: the harbour, the ferry, the
+tidal scheme, and the people arguing about all three. Reader comments are open on
+every story and are moderated before they appear.
+
+## Sections
+
+- [News archive](https://example.com/news): every story, newest first.
+- [Harbour dredging pushed back to autumn](https://example.com/news/harbour-dredging-delayed)
+- [Ferry winter timetable consultation](https://example.com/news/ferry-timetable-consultation)
+- [Tidal Reach at the Harbour Lights, reviewed](https://example.com/news/tidal-scheme-review)
+
+## Staff
+
+- [Mara Quill](https://example.com/authors/mara-quill), reporter and critic.

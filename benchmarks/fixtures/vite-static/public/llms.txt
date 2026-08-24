@@ -1,0 +1,16 @@
+# Acme Docs
+
+> Documentation for the Acme build toolchain. Every page listed below is a
+> complete HTML document on the wire: the markup was produced during the build,
+> not by a script running in the reader's browser.
+
+## Pages
+
+- [Home](https://example.com/): what the build produces and why it is shaped this way.
+- [About](https://example.com/about): how one route becomes one file.
+- [Changelog](https://example.com/changelog): dated releases, newest first.
+
+## Notes
+
+- The [release feed](https://example.com/feed.xml) carries one entry per release.
+- Paths under /internal/ are disallowed in robots.txt and are not part of the published documentation, so they are deliberately absent from the list above.

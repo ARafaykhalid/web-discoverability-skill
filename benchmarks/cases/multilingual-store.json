@@ -1,0 +1,17 @@
+{
+  "id": "multilingual-store",
+  "fixture": "benchmarks/fixtures/multilingual-store",
+  "title": "Multilingual Astro storefront with product markup and reciprocal hreflang",
+  "level": "ULTRA",
+  "notes": "English and French served captures are authored before scoring. Both pages carry reciprocal hreflang, self canonicals, and Product JSON-LD; no defect is planted so the case exercises ecommerce and international applicability without reverse-engineering output.",
+  "declared_defects": [],
+  "expected_findings": [],
+  "expected_non_findings": [
+    { "check_id": "title-element-single" },
+    { "check_id": "meta-description-single" },
+    { "check_id": "canonical-self-referencing-absolute" },
+    { "check_id": "jsonld-parses" },
+    { "check_id": "jsonld-absolute-urls" }
+  ],
+  "profile_expectations": { "framework": "astro", "public_site": true, "multilingual": true, "ecommerce": true }
+}

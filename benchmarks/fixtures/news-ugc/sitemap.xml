@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated from the article manifest. The paginated comment URL is listed
+     deliberately: it is the declared sitemap-canonical-only defect. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/news</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/news/harbour-dredging-delayed</loc>
+    <lastmod>2026-05-11</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/news/ferry-timetable-consultation</loc>
+    <lastmod>2026-05-08</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/news/tidal-scheme-review</loc>
+    <lastmod>2026-05-06</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/authors/mara-quill</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/news/harbour-dredging-delayed/comments</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/news/harbour-dredging-delayed/comments/page/2</loc>
+    <lastmod>2026-05-12</lastmod>
+  </url>
+</urlset>

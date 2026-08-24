@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-enhanced="true">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Content collections reference — Example Docs</title>
+    <meta name="description" content="How the docs collection in this project is defined, which files it reads, and what the static build writes for each entry.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/">
+    <link rel="alternate" type="application/rss+xml" title="Example Docs" href="/rss.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Example Docs">
+    <meta property="og:title" content="Content collections reference — Example Docs">
+    <meta property="og:description" content="How the docs collection in this project is defined, which files it reads, and what the static build writes for each entry.">
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:image" content="https://example.com/social/home.png">
+    <meta property="og:image:alt" content="The words Example Docs above a list of the three entries in the docs collection.">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://example.com/#website","name":"Example Docs","url":"https://example.com/","publisher":{"@type":"Organization","@id":"https://example.com/#org","name":"Example","url":"https://example.com/about","logo":"https://example.com/social/logo.svg"}}</script>
+  </head>
+  <body>
+    <header>
+      <a href="/">Example Docs</a>
+      <nav>
+        <a href="/docs/routing">Routing</a>
+        <a href="/docs/deploying">Deploying</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
+    <main>
+      <h1>Content collections reference</h1>
+      <p>
+        This site is one Astro content collection and three pages that read it. Nothing
+        here is fetched at request time, so every document the build writes is the
+        document a reader receives.
+      </p>
+      <img src="/diagrams/collection-graph.svg" alt="The docs collection drawn as one box feeding three output documents" width="720" height="360">
+      <h2>Entries</h2>
+      <ul>
+        <li><a href="/docs/routing">Routing in content collections</a></li>
+        <li><a href="/docs/deploying">Deploying a static build</a></li>
+      </ul>
+      <p><span id="build-stamp">Built from the docs collection of three entries on 20 February 2026.</span></p>
+      <script>
+        document.documentElement.dataset.enhanced = 'true';
+        const stamp = document.getElementById('build-stamp');
+        if (stamp) stamp.textContent = 'Built from the docs collection of three entries on 20 February 2026.';
+      </script>
+    </main>
+    <footer>
+      <p>Example Docs is a fixture. Its pages describe how it is built and nothing else.</p>
+    </footer>
+  </body>
+</html>

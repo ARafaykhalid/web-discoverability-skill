@@ -1,0 +1,72 @@
+{
+  "captured_at": "2026-03-04T11:05:00Z",
+  "origin": "https://example.com",
+  "note": "Hand-authored capture of a SaaS site: a public marketing and documentation surface, plus an authenticated /app/ subtree. Every page answers 200 with no redirect hops and no X-Robots-Tag, so every finding comes from the files themselves rather than from a header. The two /app/ pages carry indexable: false, which is the honest statement that their exclusion is intended - the noindex they serve is deliberate, and the fault is that robots.txt also disallows the path so no crawler ever reads it. Those two pages are the only ones with a separate rendered_html_path; the executed documents differ from the initial response only in the panel each one fills in. That does not put the two JavaScript-rendering checks into play - they are gated on client_rendered or javascript_app, and both are false for a static-html project - so the rendered captures are here to make the raw/rendered distinction real rather than to claim a pass. Nothing else in this capture is a separate document: every other page is served exactly as its file stands.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "index.html",
+      "source_file": "index.html",
+      "indexable": true
+    },
+    {
+      "url": "/pricing",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "pricing.html",
+      "source_file": "pricing.html",
+      "indexable": true
+    },
+    {
+      "url": "/api-docs",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "api-docs.html",
+      "source_file": "api-docs.html",
+      "indexable": true
+    },
+    {
+      "url": "/changelog",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "changelog.html",
+      "source_file": "changelog.html",
+      "indexable": true
+    },
+    {
+      "url": "/login",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "login.html",
+      "source_file": "login.html",
+      "indexable": true
+    },
+    {
+      "url": "/app/dashboard",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "app/dashboard.html",
+      "rendered_html_path": "captures/dashboard.rendered.html",
+      "source_file": "app/dashboard.html",
+      "indexable": false
+    },
+    {
+      "url": "/app/settings",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8" },
+      "redirect_chain": [],
+      "raw_html_path": "app/settings.html",
+      "rendered_html_path": "captures/settings.rendered.html",
+      "source_file": "app/settings.html",
+      "indexable": false
+    }
+  ]
+}

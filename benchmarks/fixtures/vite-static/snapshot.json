@@ -1,0 +1,44 @@
+{
+  "captured_at": "2026-01-31T11:05:00Z",
+  "origin": "https://example.com",
+  "note": "Captured from a local preview of dist/, which is what this project actually serves. raw_html_path names the built document rather than the source entry because the built document is the bytes a reader receives; the source entries at the fixture root still carry the <!--app-html--> placeholder and would misrepresent every line number if a finding pointed at them. The home page is captured twice, once as served and once after its inline script ran, because it is the only route with client-side code; the difference is seven words on a build stamp. The other two routes are captured once, and the two JavaScript-rendering checks therefore have nothing to compare on them - which is why the case file claims those checks against this fixture on the strength of the home page alone.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=600"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "dist/index.html",
+      "rendered_html_path": "captures/home.rendered.html",
+      "source_file": "dist/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/about",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=600"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "dist/about.html",
+      "source_file": "dist/about.html",
+      "indexable": true
+    },
+    {
+      "url": "/changelog",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=600"
+      },
+      "redirect_chain": [],
+      "raw_html_path": "dist/changelog.html",
+      "source_file": "dist/changelog.html",
+      "indexable": true
+    }
+  ]
+}

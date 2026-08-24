@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release notes — Meridian</title>
+<meta name="description" content="Dated entries describing what changed in Meridian, newest first, including the API changes that affect existing tokens.">
+<link rel="canonical" href="https://example.com/changelog">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meridian">
+<meta property="og:title" content="Release notes — Meridian">
+<meta property="og:description" content="What changed in Meridian, dated, newest first.">
+<meta property="og:url" content="https://example.com/changelog">
+<meta property="og:image" content="https://example.com/assets/og-releases.png">
+<meta property="og:image:alt" content="Three dated release entries stacked newest first">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Overview</a>
+<a href="/pricing">Plans</a>
+<a href="/api-docs">API reference</a>
+<a href="/changelog">Release notes</a>
+<a href="/login">Sign in</a>
+</nav>
+<main>
+<h1>Release notes</h1>
+<p>Newest first. Anything that changes the meaning of an existing API response is
+marked as such, because a client that was written against the old meaning will not
+notice the difference on its own.</p>
+<h2>5 February 2026</h2>
+<p>Run history now records the warehouse query duration separately from the
+delivery duration. A schedule that looks slow is usually waiting on the warehouse,
+and the previous single number could not show that.</p>
+<h2>28 January 2026</h2>
+<p>Affects existing clients: <code>DELETE /v1/schedules/:id</code> now responds 404
+rather than 403 for a schedule the token cannot see. The old response disclosed
+which identifiers existed to anyone willing to enumerate them.</p>
+<h2>14 January 2026</h2>
+<p>Workspace settings moved behind the session guard along with the rest of the
+application. The page had been reachable without a session, which is the fault
+this fixture's whole shape is built to make visible.</p>
+<h2>2 January 2026</h2>
+<p>Cron expressions accept a timezone. A weekly report that arrived at seven in
+the morning UTC arrived at an unhelpful hour for about half the people receiving
+it.</p>
+<p>The <a href="/api-docs">API reference</a> carries the current behaviour of every
+endpoint named above.</p>
+</main>
+<footer>
+<p>Operated by Meridian. Written and maintained as test data.</p>
+</footer>
+</body>
+</html>

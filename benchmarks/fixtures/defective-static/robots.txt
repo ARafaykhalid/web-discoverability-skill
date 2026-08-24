@@ -1,0 +1,11 @@
+# robots.txt for the defective-static benchmark fixture.
+#
+# The crawl configuration here is deliberately correct. Every defect in this
+# fixture is page-level, and a faulty robots.txt would add findings that belong
+# to the crawl-misconfig fixture instead - which would make it impossible to tell
+# which fixture proved what.
+
+User-agent: *
+Disallow: /admin/
+
+Sitemap: https://example.com/sitemap.xml

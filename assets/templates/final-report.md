@@ -22,8 +22,10 @@ State the implemented outcome, selected level and mode, and any material limitat
 | Evaluated | 0 |
 | Implemented | 0 |
 | Fixed | 0 |
+| Proposed | 0 |
 | Already correct | 0 |
 | Not applicable | 0 |
+| Uncertain | 0 |
 | Blocked | 0 |
 | Failed | 0 |
 | Needs manual action | 0 |
@@ -39,10 +41,7 @@ State the implemented outcome, selected level and mode, and any material limitat
 | Google News | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Google Shopping | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Bing Search | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| Bing Copilot | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| Bing AI Performance | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| AI search/answers | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
-| LLM retrieval | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
+| AI assistant retrieval | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Local search | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 | Social preview | RELEVANT / NOT_RELEVANT / UNKNOWN | | | |
 

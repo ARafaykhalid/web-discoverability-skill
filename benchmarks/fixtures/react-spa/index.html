@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<!-- There is deliberately no <title>, no meta description, and no canonical in
+     this shell. Every route sets them from useDocumentHead() after mount, which
+     is the defect this fixture exists to demonstrate: a consumer that does not
+     execute scripts receives a document with no title and no canonical. -->
+</head>
+<body>
+<div id="root"></div>
+<noscript>
+<p>This application needs JavaScript to render. If your reader does not execute
+scripts, nothing below this line exists yet.</p>
+</noscript>
+<script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

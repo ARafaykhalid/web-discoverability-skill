@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Routing in content collections — Example Docs</title>
+    <meta name="description" content="How an entry id in the docs collection becomes an output path, and where the id comes from when the file name and the front matter disagree.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com//docs/routing">
+    <link rel="alternate" type="application/rss+xml" title="Example Docs" href="/rss.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Example Docs">
+    <meta property="og:title" content="Routing in content collections — Example Docs">
+    <meta property="og:description" content="How an entry id in the docs collection becomes an output path, and where the id comes from when the file name and the front matter disagree.">
+    <meta property="og:url" content="https://example.com//docs/routing">
+    <meta property="og:image" content="https://example.com/social/docs.png">
+    <meta property="og:image:alt" content="A documentation page shown beside the markdown file it was built from.">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://example.com//docs/routing#article","headline":"Routing in content collections","url":"https://example.com//docs/routing","dateModified":"2026-01-18","author":{"@type":"Person","name":"M. Okafor","url":"https://example.com/about"}}</script>
+  </head>
+  <body>
+    <header>
+      <a href="/">Example Docs</a>
+      <nav>
+        <a href="/docs/routing">Routing</a>
+        <a href="/docs/deploying">Deploying</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
+    <main>
+      <h1>Routing in content collections</h1>
+      <p>A collection entry does not choose its own URL. The route file decides that, and in
+      this project the route is <code>src/pages/docs/[...slug].astro</code>. It asks the collection
+      for every entry, hands each id to <code>getStaticPaths</code>, and the build writes one file per
+      id under <code>docs/</code>.</p>
+      <p>The id is derived from the file path relative to the collection base, with the
+      extension removed. <code>routing.md</code> becomes <code>routing</code>, and a file at <code>guides/deploy.md</code>
+      would become <code>guides/deploy</code>. Nothing in the front matter changes it, which is worth
+      knowing before renaming a file that other pages already link to.</p>
+      <img src="/diagrams/routing-table.png" alt="Three collection file names beside the output paths the build writes for them" width="960" height="420">
+      <p>Because the id is the whole path segment, the route pattern has to be a rest
+      parameter. A single <code>[slug]</code> would match <code>routing</code> and miss <code>guides/deploy</code>
+      entirely, and the build would emit nothing for the nested entry.</p>
+      <p><a href="/">Back to the collection index</a></p>
+    </main>
+    <footer>
+      <p>Example Docs is a fixture. Its pages describe how it is built and nothing else.</p>
+    </footer>
+  </body>
+</html>

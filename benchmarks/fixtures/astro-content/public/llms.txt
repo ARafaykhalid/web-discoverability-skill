@@ -1,0 +1,18 @@
+# Example Docs
+
+Example Docs is a small static site describing its own build. Three markdown files
+in one Astro content collection are rendered by one layout and written to disk by
+one command. Nothing on the site is produced at request time.
+
+## Pages
+
+- [Content collections reference](https://example.com/) - what the collection holds and which route reads it.
+- [Routing in content collections](https://example.com/docs/routing) - how an entry id becomes an output path.
+- [Deploying a static build](https://example.com/docs/deploying) - what the build writes and what a host has to serve.
+- [About this documentation set](https://example.com/about) - who publishes the site and what it leaves out.
+
+## Not covered
+
+The site has no catalogue, no reader accounts, no contributed content and one
+language. Pages that would describe those things do not exist, so nothing here
+links to them.

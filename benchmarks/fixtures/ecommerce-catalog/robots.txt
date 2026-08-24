@@ -1,0 +1,14 @@
+# The crawl configuration here is deliberately correct. The defects in this fixture
+# are in the product markup and in one sitemap entry, so any robots finding against
+# this file is a false positive.
+#
+# /cart and /checkout are excluded by a meta robots noindex on the pages themselves
+# rather than by Disallow, because a disallowed URL cannot be read and its noindex
+# would never be seen. Adding a Disallow for them here would make the two directives
+# cancel each other out.
+
+User-agent: *
+Allow: /
+Disallow: /search
+
+Sitemap: https://example.com/sitemap.xml

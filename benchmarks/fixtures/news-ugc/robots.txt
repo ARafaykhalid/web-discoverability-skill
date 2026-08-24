@@ -1,0 +1,9 @@
+# The Marram Coast Record. One group, one sitemap reference, no preamble
+# directives: the fixture's robots defects live nowhere, so robots-group-contradiction
+# has something to inspect and stay silent about.
+User-agent: *
+Allow: /
+Disallow: /search
+Crawl-delay: 1
+
+Sitemap: https://example.com/sitemap.xml

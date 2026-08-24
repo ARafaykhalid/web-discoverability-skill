@@ -1,0 +1,19 @@
+# Ridgeline Roofing
+
+A four-person roofing firm in Whitby, North Yorkshire, working on pitched slate and
+clay tile roofs. The site is four public pages and carries no catalogue, no booking
+system and no logins.
+
+## Pages
+
+- [Overview](https://example.com/): what the firm does and where it works.
+- [What roof work costs](https://example.com/pricing): how a job is quoted and which
+  three factors move the figure most.
+- [Choosing roof tiles for a coastal roof](https://example.com/guides/roof-tile-selection):
+  clay, concrete and slate compared for exposure within two miles of the sea.
+- [Contact](https://example.com/contact): phone, email, yard address and survey radius.
+
+## Notes
+
+Prices are never published as figures on the site; every quote follows a written
+survey. Anything stated here about cost is a description of the method, not a rate.

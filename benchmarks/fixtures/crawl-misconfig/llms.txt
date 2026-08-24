@@ -1,0 +1,11 @@
+# Example Site
+
+> The crawl-misconfig fixture. Every link below is an absolute HTTPS URL, which is
+> what the llms.txt checks require, so this file is a control rather than a defect.
+
+## Pages
+
+- [Home](https://example.com/): what the fixture is for.
+- [Guides](https://example.com/guides/): the index of written guides.
+- [Crawl directives](https://example.com/guides/crawl-directives/): the one guide.
+- [About](https://example.com/about/): who maintains the fixture.

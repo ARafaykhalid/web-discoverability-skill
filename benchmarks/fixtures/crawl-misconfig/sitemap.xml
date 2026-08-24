@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Well-formed on purpose. The namespace is declared, every entry holds exactly one
+  non-empty location element, and there is no unescaped ampersand, so the
+  well-formedness check has a document it can parse and pass. The defects here are
+  semantic: one entry names another host, and one entry names a URL this site
+  declines to have listed.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2026-01-15</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/guides/</loc>
+    <lastmod>2026-01-15</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/guides/crawl-directives/</loc>
+    <lastmod>2026-02-03</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/about/</loc>
+    <lastmod>2026-01-15</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/search/</loc>
+    <lastmod>2026-02-03</lastmod>
+  </url>
+  <url>
+    <loc>https://cdn.example.net/guides/asset-checklist/</loc>
+    <lastmod>2026-02-03</lastmod>
+  </url>
+</urlset>

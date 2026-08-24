@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Picture wall — Example Site</title>
+<meta name="description" content="A page whose deliberate defects are three unusable image alternative texts, alongside one correctly marked decorative image.">
+<link rel="canonical" href="https://example.com/gallery">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>Three unusable alternatives and one correct one</h1>
+<p>Every image on this page declares both of its dimensions, so the dimension check is
+expected to stay silent here and any finding it emits against this page is a false
+positive. What varies is the alternative text.</p>
+
+<figure>
+<img src="/assets/aurora.jpg" width="800" height="600">
+<figcaption>No alt attribute at all. A consumer has nothing to fall back to.</figcaption>
+</figure>
+
+<figure>
+<img src="/assets/harbour.jpg" alt="harbour-at-dawn.jpg" width="800" height="600">
+<figcaption>The alt is the file name, which describes the asset rather than the picture.</figcaption>
+</figure>
+
+<figure>
+<img src="/assets/kiln.jpg" alt="image" width="800" height="600">
+<figcaption>The alt is a placeholder word that carries no information about the subject.</figcaption>
+</figure>
+
+<p>The next image is the control. An empty alt is the documented way to mark an image
+as decorative, and reporting it is the single most common false positive in automated
+accessibility tooling, so this fixture asserts that the check leaves it alone.</p>
+<img src="/assets/divider.svg" alt="" width="16" height="16">
+
+<p>Three findings are expected on this page, one per unusable alternative, and none for
+the decorative divider.</p>
+</main>
+</body>
+</html>

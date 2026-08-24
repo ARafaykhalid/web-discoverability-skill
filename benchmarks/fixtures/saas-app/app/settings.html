@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workspace settings — Meridian workspace</title>
+<meta name="description" content="Delivery defaults, warehouse connection, and member access for a Meridian workspace. Requires a session.">
+<link rel="canonical" href="https://example.com/app/settings">
+<!-- Declared defect (paired with robots.txt), same pairing as /app/dashboard: a
+     noindex on a path robots.txt disallows cancels itself, because the disallow
+     stops the fetch that would have read the directive. -->
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<nav aria-label="Application">
+<a href="/app/dashboard">Schedules</a>
+<a href="/app/settings">Workspace settings</a>
+<a href="/">Public site</a>
+</nav>
+<main>
+<h1>Workspace settings</h1>
+<p>Three groups of setting live here: the warehouse connection a schedule runs
+against, the delivery defaults a new schedule inherits, and the list of members who
+may see the run history. The forms themselves are filled in after the session is
+confirmed, which is why the initial response describes them rather than rendering
+them.</p>
+<p>As on the schedules page, the initial HTML deliberately carries the title, the
+heading, and the bulk of the prose, so the initial and the executed document differ
+only by the panel below, and the canonical is identical in both. Neither of those is
+measured on a static-html project, where the JavaScript-rendering requirements are
+not offered at all. The point is narrower: this fixture is about crawl and index
+directives disagreeing, and it should not accidentally also be about client-side
+rendering.</p>
+<p>This page moved behind the session guard in the January release recorded on the
+public <a href="/changelog">release notes</a>. Before that it answered without a
+session, which is precisely the failure this fixture's boundary exists to make
+visible.</p>
+<section id="settings" aria-busy="true">
+<p>Loading the settings for this workspace.</p>
+</section>
+</main>
+<footer>
+<p>Meridian workspace. Benchmark fixture data.</p>
+</footer>
+</body>
+</html>

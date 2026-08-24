@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ARafaykhalid/web-discoverability-skill/schema/benchmark-case.schema.json",
+  "title": "Benchmark case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "fixture",
+    "description",
+    "planted_defects",
+    "expected_findings",
+    "expected_non_findings"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "fixture": {
+      "type": "string",
+      "description": "Path relative to the repository root."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "LITE",
+        "RECOMMENDED",
+        "EXTRA",
+        "ULTRA"
+      ]
+    },
+    "profile_expectations": {
+      "type": "object",
+      "description": "Profile facts the detector must conclude for this fixture."
+    },
+    "planted_defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirement_id",
+          "location",
+          "note"
+        ],
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "pattern": "^SEO-\\d{3,4}$"
+          },
+          "check_id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "expected_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check_id"
+        ],
+        "properties": {
+          "check_id": {
+            "type": "string"
+          },
+          "requirement_id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "expected_non_findings": {
+      "type": "array",
+      "description": "Checks that must stay silent. These produce the true negatives in the false-positive rate.",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "check_id"
+            ],
+            "properties": {
+              "check_id": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "requirement_id": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expected_not_applicable": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      }
+    },
+    "expected_safe_fixes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      }
+    },
+    "expected_blocked": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Experimental endpoints — Example Docs</title>
+    <meta name="description" content="Notes on an endpoint shape that is still being reviewed. Published as a draft so the wording can be read in place before it is finished.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://example.com//docs/experimental-endpoints">
+    <link rel="alternate" type="application/rss+xml" title="Example Docs" href="/rss.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Example Docs">
+    <meta property="og:title" content="Experimental endpoints — Example Docs">
+    <meta property="og:description" content="Notes on an endpoint shape that is still being reviewed. Published as a draft so the wording can be read in place before it is finished.">
+    <meta property="og:url" content="https://example.com//docs/experimental-endpoints">
+    <meta property="og:image" content="https://example.com/social/docs.png">
+    <meta property="og:image:alt" content="A documentation page shown beside the markdown file it was built from.">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://example.com//docs/experimental-endpoints#article","headline":"Experimental endpoints","url":"https://example.com//docs/experimental-endpoints","dateModified":"2026-02-14","author":{"@type":"Person","name":"M. Okafor","url":"https://example.com/about"}}</script>
+  </head>
+  <body>
+    <header>
+      <a href="/">Example Docs</a>
+      <nav>
+        <a href="/docs/routing">Routing</a>
+        <a href="/docs/deploying">Deploying</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
+    <main>
+      <h1>Experimental endpoints</h1>
+      <p>This entry is marked <code>draft: true</code> in its front matter. The layout reads that flag
+      and serves a noindex robots directive, which is the intended handling: the page is
+      reachable so a reviewer can read it in its final typography, and it asks not to be
+      listed while the wording is unsettled.</p>
+      <p>The sitemap integration does not read that flag. It lists every route the build
+      emits, so this URL appears in <code>sitemap-0.xml</code> alongside the finished entries. Two
+      files therefore give opposite instructions about the same address, and the fix is a
+      <code>filter</code> in the integration options rather than a change to this file.</p>
+      <p><a href="/">Back to the collection index</a></p>
+    </main>
+    <footer>
+      <p>Example Docs is a fixture. Its pages describe how it is built and nothing else.</p>
+    </footer>
+  </body>
+</html>

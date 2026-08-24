@@ -1,529 +1,578 @@
 {
-  "schema_version": 2,
-  "requirement_count": 640,
-  "id_range": [
-    "SEO-001",
-    "SEO-640"
-  ],
-  "levels": [
-    "LITE",
-    "RECOMMENDED",
-    "EXTRA",
-    "ULTRA"
-  ],
-  "search_surfaces": [
-    "GOOGLE_SEARCH",
-    "GOOGLE_DISCOVER",
-    "GOOGLE_IMAGES",
-    "GOOGLE_VIDEO",
-    "GOOGLE_NEWS",
-    "GOOGLE_SHOPPING",
-    "BING_SEARCH",
-    "BING_COPILOT",
-    "BING_AI_PERFORMANCE",
-    "AI_SEARCH",
-    "LLM_RETRIEVAL",
-    "LOCAL_SEARCH",
-    "SOCIAL_PREVIEW"
-  ],
-  "surface_values": [
-    "RELEVANT",
-    "NOT_RELEVANT",
-    "UNKNOWN"
-  ],
-  "evidence_types": [
-    "FILE",
-    "LINE",
-    "ROUTE",
-    "HTTP_RESPONSE",
-    "HTML",
-    "HEADER",
-    "JSON_LD",
-    "SITEMAP",
-    "ROBOTS",
-    "BROWSER",
-    "BUILD",
-    "LINT",
-    "TYPECHECK",
-    "PERFORMANCE",
-    "ACCESSIBILITY",
-    "EXTERNAL_PLATFORM",
-    "MANUAL_ACTION"
-  ],
-  "allowed_statuses": [
-    "APPLICABLE",
-    "NOT_APPLICABLE",
-    "BLOCKED",
-    "ALREADY_CORRECT",
-    "IMPLEMENTED",
-    "FIXED",
-    "FAILED",
-    "NEEDS_MANUAL_ACTION"
-  ],
-  "platform_statuses": [
-    "OFFICIAL_PLATFORM_CONCEPT",
-    "ESTABLISHED_PRACTICE",
-    "INDUSTRY_TERM",
-    "EMERGING_PRACTICE",
-    "EXPERIMENTAL"
-  ],
-  "level_candidate_counts": {
-    "LITE": 124,
-    "RECOMMENDED": 400,
-    "EXTRA": 520,
-    "ULTRA": 640
+  "schema_version": 3,
+  "generated_from": "requirements/*.jsonl",
+  "generator": "npm run docs -- --write",
+  "counts": {
+    "active": 224,
+    "removed": 80,
+    "deferred": 336,
+    "domains": 37,
+    "checks": 36
   },
-  "domains": [
-    {
-      "domain": "architecture",
-      "title": "Repository and application architecture",
-      "file": "architecture.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": []
-    },
-    {
-      "domain": "urls",
+  "levels": {
+    "LITE": 56,
+    "RECOMMENDED": 223,
+    "EXTRA": 224,
+    "ULTRA": 224
+  },
+  "highest_id": "SEO-636",
+  "domains": {
+    "urls": {
       "title": "URL design and HTTP routing",
+      "activation": "always",
       "file": "urls.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture"
-      ]
+      "count": 7,
+      "ids": [
+        "SEO-017",
+        "SEO-019",
+        "SEO-020",
+        "SEO-022",
+        "SEO-024",
+        "SEO-025",
+        "SEO-026"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "metadata",
-      "title": "Document metadata and previews",
+    "metadata": {
+      "title": "Document metadata",
+      "activation": "always",
       "file": "metadata.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "urls"
-      ]
+      "count": 6,
+      "ids": [
+        "SEO-033",
+        "SEO-034",
+        "SEO-035",
+        "SEO-036",
+        "SEO-037",
+        "SEO-039"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "canonicals",
+    "canonicals": {
       "title": "Canonicalization",
+      "activation": "always",
       "file": "canonicals.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "metadata"
-      ]
+      "count": 9,
+      "ids": [
+        "SEO-049",
+        "SEO-051",
+        "SEO-052",
+        "SEO-053",
+        "SEO-054",
+        "SEO-055",
+        "SEO-056",
+        "SEO-057",
+        "SEO-058"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "crawling",
+    "crawling": {
       "title": "Crawlability and crawl management",
+      "activation": "always",
       "file": "crawling.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "urls"
-      ]
+      "count": 7,
+      "ids": [
+        "SEO-065",
+        "SEO-066",
+        "SEO-067",
+        "SEO-068",
+        "SEO-071",
+        "SEO-073",
+        "SEO-074"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "robots",
+    "robots": {
       "title": "Robots directives",
+      "activation": "always",
       "file": "robots.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "crawling"
-      ]
+      "count": 7,
+      "ids": [
+        "SEO-081",
+        "SEO-082",
+        "SEO-083",
+        "SEO-084",
+        "SEO-085",
+        "SEO-086",
+        "SEO-094"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "indexing",
+    "indexing": {
       "title": "Indexability and index lifecycle",
+      "activation": "always",
       "file": "indexing.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "robots",
-        "canonicals"
-      ]
+      "count": 6,
+      "ids": [
+        "SEO-097",
+        "SEO-098",
+        "SEO-099",
+        "SEO-101",
+        "SEO-102",
+        "SEO-103"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "sitemaps",
-      "title": "XML sitemap infrastructure",
+    "sitemaps": {
+      "title": "XML sitemaps",
+      "activation": "always",
       "file": "sitemaps.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "canonicals",
-        "indexing"
-      ]
+      "count": 6,
+      "ids": [
+        "SEO-113",
+        "SEO-114",
+        "SEO-115",
+        "SEO-116",
+        "SEO-117",
+        "SEO-119"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "google-search",
-      "title": "Google Search readiness",
-      "file": "google-search.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "indexing",
-        "sitemaps",
-        "structured-data"
-      ]
-    },
-    {
-      "domain": "bing-indexnow",
-      "title": "Bing, Copilot, and IndexNow readiness",
-      "file": "bing-indexnow.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "indexing",
-        "sitemaps",
-        "urls"
-      ]
-    },
-    {
-      "domain": "structured-data",
+    "structured-data": {
       "title": "Structured data and rich-result eligibility",
+      "activation": "public_site",
       "file": "structured-data.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "metadata",
-        "canonicals",
-        "entity"
-      ]
+      "count": 8,
+      "ids": [
+        "SEO-161",
+        "SEO-162",
+        "SEO-163",
+        "SEO-164",
+        "SEO-165",
+        "SEO-167",
+        "SEO-168",
+        "SEO-173"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "entity",
+    "entity": {
       "title": "Entity graph and site identity",
+      "activation": "public_site",
       "file": "entity.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "metadata",
-        "canonicals"
-      ]
+      "count": 6,
+      "ids": [
+        "SEO-177",
+        "SEO-178",
+        "SEO-179",
+        "SEO-180",
+        "SEO-183",
+        "SEO-186"
+      ],
+      "runtime_sensitive": false
     },
-    {
-      "domain": "content",
+    "content": {
       "title": "Content quality and answer readiness",
+      "activation": "public_site",
       "file": "content.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "indexing"
-      ]
+      "count": 6,
+      "ids": [
+        "SEO-194",
+        "SEO-195",
+        "SEO-196",
+        "SEO-198",
+        "SEO-200",
+        "SEO-208"
+      ],
+      "runtime_sensitive": false
     },
-    {
-      "domain": "internal-linking",
+    "internal-linking": {
       "title": "Internal linking and navigation",
+      "activation": "public_site",
       "file": "internal-linking.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "content"
-      ]
+      "count": 5,
+      "ids": [
+        "SEO-210",
+        "SEO-212",
+        "SEO-213",
+        "SEO-217",
+        "SEO-222"
+      ],
+      "runtime_sensitive": false
     },
-    {
-      "domain": "images",
-      "title": "Image SEO and delivery",
-      "file": "images.jsonl",
+    "images": {
+      "title": "Image discoverability and delivery",
       "activation": "has_images",
-      "count": 16,
-      "dependencies": [
-        "content",
-        "performance"
-      ]
+      "file": "images.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-225",
+        "SEO-226",
+        "SEO-227",
+        "SEO-228",
+        "SEO-231",
+        "SEO-234"
+      ],
+      "runtime_sensitive": false
     },
-    {
-      "domain": "video",
-      "title": "Video SEO and accessibility",
-      "file": "video.jsonl",
+    "video": {
+      "title": "Video discoverability and accessibility",
       "activation": "has_video",
-      "count": 16,
-      "dependencies": [
-        "content",
-        "images",
-        "structured-data"
-      ]
+      "file": "video.jsonl",
+      "count": 5,
+      "ids": [
+        "SEO-241",
+        "SEO-242",
+        "SEO-243",
+        "SEO-244",
+        "SEO-247"
+      ],
+      "runtime_sensitive": false
     },
-    {
-      "domain": "discover",
-      "title": "Google Discover readiness",
-      "file": "discover.jsonl",
-      "activation": "editorial_content",
-      "count": 16,
-      "dependencies": [
-        "content",
-        "images",
-        "google-search"
-      ]
-    },
-    {
-      "domain": "ai-search",
-      "title": "AI search, AEO, GEO, LLMO, and answer discoverability",
-      "file": "ai-search.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "content",
-        "entity",
-        "structured-data"
-      ]
-    },
-    {
-      "domain": "ai-crawlers",
-      "title": "AI crawler policy",
-      "file": "ai-crawlers.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "robots",
-        "security"
-      ]
-    },
-    {
-      "domain": "llms-txt",
-      "title": "llms.txt machine-readable guidance",
-      "file": "llms-txt.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "content",
-        "ai-search"
-      ]
-    },
-    {
-      "domain": "performance",
-      "title": "Performance and Core Web Vitals",
-      "file": "performance.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "architecture"
-      ]
-    },
-    {
-      "domain": "caching",
-      "title": "HTTP caching and freshness",
-      "file": "caching.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "security"
-      ]
-    },
-    {
-      "domain": "bfcache",
-      "title": "Back-forward cache and page lifecycle",
-      "file": "bfcache.jsonl",
-      "activation": "interactive_app",
-      "count": 16,
-      "dependencies": [
-        "performance"
-      ]
-    },
-    {
-      "domain": "accessibility",
-      "title": "Accessibility and WCAG 2.2 AA readiness",
-      "file": "accessibility.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "architecture"
-      ]
-    },
-    {
-      "domain": "security",
-      "title": "SEO security and public-surface integrity",
-      "file": "security.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture"
-      ]
-    },
-    {
-      "domain": "cdn-waf",
-      "title": "CDN, WAF, edge, and bot delivery",
-      "file": "cdn-waf.jsonl",
-      "activation": "has_cdn_or_waf",
-      "count": 16,
-      "dependencies": [
-        "crawling",
-        "security",
-        "caching"
-      ]
-    },
-    {
-      "domain": "ecommerce",
-      "title": "Ecommerce, products, and shopping surfaces",
-      "file": "ecommerce.jsonl",
-      "activation": "ecommerce",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "structured-data",
-        "images"
-      ]
-    },
-    {
-      "domain": "local",
-      "title": "Local search and location entities",
-      "file": "local.jsonl",
-      "activation": "local_business",
-      "count": 16,
-      "dependencies": [
-        "entity",
-        "structured-data",
-        "content"
-      ]
-    },
-    {
-      "domain": "international",
-      "title": "International and multilingual SEO",
-      "file": "international.jsonl",
-      "activation": "multilingual_or_multiregional",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "canonicals",
-        "sitemaps"
-      ]
-    },
-    {
-      "domain": "ugc",
-      "title": "UGC, community, profiles, and moderation",
-      "file": "ugc.jsonl",
-      "activation": "ugc",
-      "count": 16,
-      "dependencies": [
-        "security",
-        "indexing",
-        "content"
-      ]
-    },
-    {
-      "domain": "paywall",
-      "title": "Paywall, subscription, and membership content",
-      "file": "paywall.jsonl",
-      "activation": "paywall_or_subscription",
-      "count": 16,
-      "dependencies": [
-        "security",
-        "indexing",
-        "structured-data"
-      ]
-    },
-    {
-      "domain": "feeds",
-      "title": "RSS, Atom, and content feeds",
-      "file": "feeds.jsonl",
-      "activation": "content_publication",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "content",
-        "canonicals"
-      ]
-    },
-    {
-      "domain": "pdf",
-      "title": "PDF and non-HTML document discovery",
-      "file": "pdf.jsonl",
-      "activation": "public_documents",
-      "count": 16,
-      "dependencies": [
-        "security",
-        "indexing"
-      ]
-    },
-    {
-      "domain": "analytics",
-      "title": "Analytics and measurement integrity",
-      "file": "analytics.jsonl",
-      "activation": "analytics_or_measurement",
-      "count": 16,
-      "dependencies": [
-        "urls",
-        "performance",
-        "security"
-      ]
-    },
-    {
-      "domain": "monitoring",
-      "title": "Search and discoverability monitoring",
-      "file": "monitoring.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "testing",
-        "google-search",
-        "bing-indexnow"
-      ]
-    },
-    {
-      "domain": "testing",
-      "title": "Verification and regression prevention",
-      "file": "testing.jsonl",
-      "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture"
-      ]
-    },
-    {
-      "domain": "social-preview",
+    "social-preview": {
       "title": "Social and messaging previews",
+      "activation": "public_site",
       "file": "social-preview.jsonl",
-      "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "metadata",
-        "images"
-      ]
+      "count": 7,
+      "ids": [
+        "SEO-577",
+        "SEO-578",
+        "SEO-579",
+        "SEO-580",
+        "SEO-581",
+        "SEO-584",
+        "SEO-592"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "javascript-rendering",
+    "javascript-rendering": {
       "title": "JavaScript rendering and hydration",
-      "file": "javascript-rendering.jsonl",
-      "activation": "javascript_app",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "metadata",
-        "crawling"
-      ]
-    },
-    {
-      "domain": "mobile-ux",
-      "title": "Mobile search experience and SXO",
-      "file": "mobile-ux.jsonl",
       "activation": "public_site",
-      "count": 16,
-      "dependencies": [
-        "accessibility",
-        "performance"
-      ]
+      "file": "javascript-rendering.jsonl",
+      "count": 5,
+      "ids": [
+        "SEO-593",
+        "SEO-596",
+        "SEO-597",
+        "SEO-598",
+        "SEO-605"
+      ],
+      "runtime_sensitive": true
     },
-    {
-      "domain": "privacy-auth",
-      "title": "Privacy, authentication, and environment boundaries",
-      "file": "privacy-auth.jsonl",
+    "performance": {
+      "title": "Performance and Core Web Vitals",
+      "activation": "public_site",
+      "file": "performance.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-321",
+        "SEO-322",
+        "SEO-323",
+        "SEO-324",
+        "SEO-325",
+        "SEO-330"
+      ],
+      "runtime_sensitive": false
+    },
+    "mobile": {
+      "title": "Mobile-first indexing and small-screen delivery",
+      "activation": "public_site",
+      "file": "mobile.jsonl",
+      "count": 5,
+      "ids": [
+        "SEO-609",
+        "SEO-610",
+        "SEO-612",
+        "SEO-613",
+        "SEO-614"
+      ],
+      "runtime_sensitive": false
+    },
+    "caching": {
+      "title": "HTTP caching and freshness",
+      "activation": "public_site",
+      "file": "caching.jsonl",
+      "count": 5,
+      "ids": [
+        "SEO-337",
+        "SEO-338",
+        "SEO-339",
+        "SEO-340",
+        "SEO-345"
+      ],
+      "runtime_sensitive": true
+    },
+    "bfcache": {
+      "title": "Back-forward cache and page lifecycle",
+      "activation": "public_site",
+      "file": "bfcache.jsonl",
+      "count": 4,
+      "ids": [
+        "SEO-353",
+        "SEO-354",
+        "SEO-359",
+        "SEO-361"
+      ],
+      "runtime_sensitive": false
+    },
+    "accessibility": {
+      "title": "Accessibility affecting discoverability",
+      "activation": "public_site",
+      "file": "accessibility.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-369",
+        "SEO-370",
+        "SEO-371",
+        "SEO-373",
+        "SEO-374",
+        "SEO-377"
+      ],
+      "runtime_sensitive": false
+    },
+    "security": {
+      "title": "Public-surface integrity",
       "activation": "always",
-      "count": 16,
-      "dependencies": [
-        "architecture",
-        "security",
-        "robots"
-      ]
+      "file": "security.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-385",
+        "SEO-388",
+        "SEO-390",
+        "SEO-391",
+        "SEO-393",
+        "SEO-394"
+      ],
+      "runtime_sensitive": false
+    },
+    "privacy-auth": {
+      "title": "Privacy, authentication, and environment boundaries",
+      "activation": "always",
+      "file": "privacy-auth.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-625",
+        "SEO-628",
+        "SEO-630",
+        "SEO-632",
+        "SEO-633",
+        "SEO-636"
+      ],
+      "runtime_sensitive": false
+    },
+    "cdn-waf": {
+      "title": "CDN, WAF, edge, and bot delivery",
+      "activation": "has_cdn_or_waf",
+      "file": "cdn-waf.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-401",
+        "SEO-402",
+        "SEO-403",
+        "SEO-405",
+        "SEO-406",
+        "SEO-410"
+      ],
+      "runtime_sensitive": true
+    },
+    "ai-crawlers": {
+      "title": "AI crawler policy",
+      "activation": "public_site",
+      "file": "ai-crawlers.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-289",
+        "SEO-291",
+        "SEO-293",
+        "SEO-295",
+        "SEO-302",
+        "SEO-303"
+      ],
+      "runtime_sensitive": false
+    },
+    "ai-retrieval": {
+      "title": "AI retrieval readiness",
+      "activation": "public_site",
+      "file": "ai-retrieval.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-273",
+        "SEO-275",
+        "SEO-277",
+        "SEO-282",
+        "SEO-287",
+        "SEO-288"
+      ],
+      "runtime_sensitive": false
+    },
+    "llms-txt": {
+      "title": "llms.txt machine-readable guidance",
+      "activation": "public_site",
+      "file": "llms-txt.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-305",
+        "SEO-306",
+        "SEO-307",
+        "SEO-308",
+        "SEO-312",
+        "SEO-314"
+      ],
+      "runtime_sensitive": false
+    },
+    "submission": {
+      "title": "Search platform submission and change notification",
+      "activation": "public_site",
+      "file": "submission.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-129",
+        "SEO-133",
+        "SEO-147",
+        "SEO-148",
+        "SEO-151",
+        "SEO-157"
+      ],
+      "runtime_sensitive": false
+    },
+    "feeds": {
+      "title": "RSS and Atom feeds",
+      "activation": "content_publication",
+      "file": "feeds.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-497",
+        "SEO-498",
+        "SEO-499",
+        "SEO-501",
+        "SEO-502",
+        "SEO-503"
+      ],
+      "runtime_sensitive": false
+    },
+    "discover": {
+      "title": "Google Discover prerequisites",
+      "activation": "editorial_content",
+      "file": "discover.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-257",
+        "SEO-258",
+        "SEO-261",
+        "SEO-262",
+        "SEO-263",
+        "SEO-269"
+      ],
+      "runtime_sensitive": false
+    },
+    "ecommerce": {
+      "title": "Ecommerce, products, and shopping surfaces",
+      "activation": "ecommerce",
+      "file": "ecommerce.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-418",
+        "SEO-420",
+        "SEO-422",
+        "SEO-423",
+        "SEO-424",
+        "SEO-426"
+      ],
+      "runtime_sensitive": false
+    },
+    "local": {
+      "title": "Local search and location entities",
+      "activation": "local_business",
+      "file": "local.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-433",
+        "SEO-434",
+        "SEO-436",
+        "SEO-437",
+        "SEO-441",
+        "SEO-448"
+      ],
+      "runtime_sensitive": false
+    },
+    "international": {
+      "title": "International and multilingual",
+      "activation": "multilingual",
+      "file": "international.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-451",
+        "SEO-452",
+        "SEO-453",
+        "SEO-455",
+        "SEO-457",
+        "SEO-460"
+      ],
+      "runtime_sensitive": true
+    },
+    "ugc": {
+      "title": "User-generated content",
+      "activation": "ugc",
+      "file": "ugc.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-466",
+        "SEO-468",
+        "SEO-470",
+        "SEO-473",
+        "SEO-475",
+        "SEO-476"
+      ],
+      "runtime_sensitive": false
+    },
+    "paywall": {
+      "title": "Paywalled and subscription content",
+      "activation": "paywall_or_subscription",
+      "file": "paywall.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-482",
+        "SEO-484",
+        "SEO-486",
+        "SEO-487",
+        "SEO-491",
+        "SEO-492"
+      ],
+      "runtime_sensitive": true
+    },
+    "documents": {
+      "title": "PDF and non-HTML document discovery",
+      "activation": "public_documents",
+      "file": "documents.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-513",
+        "SEO-515",
+        "SEO-518",
+        "SEO-520",
+        "SEO-521",
+        "SEO-523"
+      ],
+      "runtime_sensitive": false
+    },
+    "analytics": {
+      "title": "Measurement integrity",
+      "activation": "analytics_or_measurement",
+      "file": "analytics.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-529",
+        "SEO-530",
+        "SEO-531",
+        "SEO-532",
+        "SEO-534",
+        "SEO-536"
+      ],
+      "runtime_sensitive": false
+    },
+    "operations": {
+      "title": "Discoverability operations and regression prevention",
+      "activation": "always",
+      "file": "operations.jsonl",
+      "count": 6,
+      "ids": [
+        "SEO-546",
+        "SEO-547",
+        "SEO-559",
+        "SEO-570",
+        "SEO-572",
+        "SEO-575"
+      ],
+      "runtime_sensitive": false
     }
-  ]
+  }
 }

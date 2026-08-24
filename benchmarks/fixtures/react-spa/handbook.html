@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<!-- This shell hard-codes the canonical of the section root. It was added by
+     hand so that at least one handbook URL would have a canonical before the
+     bundle loads, and it is wrong for every article except the section index:
+     the router replaces it with the article's own URL after mount. -->
+<link rel="canonical" href="https://example.com/handbook">
+</head>
+<body>
+<div id="root"></div>
+<noscript>
+<p>The handbook is rendered in the browser. Without JavaScript this response
+carries no article text, no heading, and no title of its own.</p>
+</noscript>
+<script type="module" src="/src/handbook.jsx"></script>
+</body>
+</html>

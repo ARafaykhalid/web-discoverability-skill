@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--
+  Vite entry for the /about route, listed as `about` in vite.config.js.
+
+  A separate file rather than a shared template, which is what makes the title and
+  the description below specific to this page instead of a site-wide default. The
+  structured data graph lives only on the home entry: one WebSite node per site is
+  the claim, and repeating it here would assert it twice.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How one route becomes one file — Acme Docs</title>
+<meta name="description" content="The three build steps that turn a source entry and a React page component into a finished HTML document, and the parts of the head that are deliberately left alone.">
+<link rel="canonical" href="https://example.com/about">
+<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml" title="Acme Docs releases">
+<link rel="stylesheet" href="/assets/styles-CJ4pQ1xE.css">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Acme Docs">
+<meta property="og:title" content="How one route becomes one file — Acme Docs">
+<meta property="og:description" content="The three build steps that turn a source entry and a page component into a finished HTML document.">
+<meta property="og:url" content="https://example.com/about">
+<meta property="og:image" content="https://example.com/img/entries.png">
+<meta property="og:image:alt" content="A source entry with an empty placeholder above the same document with rendered markup in its place.">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div id="app">
+<header>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/changelog">Changelog</a>
+</nav>
+</header>
+<main>
+<h1>How one route becomes one file</h1>
+<p>There are three steps and none of them is clever. First, <code>vite build</code> reads the three entries listed in the config and writes a copy of each into <code>dist/</code>, rewriting the stylesheet reference to the hashed file it emitted. Second, a second Vite build compiles the page components for Node. Third, a short script walks the built documents and replaces the placeholder in each one with the markup its component renders.</p>
+<img src="/img/entries.png" alt="A source entry with an empty placeholder above the same document with rendered markup in its place." width="1200" height="630"/>
+<h2>What is deliberately not automated</h2>
+<p>The head is never touched by the build. A canonical URL that a script derives from a file path is correct until somebody moves the file, and then it is silently wrong; a canonical URL typed into the entry is wrong immediately and loudly, which is the failure mode worth having. The same reasoning applies to the title, the description and the preview properties.</p>
+<h2>Making a correction</h2>
+<p>Edit the entry for prose in the head, or the component under <code>src/pages/</code> for prose in the body, and run the build. Because each route is its own document, a change to one page cannot alter another, which is the property that makes the output reviewable.</p>
+</main>
+<footer>
+<p>Fixture content. Not a real site.</p>
+</footer>
+</div>
+</body>
+</html>

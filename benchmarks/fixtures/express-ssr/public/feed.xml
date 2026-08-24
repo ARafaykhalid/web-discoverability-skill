@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://example.com/feed.xml</id>
+  <title>Ridgeline Roofing notes</title>
+  <updated>2026-01-14T09:00:00Z</updated>
+  <link rel="self" href="https://example.com/feed.xml"/>
+  <link rel="alternate" type="text/html" href="https://example.com/"/>
+  <author>
+    <name>Neil Ackroyd</name>
+  </author>
+  <entry>
+    <id>https://example.com/guides/roof-tile-selection</id>
+    <title>Choosing roof tiles for a coastal roof</title>
+    <updated>2026-01-14T09:00:00Z</updated>
+    <link rel="alternate" type="text/html" href="https://example.com/guides/roof-tile-selection"/>
+    <summary>Clay, concrete and natural slate compared for a roof within two miles of the North Sea.</summary>
+  </entry>
+  <entry>
+    <id>https://example.com/pricing</id>
+    <title>How we arrive at a figure</title>
+    <updated>2025-11-03T14:30:00Z</updated>
+    <link rel="alternate" type="text/html" href="https://example.com/pricing"/>
+    <summary>Why access decides more of a roofing cost than area does.</summary>
+  </entry>
+</feed>

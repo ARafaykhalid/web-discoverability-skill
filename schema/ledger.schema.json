@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ARafaykhalid/web-discoverability-skill/schema/ledger.schema.json",
+  "title": "Requirement review ledger entry",
+  "description": "A reviewed requirement that is not active. IDs recorded here are never reused.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "classification",
+    "reason"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^SEO-\\d{3,4}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 8,
+      "description": "The title as it existed before review."
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "VALID",
+        "NEEDS_SOURCE",
+        "NEEDS_REWORDING",
+        "NEEDS_TEST",
+        "DUPLICATE",
+        "SPECULATIVE",
+        "OBSOLETE",
+        "UNSAFE",
+        "NOT_ACTIONABLE",
+        "SPLIT",
+        "MERGED",
+        "OUT_OF_SCOPE"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 20,
+      "description": "Why this is not an active requirement."
+    },
+    "domain": {
+      "type": "string"
+    },
+    "replaced_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SEO-\\d{3,4}$"
+      },
+      "uniqueItems": true
+    },
+    "blocker": {
+      "type": "string",
+      "description": "For deferred entries: what is missing before it can be activated."
+    },
+    "reviewed_on": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    }
+  }
+}

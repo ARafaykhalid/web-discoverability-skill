@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Example Site</title>
+<meta name="description" content="Who maintains the clean control fixture and why it is deliberately dull.">
+<link rel="canonical" href="https://example.com/about">
+<link rel="alternate" type="application/atom+xml" href="https://example.com/feed.xml" title="Example Site articles">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Example Site">
+<meta property="og:title" content="About Example Site">
+<meta property="og:description" content="Who maintains the fixture.">
+<meta property="og:url" content="https://example.com/about">
+<meta property="og:image" content="https://example.com/img/cover.png">
+<meta property="og:image:alt" content="The words Example Site on a plain background.">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header>
+<nav>
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/blog/hello">Hello</a>
+</nav>
+</header>
+<main>
+<h1>About this fixture</h1>
+<p>This page carries a distinct title and a distinct meta description, because the
+duplicate-title check compares indexable routes against each other and a fixture
+that accidentally repeats a title would score a finding nobody asked for.</p>
+<p>The navigation links point at the two other captured routes and nothing else,
+so the internal-link check has a complete set of targets to resolve against.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Harbour Supply
+
+Harbour Supply sells canvas bags. This file is part of a benchmark fixture, not a
+real shop, so every address below resolves inside the fixture's own capture.
+
+## Catalogue
+
+- [Bags collection](https://example.com/collections/bags): the full listing, with the
+  sort and filter controls that generate the faceted URLs.
+- [Harbour Tote in navy](https://example.com/products/harbour-tote-navy): the page
+  carrying the deliberate review-markup defect.
+- [Harbour Tote in slate](https://example.com/products/harbour-tote-slate): the second
+  colour variant, which shares its title with the navy page on purpose.
+- [Field Satchel](https://example.com/products/field-satchel): the page carrying the
+  offer and image defects.
+
+## Notes
+
+Every link here is absolute and https, which is what the two llms.txt checks read.
+The cart and the checkout are deliberately not listed: both serve noindex, and a
+discovery file should not point at pages the site excludes.

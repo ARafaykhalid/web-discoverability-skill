@@ -1,8 +1,9 @@
 # AI discoverability taxonomy
 
 These labels are retained for vocabulary compatibility, not as a list of
-official ranking factors. The registry uses `platform_status` and
-`requirement_type` to prevent industry terminology from becoming a guarantee.
+official ranking factors. The registry uses `category`, `evidence_tier`, and
+`confidence` to keep industry terminology separate from documented platform
+behaviour and to prevent it from becoming a guarantee.
 
 | Term | Classification | Engineering interpretation | Evidence boundary |
 | --- | --- | --- | --- |
@@ -24,3 +25,10 @@ Documented platform requirements, eligibility rules, technical best practices,
 AI retrieval practices, industry terms, and experimental hypotheses must remain
 separate in reports. `llms.txt` is an emerging optional convention, not an
 official Google ranking requirement.
+
+In registry records, established crawler and search guidance normally belongs in
+`TECHNICAL_SEO`, `SEARCH_DISCOVERABILITY`, `AI_CRAWLER_ACCESS`, or
+`AI_RETRIEVAL`. Experimental generative-search hypotheses belong in
+`EMERGING_GEO`, require tier `D`, and must include a caution. `confidence` is a
+separate judgement from `evidence_tier`; neither field promises ranking,
+indexing, traffic, rich-result display, or AI citation.

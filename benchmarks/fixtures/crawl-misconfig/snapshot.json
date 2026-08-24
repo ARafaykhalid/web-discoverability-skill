@@ -1,0 +1,52 @@
+{
+  "captured_at": "2026-02-10T09:00:00Z",
+  "origin": "https://example.com",
+  "note": "Hand-written capture. raw_html and rendered_html are the same bytes because the fixture ships no client script, so the two JavaScript-rendering checks report NOT_APPLICABLE rather than a pass the capture could not support. /search/ carries indexable:false because its noindex is intended; without that flag the CRITICAL robots-meta-noindex-unintended would fire on a page whose exclusion is deliberate, and the finding under test would be buried.",
+  "pages": [
+    {
+      "url": "/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "index.html",
+      "source_file": "index.html",
+      "indexable": true
+    },
+    {
+      "url": "/guides/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "guides/index.html",
+      "source_file": "guides/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/guides/crawl-directives/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "guides/crawl-directives/index.html",
+      "source_file": "guides/crawl-directives/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/about/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600" },
+      "redirect_chain": [],
+      "raw_html_path": "about/index.html",
+      "source_file": "about/index.html",
+      "indexable": true
+    },
+    {
+      "url": "/search/",
+      "status": 200,
+      "headers": { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
+      "redirect_chain": [],
+      "raw_html_path": "search/index.html",
+      "source_file": "search/index.html",
+      "indexable": false
+    }
+  ]
+}

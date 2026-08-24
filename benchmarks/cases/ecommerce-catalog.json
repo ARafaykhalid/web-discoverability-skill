@@ -1,0 +1,112 @@
+{
+  "id": "ecommerce-catalog",
+  "fixture": "benchmarks/fixtures/ecommerce-catalog",
+  "title": "Product catalogue with Product and Offer markup, an unsupported rating, and a faceted sitemap entry",
+  "level": "ULTRA",
+  "declared_defects": [
+    "products/harbour-tote-navy.html serves a Product whose aggregateRating states a ratingValue with no reviewCount and no ratingCount, so the score rests on an unstated number of ratings (SEO-173).",
+    "products/harbour-tote-navy.html states ratingValue 4.8 in that same aggregateRating while the page body displays no rating at all, so nothing a visitor can see corroborates the number (SEO-173).",
+    "products/harbour-tote-navy.html serves the same Product with a review array whose single Review names no author (SEO-173).",
+    "products/harbour-tote-slate.html serves the same <title> as products/harbour-tote-navy.html; the two are colour variants of one tote and the title names neither colour (SEO-037).",
+    "products/field-satchel.html serves an Offer whose price is 148.00 with no priceCurrency, while the page body and data/catalogue.json both state 164.00 GBP (SEO-418).",
+    "sitemap.xml lists https://example.com/collections/bags?sort=price-asc&filter=colour-navy, a faceted-navigation URL whose query separator is a bare ampersand rather than an entity (SEO-113).",
+    "products/field-satchel.html serves the main product image with no alt attribute at all (SEO-225)."
+  ],
+  "expected_findings": [
+    {
+      "check_id": "jsonld-review-without-source",
+      "requirement_id": "SEO-173",
+      "location": "products/harbour-tote-navy.html"
+    },
+    {
+      "check_id": "jsonld-review-without-source",
+      "requirement_id": "SEO-173",
+      "location": "products/harbour-tote-navy.html"
+    },
+    {
+      "check_id": "jsonld-review-without-source",
+      "requirement_id": "SEO-173",
+      "location": "products/harbour-tote-navy.html"
+    },
+    {
+      "check_id": "title-distinct-across-routes",
+      "requirement_id": "SEO-037",
+      "location": "products/harbour-tote-slate.html"
+    },
+    {
+      "check_id": "sitemap-xml-wellformed",
+      "requirement_id": "SEO-113",
+      "location": "sitemap.xml"
+    },
+    {
+      "check_id": "img-alt-attribute-present",
+      "requirement_id": "SEO-225",
+      "location": "products/field-satchel.html"
+    }
+  ],
+  "expected_non_findings": [
+    { "check_id": "title-element-single" },
+    { "check_id": "meta-description-single" },
+    { "check_id": "html-lang-present" },
+    { "check_id": "viewport-declared" },
+    { "check_id": "canonical-self-referencing-absolute" },
+    { "check_id": "canonical-no-tracking-params" },
+    { "check_id": "robots-txt-present" },
+    { "check_id": "robots-sitemap-reference" },
+    { "check_id": "robots-group-contradiction" },
+    { "check_id": "robots-meta-noindex-unintended" },
+    { "check_id": "crawl-index-directive-conflict" },
+    { "check_id": "sitemap-loc-same-host" },
+    { "check_id": "sitemap-lists-noindex-url" },
+    { "check_id": "sitemap-canonical-only" },
+    { "check_id": "sitemap-size-limits" },
+    { "check_id": "jsonld-parses" },
+    { "check_id": "jsonld-absolute-urls" },
+    { "check_id": "jsonld-duplicate-entity" },
+    { "check_id": "internal-links-resolve" },
+    { "check_id": "img-dimensions-declared" },
+    { "check_id": "llms-txt-plain-text" },
+    { "check_id": "llms-txt-absolute-https-links" },
+    { "check_id": "og-url-matches-canonical" },
+    { "check_id": "og-image-alt-present" },
+    { "check_id": "og-duplicate-properties" }
+  ],
+  "expected_safe_fixes": ["SEO-033", "SEO-034"],
+  "expected_blocked": ["SEO-173", "SEO-418", "SEO-037", "SEO-113", "SEO-225"],
+  "expected_not_applicable": [
+    "SEO-453",
+    "SEO-455",
+    "SEO-460",
+    "SEO-466",
+    "SEO-484",
+    "SEO-486",
+    "SEO-497",
+    "SEO-498"
+  ],
+  "expected_not_applicable_rationale": "This shop sells three bags in one language, publishes no feed, accepts no contributions, and charges for no access. Offering the locale rules would invite hreflang pointing at pages that do not exist; offering the paid-access rules would invite access markup for an entitlement nobody sells; offering the feed rules would invite a feed file with nothing to put in it. SEO-073 is deliberately absent from this list even though it is the obvious neighbour of the sitemap defect: the category page really does serve sort and filter links, faceted_navigation is therefore TRUE, and the rule genuinely applies here. Asserting it as inapplicable would have been the easy way to pad this list and it would have been false.",
+  "expected_applicable": [
+    "SEO-173",
+    "SEO-213",
+    "SEO-418",
+    "SEO-420",
+    "SEO-422",
+    "SEO-423",
+    "SEO-424",
+    "SEO-426"
+  ],
+  "expected_applicable_rationale": "Until this fixture existed, every requirement gated on the ecommerce fact could only ever be proved absent, so the selector was only being tested in one direction. The fact is set here by evidence rather than by a token: three product routes carrying Product and Offer markup, a cart route, a checkout route, and data/catalogue.json holding the rows the pages are built from. SEO-418, SEO-420, SEO-422, SEO-423, SEO-424 and SEO-426 are gated on ecommerce alone and are the load-bearing half of this assertion. SEO-173 and SEO-213 are gated more loosely and would also be selected on a site with structured data or a router, so they are included as the requirements the declared findings and the breadcrumb markup actually correspond to, not as evidence about the ecommerce gate.",
+  "profile_expectations": {
+    "framework": "static-html",
+    "ecommerce": true,
+    "faceted_navigation": true,
+    "has_structured_data": true,
+    "has_robots_txt": true,
+    "has_sitemap": true,
+    "has_llms_txt": true,
+    "has_feeds": false,
+    "paywall_or_subscription": false,
+    "ugc": false
+  },
+  "notes": "The point of this fixture is the ecommerce half of the selector and the structured-data checks that need a commercial entity to inspect. Defects are partitioned by page so that a finding on the wrong page is unambiguously a false positive: the review markup is on the navy tote, the duplicate title is on the slate tote, the offer and image defects are on the satchel, and the crawl defect is in sitemap.xml. Everything else is deliberately correct - one title per page, one meta description, lang, viewport, an absolute self-referencing canonical, a full og:* set including og:url and og:image:alt, resolving internal links, and intrinsic dimensions on every image.\n\nSEO-173 is BLOCKED and that is the whole reason this fixture carries a rating. The navy tote claims a score with no count of ratings behind it and a review with no author, and no rating or review appears anywhere in the page body. The correct remediation is to remove the claim or to supply the real collected data - never to invent a reviewCount, a reviewer name, or a score. An agent that writes a plausible number here converts an unsupported claim into a fabricated one, which is a documented spam policy violation, and there is no way to tell from the page which of the two remedies is right. That is what BLOCKED encodes: the decision needs someone who knows whether the reviews exist.\n\nThe price defect is declared and built but is not asserted as a finding, because no check in tools/lib/checks/ reads price or priceCurrency. The satchel's Offer states 148.00 with no currency while the page and data/catalogue.json both say 164.00 GBP, so SEO-418 - CRITICAL and BLOCKED - has a fixture that exhibits it and no automated detection. Listing it under expected_findings would score an unconditional false negative for naming a check that does not exist, so it is recorded here as a coverage gap instead.\n\nThree aggregate findings are expected on the navy tote, not two, and the third one is the reason this fixture was worth building. jsonld-review-without-source has an aggregate rule for a ratingValue that appears nowhere in the served page, and when this case was first written that rule was unreachable: it text-searched the whole document, the document contains the ld+json block that declares the value, so the value always corroborated itself and a page displaying no rating anywhere passed. This fixture is what exposed that, and the fix - searching visibleText, which drops scripts, styles, comments and tags - is what the third expectation now scores. The page states 4.8 in markup and shows no rating to a reader, which is the exact condition the requirement exists to catch. tests/regression/rating-self-corroboration.test.mjs holds the minimal reproduction so the rule cannot silently become unreachable again.\n\nThe duplicate-title finding is scored here and now also appears in an audit of this fixture, which was not true when the case was written. SEO-037 was gated on has_router, has_router is FALSE for a static-html project, and tools/cli.mjs audit runs only the checks whose requirements the selector offered - so title-distinct-across-routes never executed there while the scorer ran it anyway and counted the hit. Two things changed. The benchmark now applies the same requirement filter as audit, so a wrong gate surfaces as a false negative instead of being hidden; and SEO-037's gate was corrected to public_site alone, because titles are authored per document and a static tree of hand-written pages is the most likely place to find copy-pasted ones. An audit of this fixture reports the same six findings the benchmark scores.\n\nThe cart and the checkout serve a meta robots noindex and are recorded non-indexable in the capture, so robots-meta-noindex-unintended inspects them and stays silent rather than reporting an intended exclusion. They are excluded by meta robots and not by Disallow, and are absent from sitemap.xml, which is why the crawl and sitemap checks pass on a site that genuinely excludes two of its seven pages. No rendered_html_path is supplied, so the two JavaScript-rendering checks report NOT_APPLICABLE; the hreflang and feed checks do the same because the site is monolingual and ships no feed. None of those six are listed as true negatives."
+}
+

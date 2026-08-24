@@ -1,0 +1,8 @@
+# Crawl policy for the clean control fixture.
+# One group, one disallowed prefix that no captured page falls under, and an
+# absolute sitemap URL as the sitemap protocol requires.
+
+User-agent: *
+Disallow: /admin/
+
+Sitemap: https://example.com/sitemap.xml

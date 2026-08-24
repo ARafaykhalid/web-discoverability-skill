@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reaching the maintainers — Example Site</title>
+<meta name="description" content="A page whose single deliberate defect is a tracking parameter carried inside its canonical URL.">
+<link rel="canonical" href="https://example.com/contact?utm_source=newsletter">
+</head>
+<body>
+<nav aria-label="Primary">
+<a href="/">Home</a>
+<a href="/about">About</a>
+<a href="/services">Services</a>
+<a href="/contact">Contact</a>
+<a href="/gallery">Gallery</a>
+<a href="/team">Team</a>
+<a href="/social">Social preview</a>
+<a href="/schema">Structured data</a>
+<a href="/blog">Journal</a>
+</nav>
+<main>
+<h1>A canonical that names a visit</h1>
+<p>This canonical is absolute and its path agrees with the page's own path, so the
+self-reference rule is satisfied. What it also carries is a campaign parameter, which
+turns the canonical from a statement about the document into a statement about one
+arrival at it.</p>
+<p>Exactly one finding is expected here, from the tracking-parameter check. The
+self-referencing check is expected to stay silent, because the parameter lives in the
+query string and the path comparison ignores it.</p>
+<p>The parameter chosen is a campaign source rather than a session identifier, which
+makes this the most common form of the defect in the field: a marketing template
+writes the arrival URL into the head instead of the address of the document.</p>
+</main>
+</body>
+</html>

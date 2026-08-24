@@ -1,0 +1,127 @@
+{
+  "id": "clean-static",
+  "fixture": "benchmarks/fixtures/clean-static",
+  "title": "Hand-written static site with no defects",
+  "level": "ULTRA",
+  "notes": "The primary control. Nothing here is wrong, so every finding is a false positive and the case exists to measure exactly that. A registry of 224 requirements evaluated against a small correct site is where an over-eager rule shows itself: a check that fires on a well-formed page would be indistinguishable, in a report, from a check that found a real problem, and an autonomous agent acting on it would damage working code.\n\nThe fixture deliberately supplies the resources the optional checks look for - a robots.txt, a sitemap, an RSS feed, and an llms.txt - so those checks inspect something and pass rather than reporting NOT_APPLICABLE. That is what makes them count toward the true-negative denominator.\n\nSix checks still report NOT_APPLICABLE and are absent from expected_non_findings on purpose. There is no separate rendered capture, so the initial and executed documents were never compared; there are no hreflang alternates; and there is no review or rating markup. Listing those six would claim credit for four comparisons that never happened and two that had nothing to examine.",
+  "declared_defects": [],
+  "expected_findings": [],
+  "expected_non_findings": [
+    {
+      "check_id": "title-element-single"
+    },
+    {
+      "check_id": "meta-description-single"
+    },
+    {
+      "check_id": "html-lang-present"
+    },
+    {
+      "check_id": "viewport-declared"
+    },
+    {
+      "check_id": "title-distinct-across-routes"
+    },
+    {
+      "check_id": "canonical-self-referencing-absolute"
+    },
+    {
+      "check_id": "canonical-no-tracking-params"
+    },
+    {
+      "check_id": "sitemap-canonical-only"
+    },
+    {
+      "check_id": "robots-txt-present"
+    },
+    {
+      "check_id": "robots-sitemap-reference"
+    },
+    {
+      "check_id": "robots-group-contradiction"
+    },
+    {
+      "check_id": "robots-meta-noindex-unintended"
+    },
+    {
+      "check_id": "crawl-index-directive-conflict"
+    },
+    {
+      "check_id": "sitemap-xml-wellformed"
+    },
+    {
+      "check_id": "sitemap-lists-noindex-url"
+    },
+    {
+      "check_id": "sitemap-loc-same-host"
+    },
+    {
+      "check_id": "sitemap-size-limits"
+    },
+    {
+      "check_id": "jsonld-parses"
+    },
+    {
+      "check_id": "jsonld-absolute-urls"
+    },
+    {
+      "check_id": "jsonld-duplicate-entity"
+    },
+    {
+      "check_id": "internal-links-resolve"
+    },
+    {
+      "check_id": "img-alt-attribute-present"
+    },
+    {
+      "check_id": "img-dimensions-declared"
+    },
+    {
+      "check_id": "llms-txt-plain-text"
+    },
+    {
+      "check_id": "llms-txt-absolute-https-links"
+    },
+    {
+      "check_id": "feed-wellformed"
+    },
+    {
+      "check_id": "feed-alternate-link-declared"
+    },
+    {
+      "check_id": "og-url-matches-canonical"
+    },
+    {
+      "check_id": "og-image-alt-present"
+    },
+    {
+      "check_id": "og-duplicate-properties"
+    }
+  ],
+  "expected_not_applicable": [
+    "SEO-418",
+    "SEO-420",
+    "SEO-466",
+    "SEO-453",
+    "SEO-455",
+    "SEO-460",
+    "SEO-484",
+    "SEO-486",
+    "SEO-073"
+  ],
+  "expected_not_applicable_rationale": "The same exclusions as defective-static, asserted here because a control that only proves \"no findings\" would not catch a rule being offered to a site that cannot act on it. A requirement selected for the wrong site is a false positive that has not happened yet.",
+  "expected_applicable": [
+    "SEO-081",
+    "SEO-082",
+    "SEO-497",
+    "SEO-498"
+  ],
+  "expected_applicable_rationale": "A plain static site establishes only the universal fact plus the three it establishes by shipping files. These are deliberately modest assertions: their value is that they hold on the simplest possible project, so a selector that had quietly started requiring a framework would fail here first.",
+  "profile_expectations": {
+    "framework": "static-html",
+    "has_robots_txt": true,
+    "has_sitemap": true,
+    "has_llms_txt": true,
+    "has_feeds": true
+  }
+}
