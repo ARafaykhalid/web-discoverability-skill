@@ -122,7 +122,7 @@ npm run bench
 ```
 
 ```bash
-node tools/cli.mjs bench --case react-spa,vite-static
+node tools/cli.ts bench --case react-spa,vite-static
 ```
 
 `npm run bench` passes `--write` and records `reports/benchmarks.json`; every

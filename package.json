@@ -1,6 +1,6 @@
 {
   "name": "web-discoverability-skill",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Evidence-tiered web and AI discoverability requirement registry, applicability engine, deterministic checks, and benchmark harness for autonomous coding agents.",
   "license": "MIT",
   "repository": {
@@ -25,25 +25,26 @@
   "type": "module",
   "private": true,
   "engines": {
-    "node": ">=20.6.0"
+    "node": ">=22.18.0"
   },
   "bin": {
-    "wds": "./tools/cli.mjs"
+    "wds": "./tools/cli.ts"
   },
   "scripts": {
-    "validate": "node tools/cli.mjs validate",
-    "quality": "node tools/cli.mjs quality",
-    "metrics": "node tools/cli.mjs metrics --write",
-    "stale": "node tools/cli.mjs stale-requirements",
-    "sources": "node tools/cli.mjs sources",
-    "check-sources": "node tools/cli.mjs check-sources",
-    "select": "node tools/cli.mjs select",
-    "profile": "node tools/cli.mjs profile",
-    "audit": "node tools/cli.mjs audit",
-    "bench": "node tools/cli.mjs bench --write",
-    "bench:check": "node tools/cli.mjs bench",
-    "docs": "node tools/cli.mjs docs",
-    "docs:check": "node tools/cli.mjs docs --check",
+    "validate": "node tools/cli.ts validate",
+    "quality": "node tools/cli.ts quality",
+    "metrics": "node tools/cli.ts metrics --write",
+    "stale": "node tools/cli.ts stale-requirements",
+    "sources": "node tools/cli.ts sources",
+    "check-sources": "node tools/cli.ts check-sources",
+    "select": "node tools/cli.ts select",
+    "profile": "node tools/cli.ts profile",
+    "version": "node tools/cli.ts version",
+    "audit": "node tools/cli.ts audit",
+    "bench": "node tools/cli.ts bench --write",
+    "bench:check": "node tools/cli.ts bench",
+    "docs": "node tools/cli.ts docs",
+    "docs:check": "node tools/cli.ts docs --check",
     "test": "node --test",
     "ci": "npm run validate && npm run quality && npm run bench && npm run metrics && npm run docs:check && npm test"
   }

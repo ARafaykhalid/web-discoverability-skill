@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ARafaykhalid/web-discoverability-skill/schema/requirement.schema.json",
   "title": "Discoverability requirement",
-  "description": "One record of requirements/<domain>.jsonl. Generated from tools/lib/model.mjs.",
+  "description": "One record of requirements/<domain>.jsonl. Generated from tools/lib/model.ts.",
   "type": "object",
   "additionalProperties": false,
   "required": [

@@ -16,9 +16,32 @@ Set `SKILL_ROOT` to the directory containing this file. In a checkout it is the
 repository root; after installation it is commonly
 `.agents/skills/web-discoverability-skill`.
 
-Run bundled commands with `node "$SKILL_ROOT/tools/cli.mjs"`. Pass the target
+Run bundled commands with `node "$SKILL_ROOT/tools/cli.ts"`. Pass the target
 application path explicitly. Resolve references, requirements, and templates
 from `"$SKILL_ROOT"`; do not assume the target application contains the skill.
+
+## Check skill freshness (before every task)
+
+Run the version check before any profile, select, audit, implementation, or
+verification work:
+
+```bash
+node "$SKILL_ROOT/tools/cli.ts" version --json
+```
+
+- `verified`: proceed with the local copy.
+- `update_available`: update or reload the skill when the execution environment
+  permits it (`git pull` in a checkout, or reinstall via the `skills` CLI),
+  re-run the check, and record which commit is in use. When updating mid-task
+  is impossible or unsafe, continue with the local copy and say so.
+- `unable_to_verify`: proceed with the local copy and explicitly record that
+  freshness could not be verified and why.
+
+Never state that the skill is up to date without a `verified` result. Record
+the skill version, registry version, and freshness outcome in the final report;
+the `audit`, `select`, and `profile` JSON outputs carry `skill_version` and
+`registry_version` for that purpose, and `version` supplies the freshness half
+(upstream comparison needs the network, which those commands never touch).
 
 ## Set controls
 
@@ -33,14 +56,15 @@ file changes.
 
 ## Workflow
 
+0. Run the freshness check above and record its outcome before doing anything else.
 1. Read [references/discovery-applicability.md](references/discovery-applicability.md), inspect the target repository, and build one compact profile.
-2. Run `node "$SKILL_ROOT/tools/cli.mjs" profile <project>` and review the detected facts and unknowns.
-3. Run `node "$SKILL_ROOT/tools/cli.mjs" select <project> --level <level>` to preview candidate requirements.
+2. Run `node "$SKILL_ROOT/tools/cli.ts" profile <project>` and review the detected facts and unknowns.
+3. Run `node "$SKILL_ROOT/tools/cli.ts" select <project> --level <level>` to preview candidate requirements.
 4. Load only the selected records from `requirements/*.jsonl` or the linked pages in `requirements/by-id/`.
 5. Read [references/framework-adapters.md](references/framework-adapters.md) and the relevant search-surface references.
 6. Treat selector output as `APPLICABLE`, `NOT_APPLICABLE`, or `UNCERTAIN`; then record `BLOCKED` when authority or facts are missing and `ALREADY_CORRECT` only after a check or documented verification proves the requirement already holds.
 7. Resolve dependencies and conflicts, assign one writer per shared file, and implement in dependency order. Apply `SAFE_AUTOMATIC` changes only when the evidence is direct; propose `REVIEW_REQUIRED` changes and wait for approval; never implement `BLOCKED` requirements.
-8. Run `node "$SKILL_ROOT/tools/cli.mjs" audit <project> --level <level>` and inspect every finding, `needs_runtime` result, `unchecked_applicable` ID, and profile problem. An empty findings list is not a clean audit while any of those unresolved lists are non-empty.
+8. Run `node "$SKILL_ROOT/tools/cli.ts" audit <project> --level <level>` and inspect every finding, `needs_runtime` result, `unchecked_applicable` ID, and profile problem. An empty findings list is not a clean audit while any of those unresolved lists are non-empty.
 9. Verify changed behavior using the target project's own build, test, browser, HTTP, and accessibility commands when available.
 10. Report statuses, evidence, changed files, blockers, manual actions, and residual uncertainty.
 

@@ -79,9 +79,11 @@ table is typed by hand, and `npm run ci` fails if any of them drifts.
 
 ## Install
 
-The bundled audit tooling supports Node.js 20.6 or newer and has no dependencies
-or build step. Vercel's `skills` CLI has its own Node requirement; its current
-release requires Node.js 22.20 or newer.
+The bundled audit tooling supports Node.js 22.18 or newer and has no dependencies
+or build step: the tools are TypeScript executed directly by Node's native type
+stripping, so there is nothing to compile and nothing to install. Vercel's
+`skills` CLI has its own Node requirement; its current release requires Node.js
+22.20 or newer.
 
 ### Install as a Vercel Agent Skill
 
@@ -119,17 +121,27 @@ npm test
 
 The skill install and the CLI are separate concerns. The Vercel `skills` command
 installs the instructions and bundled references for an agent; the repository
-itself declares no `dependencies` or `devDependencies`, and every tool is plain
-ESM run by `node`. `npm link` puts the `wds` command on your path if you want the
+itself declares no `dependencies` or `devDependencies`, and every tool is
+TypeScript run directly by `node` (no compiler, no transpilation step, no
+artifacts). `npm link` puts the `wds` command on your path if you want the
 audit tooling outside this directory.
 
 ## Use it from the command line
 
 ```bash
-node tools/cli.mjs profile ./path/to/site      # what kind of site is this?
-node tools/cli.mjs select ./path/to/site       # which rules apply, and why
-node tools/cli.mjs audit ./path/to/site        # run the checks, report findings
+node tools/cli.ts version                    # skill, registry, and upstream freshness
+node tools/cli.ts profile ./path/to/site      # what kind of site is this?
+node tools/cli.ts select ./path/to/site       # which rules apply, and why
+node tools/cli.ts audit ./path/to/site        # run the checks, report findings
 ```
+
+`version` is the freshness check the skill runs before any substantive work. It
+reports the skill version, the registry schema version, the commit the local
+copy is at, and the latest commit on upstream `main`; when the network is
+unavailable it says `unable_to_verify` with the reason rather than pretending
+the copy is current. It always exits 0, because "could not check" is a recorded
+outcome, not a failure. `audit`, `select`, and `profile` embed `skill_version`
+and `registry_version` in their JSON output without touching the network.
 
 `profile`, `select`, and `audit` never modify the project they inspect. With
 `--write` they may persist reports under `reports/`. Registry-maintenance
@@ -139,6 +151,7 @@ schemas, while the `bench` and `metrics` npm scripts refresh their reports.
 Registry maintenance and self-checks:
 
 ```bash
+npm run version         # skill, registry, and upstream freshness check
 npm run validate        # registry integrity; exits 1 on any error
 npm run quality         # duplicates, dependencies, missing metadata
 npm run metrics         # the machine-readable metrics report
@@ -155,7 +168,7 @@ records, run `npm run docs -- --write`. Plain `npm run docs` is read-only.
 
 ## The three modes, and which of them is code
 
-**Audit.** Implemented in this repository, as `tools/cli.mjs audit`. Detects the
+**Audit.** Implemented in this repository, as `tools/cli.ts audit`. Detects the
 profile, selects applicable requirements, runs the deterministic checks against a
 snapshot of served output, and reports findings with evidence and locations. This
 is the mode with test coverage and benchmark scores.
@@ -277,8 +290,8 @@ requirements/     canonical JSONL file per domain, plus removed.jsonl and deferr
   by-id/          generated Markdown page for every active requirement
 schema/           generated JSON Schema for records, ledgers, and benchmark cases
 tools/
-  cli.mjs         the wds command; every subcommand lives here
-  lib/            registry, validator, profiler, selector, reporter, docs generator
+  cli.ts          the wds command; every subcommand lives here
+  lib/            registry, validator, profiler, selector, reporter, version, docs
   lib/checks/     the deterministic checks, one module per domain
 benchmarks/
   cases/          one JSON case per fixture: declared defects and expectations

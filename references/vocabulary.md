@@ -2,7 +2,7 @@
 
 # Registry vocabulary
 
-Every enum below is defined once in `tools/lib/model.mjs` and enforced by `npm run validate`.
+Every enum below is defined once in `tools/lib/model.ts` and enforced by `npm run validate`.
 
 ## Domains
 

@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [4.0.0] - 2026-08-31
+
+### Fixed
+- **CI audit-fixture assertion**: the "Audit every fixture" step validated a `profile` key that `audit --json` never emitted; it now checks the `framework` key the report actually carries. The step failed on every fixture while the command itself was correct.
+- **Line-ending tolerance in the skill-package test**: the SKILL.md frontmatter assertion now accepts CRLF checkouts of the same commit, which Windows working copies produce.
+
+### Added
+- **Version and freshness reporting (`wds version`)**: reports the skill version, registry schema version, local commit, and the latest upstream `main` commit from the GitHub atom feed. `verified`, `update_available`, and `unable_to_verify` are distinct outcomes; an unreachable upstream is recorded with its reason, never silently treated as current. The command always exits 0, because "could not check" is a recorded outcome rather than a failure.
+- **Version metadata in machine-readable output**: `audit`, `select`, and `profile` JSON now embed `skill_version` and `registry_version` without touching the network.
+- **Mandatory freshness step in the skill workflow**: [SKILL.md](SKILL.md) and [INTEGRATION.md](INTEGRATION.md) require the version check before any profile, select, audit, implementation, or verification work, and forbid claiming the skill is current without a `verified` result.
+- **Version lifecycle tests**: offline suites covering verified, update-available, unreachable, malformed, timed-out, no-git-history, missing-metadata, and repeated-invocation paths, plus `readLocalCommit` against detached HEAD, packed refs, and worktree `.git` files.
+
+### Changed
+- **Converted to TypeScript run by native type stripping**: every tool, test, and CI helper is now a `.ts` file executed directly by `node` — no compiler, no build step, no emitted artifacts, and still zero dependencies and zero devDependencies. Type annotations are erasable syntax only (no enums or namespaces). Relative imports carry explicit `.ts` extensions.
+- **Node.js floor raised from 20.6 to 22.18**: the first release where Node runs `.ts` files unflagged. The CI matrix drops 20.x accordingly; `engines` is a tested claim.
+- **Package version 4.0.0**: the Node floor and the `wds` entry-point path (`tools/cli.ts`) are breaking changes. Migration: upgrade Node to 22.18+ and update any direct invocation or `bin` reference from `tools/cli.mjs` to `tools/cli.ts`.
+
+---
+
 ## [3.0.0] - 2026-08-23
 
 ### Added

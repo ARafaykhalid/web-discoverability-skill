@@ -25,7 +25,7 @@ Canonical records live in `requirements/*.jsonl`. Generated files are not
 editing surfaces. Stable IDs are never reused, even after removal or deferral.
 Every active record must satisfy
 [schema/requirement.schema.json](schema/requirement.schema.json) and the
-validation rules in `tools/lib/validate.mjs`.
+validation rules in `tools/lib/validate.ts`.
 
 Current record shape:
 

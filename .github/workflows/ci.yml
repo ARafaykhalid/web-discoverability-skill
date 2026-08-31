@@ -124,10 +124,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # engines.node is >=20.6.0. 20.x is the floor that claim promises; if it
+        # engines.node is >=22.18.0: the first release where Node runs .ts files
+        # by native type stripping without a flag, which is how this package
+        # stays dependency-free. 22.x is the floor that claim promises; if it
         # breaks here, the floor is wrong and should be raised rather than the
         # failure worked around.
-        node: [20.x, 22.x, 24.x]
+        node: [22.x, 24.x]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -158,7 +160,7 @@ jobs:
           failed=0
           for dir in benchmarks/fixtures/*/; do
             name=$(basename "$dir")
-            if ! out=$(node tools/cli.mjs audit "$dir" --json 2>/dev/null); then
+            if ! out=$(node tools/cli.ts audit "$dir" --json 2>/dev/null); then
               echo "audit failed to run against $name"
               failed=1
               continue
@@ -169,8 +171,8 @@ jobs:
               process.stdin.on("end", () => {
                 const report = JSON.parse(chunks.join(""));
                 if (!Array.isArray(report.findings)) throw new Error("no findings array");
-                if (!report.profile) throw new Error("no profile");
-                console.log(`  ${report.findings.length} findings, framework ${report.profile.framework}`);
+                if (!report.framework) throw new Error("no framework");
+                console.log(`  ${report.findings.length} findings, framework ${report.framework}`);
               });
             ' || failed=1
             echo "audited $name"
@@ -210,7 +212,7 @@ jobs:
       # would survive indefinitely, because every other job either regenerates
       # first or reads the file it is meant to be checking.
       - name: Committed reports match a fresh run
-        run: node .github/scripts/assert-reports-fresh.mjs /tmp/committed reports
+        run: node .github/scripts/assert-reports-fresh.ts /tmp/committed reports
 
   # ---------------------------------------------------------------------------
   # Maintenance. Scheduled only, for the reasons at the top of this file: these
@@ -235,7 +237,7 @@ jobs:
       # the whole point: something has to eventually insist that a rule about
       # external behaviour gets looked at again.
       - name: Requirements overdue for re-verification
-        run: node tools/cli.mjs stale-requirements --strict
+        run: node tools/cli.ts stale-requirements --strict
 
       # If a source moved or a review lapsed, the registry may still validate
       # while being wrong about the world. Running the fast gates too means the

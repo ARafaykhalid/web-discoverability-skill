@@ -164,7 +164,7 @@ For the outcomes these numbers cannot speak to, see
 ```bash
 npm run bench                                          # every case; records the report
 npm run bench:check                                    # every case; writes nothing
-node tools/cli.mjs bench --case react-spa,vite-static  # one or more by id
+node tools/cli.ts bench --case react-spa,vite-static  # one or more by id
 ```
 
 Every command in this repository is read-only unless given `--write`. `npm run

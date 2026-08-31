@@ -27,28 +27,33 @@ npx skills use \
   --agent codex
 ```
 
-The bundled audit tools support Node.js 20.6+. The current Vercel `skills` CLI
-declares Node.js 22.20+.
+The bundled audit tools support Node.js 22.18+ (the first Node release that
+runs `.ts` files by native type stripping, which is how the tools ship without
+a compiler or any dependency). The current Vercel `skills` CLI declares
+Node.js 22.20+.
 
 ## CLI quick start
 
 From a checkout:
 
 ```bash
-node tools/cli.mjs profile ./path/to/site
-node tools/cli.mjs select ./path/to/site --level RECOMMENDED
-node tools/cli.mjs audit ./path/to/site --level RECOMMENDED
+node tools/cli.ts version
+node tools/cli.ts profile ./path/to/site
+node tools/cli.ts select ./path/to/site --level RECOMMENDED
+node tools/cli.ts audit ./path/to/site --level RECOMMENDED
 ```
 
 From an installed skill, resolve the directory containing `SKILL.md` and use:
 
 ```bash
-node "$SKILL_ROOT/tools/cli.mjs" audit ./path/to/site --level RECOMMENDED
+node "$SKILL_ROOT/tools/cli.ts" audit ./path/to/site --level RECOMMENDED
 ```
 
-`profile` describes the stack and evidence-backed facts. `select` returns
-candidate requirements. `audit` runs deterministic checks and reports evidence;
-it does not modify the target repository.
+`version` reports the skill version, registry schema version, local commit, and
+upstream freshness; run it before any substantive work. `profile` describes the
+stack and evidence-backed facts. `select` returns candidate requirements.
+`audit` runs deterministic checks and reports evidence; it does not modify the
+target repository.
 
 ## Project profile overrides
 
@@ -65,10 +70,10 @@ for predicates and activation behavior.
 Use the selector instead of loading the whole registry:
 
 ```bash
-node tools/cli.mjs select ./path/to/site \
+node tools/cli.ts select ./path/to/site \
   --level RECOMMENDED
 
-node tools/cli.mjs select ./path/to/site \
+node tools/cli.ts select ./path/to/site \
   --level EXTRA --domains metadata,sitemaps --json
 ```
 
@@ -80,6 +85,11 @@ Markdown page for every active requirement in `requirements/by-id/`.
 
 ## Agent implementation workflow
 
+0. Run `node "$SKILL_ROOT/tools/cli.ts" version --json` and act on the result:
+   proceed when `verified`, update or reload the skill when `update_available`
+   and the environment permits, and record `unable_to_verify` with its reason
+   when the upstream cannot be reached. Never claim the skill is current
+   without a `verified` result.
 1. Profile the repository and record unknowns.
 2. Select the requested level and relevant domains.
 3. Read the generated pages for the selected requirement IDs.
@@ -131,7 +141,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
       - run: npm run validate
       - run: npm run quality
       - run: npm run bench:check

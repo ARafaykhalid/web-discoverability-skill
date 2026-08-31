@@ -18,9 +18,9 @@ project directory
 Each stage is a separate command, and each is inspectable on its own:
 
 ```bash
-node tools/cli.mjs profile ./site --json   # the facts, with the reason for each
-node tools/cli.mjs select ./site --json    # every verdict, with the reason
-node tools/cli.mjs audit ./site --json     # the findings
+node tools/cli.ts profile ./site --json   # the facts, with the reason for each
+node tools/cli.ts select ./site --json    # every verdict, with the reason
+node tools/cli.ts audit ./site --json     # the findings
 ```
 
 Running them in order is the fastest way to answer "why did you not tell me about
@@ -140,12 +140,16 @@ keeps this from decaying into a convention.
 
 ## What the audit reports
 
-`node tools/cli.mjs audit` prints, and with `--json` returns:
+`node tools/cli.ts audit` prints, and with `--json` returns:
 
 - **findings** — with requirement id, check id, location, detail, severity,
   `change_safety`, `impact`, `evidence_tier`, `confidence`, and source URLs
 - **needs_runtime** — checks that could not run for lack of a captured response
 - **errors** — checks that threw, named individually
+- **skill_version / registry_version** — the versions this audit ran against,
+  read from `package.json` and `requirements/manifest.json` without touching
+  the network; freshness against upstream is the `version` command's job, and
+  `SKILL.md` requires it before any audit
 - **uncertain** — requirements whose applicability could not be decided, each
   with the fact that was missing
 - **unchecked_applicable** — applicable requirements with no deterministic check,
@@ -160,7 +164,7 @@ so in as many words.
 
 An agent implementing findings records one terminal status per requirement it
 acted on: `IMPLEMENTED`, `FIXED`, `PROPOSED`, `FAILED`, or `NEEDS_MANUAL_ACTION`.
-These are defined in `tools/lib/model.mjs` and used by the report templates in
+These are defined in `tools/lib/model.ts` and used by the report templates in
 `assets/templates/`. They are the agent's vocabulary, not the CLI's — the CLI
 audits and verifies, and does not implement.
 
