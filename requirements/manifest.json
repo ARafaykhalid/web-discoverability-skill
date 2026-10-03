@@ -3,19 +3,19 @@
   "generated_from": "requirements/*.jsonl",
   "generator": "npm run docs -- --write",
   "counts": {
-    "active": 224,
+    "active": 226,
     "removed": 80,
     "deferred": 336,
     "domains": 37,
-    "checks": 36
+    "checks": 46
   },
   "levels": {
     "LITE": 56,
-    "RECOMMENDED": 223,
-    "EXTRA": 224,
-    "ULTRA": 224
+    "RECOMMENDED": 225,
+    "EXTRA": 226,
+    "ULTRA": 226
   },
-  "highest_id": "SEO-636",
+  "highest_id": "SEO-642",
   "domains": {
     "urls": {
       "title": "URL design and HTTP routing",
@@ -368,14 +368,15 @@
       "title": "AI crawler policy",
       "activation": "public_site",
       "file": "ai-crawlers.jsonl",
-      "count": 6,
+      "count": 7,
       "ids": [
         "SEO-289",
         "SEO-291",
         "SEO-293",
         "SEO-295",
         "SEO-302",
-        "SEO-303"
+        "SEO-303",
+        "SEO-642"
       ],
       "runtime_sensitive": false
     },
@@ -383,14 +384,15 @@
       "title": "AI retrieval readiness",
       "activation": "public_site",
       "file": "ai-retrieval.jsonl",
-      "count": 6,
+      "count": 7,
       "ids": [
         "SEO-273",
         "SEO-275",
         "SEO-277",
         "SEO-282",
         "SEO-287",
-        "SEO-288"
+        "SEO-288",
+        "SEO-641"
       ],
       "runtime_sensitive": false
     },

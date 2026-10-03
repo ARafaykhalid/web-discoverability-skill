@@ -8,7 +8,7 @@
  * and the recorded status and redirect chain of the matched page are the verdict.
  */
 import { anchors, findTags, stripComments } from '../html.ts';
-import { pageCheck, gate, location, ev, pathOf, hostOf } from '../check-support.ts';
+import { pageCheck, gate, findingsFor, location, ev, pathOf, hostOf } from '../check-support.ts';
 
 /**
  * Anchors paired with their offset in the document.
@@ -23,6 +23,9 @@ function anchorsInOrder(html) {
   const tags = findTags(stripComments(html), 'a');
   return anchors(html).map((link, i) => ({ ...link, index: tags[i]?.index ?? null }));
 }
+
+/** Redirect statuses, so a page that redirects is never called unreachable. */
+const REDIRECT = new Set([301, 302, 303, 307, 308]);
 
 /** Schemes that address something other than a page on this site. */
 const NON_PAGE_SCHEME = /^(?:mailto|tel|sms|javascript|data|blob|ftp|ftps|file|ws|wss|news|magnet|intent):/i;
@@ -299,4 +302,77 @@ const internalLinksResolve = {
   },
 };
 
-export default [internalLinksResolve];
+/**
+ * Pages nothing in the capture links to.
+ *
+ * Reachability, not depth. A depth threshold would have to be invented, and an
+ * invented threshold turns every ordinary long-tailed URL into a finding; a page
+ * with no inbound internal link is a defect on any threshold, because the site's
+ * own navigation does not contain it and neither does anything else the capture
+ * read.
+ *
+ * The walk starts from every captured page rather than one nominated root, because
+ * a capture is a sample and cannot prove which page is the site's entry point.
+ * That makes this the weak form of the check - it reports a page isolated *within
+ * the captured sample*, and says so, rather than claiming the page is unreachable
+ * from a root it never identified.
+ */
+const orphanedPages = {
+  id: 'orphaned-pages',
+  requirements: ['SEO-222'],
+  level: 'RUNTIME',
+  title: 'Indexable pages other captured pages link to',
+  run(snapshot) {
+    const blocked = gate(snapshot);
+    if (blocked) return blocked;
+
+    // ponytail: a 3-page floor, because below it the sample cannot distinguish an
+    // orphan from an entry point. Ceiling: a 2-page capture of a 10,000-page site
+    // reports nothing at all. Upgrade if a capture ever records the crawl root.
+    const indexable = snapshot.pages.filter((p) => p.indexable !== false);
+    if (indexable.length < 3) {
+      return { status: 'NOT_APPLICABLE', findings: [], detail: `only ${indexable.length} indexable pages in this capture; too few to show that a page is isolated` };
+    }
+
+    const hosts = siteHosts(snapshot.pages);
+    const root = staticSiteRoot(snapshot.pages);
+    const inbound = new Map();
+
+    for (const page of snapshot.pages) {
+      const html = page.rendered_html ?? page.raw_html;
+      if (!html) continue;
+      for (const link of anchorsInOrder(html)) {
+        const target = resolveTarget(link.href, page.url, hosts, root);
+        if (target.skip || !target.key) continue;
+        if (!inbound.has(target.key)) inbound.set(target.key, new Set());
+        inbound.get(target.key).add(pagePath(page));
+      }
+    }
+
+    const items = [];
+    for (const page of indexable) {
+      // The site root is reached by typing an address, not by following a link, so
+      // "nothing links here" is what a root looks like. A page that redirects is
+      // addressed the same way: a legacy URL nothing links to is the intended shape
+      // of a redirect, not an orphan.
+      const key = pagePath(page);
+      if (key === '/') continue;
+      if ((page.redirect_chain || []).length || REDIRECT.has(page.status)) continue;
+      const sources = inbound.get(key);
+      if (sources?.size) continue;
+      items.push({
+        requirement_id: 'SEO-222',
+        location: location(page),
+        severity: 'LOW',
+        detail: `no other page in this capture links to ${page.url}; it is reachable only by address, so nothing in the site structure leads a crawler to it`,
+        evidence: [
+          ev('ROUTE', { url: page.url, linked_from: [] }),
+          ev('RENDERED_HTML', { url: page.url, observed: `${snapshot.pages.length} pages examined for inbound links` }),
+        ],
+      });
+    }
+    return findingsFor(orphanedPages, items);
+  },
+};
+
+export default [internalLinksResolve, orphanedPages];

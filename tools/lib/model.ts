@@ -107,7 +107,7 @@ export const EVIDENCE_TIERS = {
 export const EVIDENCE_TIER_VALUES = Object.keys(EVIDENCE_TIERS);
 
 /** Tiers that must carry at least one source. */
-export const TIERS_REQUIRING_SOURCES = ['A', 'B', 'C', 'D'] as const;
+export const TIERS_REQUIRING_SOURCES: readonly string[] = ['A', 'B', 'C', 'D'];
 
 /**
  * Confidence that implementing the requirement produces the stated effect.
@@ -134,7 +134,7 @@ export const CATEGORIES = [
 ] as const;
 
 /** Categories whose requirements are experimental by construction. */
-export const EXPERIMENTAL_CATEGORIES = ['EMERGING_GEO'] as const;
+export const EXPERIMENTAL_CATEGORIES: readonly string[] = ['EMERGING_GEO'];
 
 /** Change-safety classification. Drives what an agent may do without asking. */
 export const CHANGE_SAFETY = {
@@ -259,7 +259,7 @@ export const FRAMEWORKS = [
  * least one fixture. Anything outside this list is "generic guidance only" and
  * must be reported as such rather than implied to have equal depth.
  */
-export const FRAMEWORKS_WITH_ADAPTERS = [
+export const FRAMEWORKS_WITH_ADAPTERS: readonly string[] = [
   'static-html',
   'next-app-router',
   'next-pages-router',
@@ -270,7 +270,7 @@ export const FRAMEWORKS_WITH_ADAPTERS = [
   'node-server',
   'django',
   'flask-fastapi',
-] as const;
+];
 
 /** Profile facts a requirement may gate on. Keep in sync with tools/lib/profile.ts. */
 export const PROFILE_PREDICATES = [
@@ -362,12 +362,38 @@ export const CLASSIFICATIONS = [
 ] as const;
 
 /**
+ * The shared re-admission criteria for `deferred.jsonl`.
+ *
+ * Every deferred id was imported from a v1 catalogue that carried no per-record
+ * specification, so they share one blocker and it is stated here once. It used to
+ * be repeated verbatim on all 336 lines, which made the ledger 171KB of one
+ * paragraph and made the file's size look like progress. A deferred entry now
+ * carries only what is per-record - its id, title, and `NEEDS_REWORDING`
+ * classification - and the criteria that apply to all of them are published here
+ * and generated into `requirements/registry.md`.
+ */
+export const DEFERRED_READMISSION_CRITERIA = [
+  'A `statement` that asserts a testable condition, not the title restated.',
+  'A `rationale` written in language the evidence tier supports.',
+  'An `implementation` concrete enough to act on without guessing.',
+  'A `verification.method` describing an observation, plus the `verification.evidence` types it produces.',
+  'At least one entry in `sources`, with the record tier matched by at least one citation.',
+].join('\n');
+
+/** What the v1 catalogue actually contained, quoted so the reason is checkable. */
+export const DEFERRED_ORIGIN = 'The v1 catalogue carried a title, a minimum level, and a category per ID. Its description field was one shared boilerplate sentence, its evidence-type list was all 17 legacy types verbatim, and its verification method was one of three domain-wide skeletons. None of that is a specification, so none of it was promoted.';
+
+/**
  * Domains whose requirements describe output a runtime layer can override
  * (a framework head-merge, a CDN, an edge rewrite, hydration). For these,
  * source-level verification alone is not evidence: brief-grade verification
  * must inspect what is actually served.
  */
-export const RUNTIME_SENSITIVE_DOMAINS = [
+// Typed `readonly string[]` rather than left as a literal union: these three arrays are
+// used with `.includes(someString)`, and a literal union makes that call a compile
+// error for any domain the array does not happen to list - which is the wrong way
+// round for a membership test.
+export const RUNTIME_SENSITIVE_DOMAINS: readonly string[] = [
   'urls',
   'metadata',
   'canonicals',
@@ -514,6 +540,20 @@ export interface LedgerRecord {
   reason?: string;
   superseded_by?: string;
   __line?: number;
+}
+
+/**
+ * Membership test against an array declared `as const`.
+ *
+ * `as const` is what gives these arrays their literal union, which the schema
+ * generator and the derived types need. The cost is that `includes` then only
+ * accepts that exact union, so a test against a plain `string` - a domain read
+ * from a record, a flag from the command line - is a type error even when the
+ * value is obviously fine. This widens the receiver instead of the argument, so
+ * the array keeps its union and the call site reads as the membership test it is.
+ */
+export function includesValue(list: readonly string[], value: string): boolean {
+  return list.includes(value);
 }
 
 export function cumulativeLevels(minimum) {

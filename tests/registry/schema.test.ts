@@ -10,6 +10,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { loadRegistry, loadRemoved, loadDeferred, levelsFor } from '../../tools/lib/registry.ts';
+import { assertPopulated, where } from '../helpers.ts';
 import {
   CATEGORIES,
   CHANGE_SAFETY_VALUES,
@@ -32,17 +33,6 @@ const removed = loadRemoved();
 const deferred = loadDeferred();
 
 /** Guard against a vacuous pass: an empty collection must never satisfy a sweep. */
-function assertPopulated(list, what) {
-  assert.ok(
-    Array.isArray(list) && list.length > 0,
-    `${what} is empty, so every per-item assertion below would pass without inspecting anything`,
-  );
-}
-
-function where(record) {
-  return `${record.__file ?? '?'}:${record.__line ?? '?'}`;
-}
-
 /** The validator's own definition of "present and non-empty" (validate.ts required-field). */
 function isMissing(value) {
   return (

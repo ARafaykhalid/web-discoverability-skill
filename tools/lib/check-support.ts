@@ -12,6 +12,7 @@
  * group is.
  */
 import { finding } from './snapshot.ts';
+import type { EvidenceItem } from './snapshot.ts';
 import { findTags, parseAttributes } from './html.ts';
 
 /* ------------------------------------------------------------- locations */
@@ -69,7 +70,7 @@ export function location(page, index = null) {
  * plausible-looking one. Name the detail `node_type`, `entity_type`, or whatever
  * the value actually is.
  */
-export function ev(type, detail = {}) {
+export function ev(type: string, detail: Record<string, unknown> = {}): EvidenceItem {
   if (Object.hasOwn(detail, 'type')) {
     throw new Error(`ev(${JSON.stringify(type)}) was given a detail key named "type", which would overwrite the evidence type; rename it`);
   }

@@ -1,7 +1,7 @@
 # Universal Web Discoverability Engineering Skill (`web-discoverability-skill`)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Stable IDs: 640 Allocated](https://img.shields.io/badge/Stable%20IDs-640%20Allocated-green.svg)](requirements/registry.md)
+[![Stable IDs: 642 Allocated](https://img.shields.io/badge/Stable%20IDs-642%20Allocated-green.svg)](requirements/registry.md)
 [![Domains: 37](https://img.shields.io/badge/Domains-37-orange.svg)](requirements/manifest.json)
 [![Agent Skills Compatible](https://img.shields.io/badge/Agent%20Skills-Compatible-purple.svg)](SKILL.md)
 
@@ -47,19 +47,19 @@ you.
 
 | Registry | Value |
 | --- | --- |
-| Active requirements | 224 |
-| Distinct titles | 224 |
-| With a citation | 204 |
-| With a verification method | 224 |
-| With a deterministic check | 36 (16%) |
-| With a confidence rating | 224 |
+| Active requirements | 226 |
+| Distinct titles | 226 |
+| With a citation | 206 |
+| With a verification method | 226 |
+| With a deterministic check | 48 (21%) |
+| With a confidence rating | 226 |
 | Duplicate titles | 0 |
 | Near-duplicate title pairs | 0 |
 | Broken dependencies | 0 |
 | Circular dependencies | 0 |
 | Retired IDs (never reused) | 80 |
 | Deferred IDs | 336 |
-| Deterministic checks | 36 |
+| Deterministic checks | 46 |
 
 | Benchmark (fixtures, checked subset only) | Value |
 | --- | --- |
@@ -79,11 +79,12 @@ table is typed by hand, and `npm run ci` fails if any of them drifts.
 
 ## Install
 
-The bundled audit tooling supports Node.js 22.18 or newer and has no dependencies
-or build step: the tools are TypeScript executed directly by Node's native type
-stripping, so there is nothing to compile and nothing to install. Vercel's
-`skills` CLI has its own Node requirement; its current release requires Node.js
-22.20 or newer.
+The bundled audit tooling has no dependencies and no build step: the tools are
+TypeScript executed directly by Node's native type stripping, so there is nothing
+to compile and nothing to install. The supported floor is `engines.node` in
+[package.json](package.json) - 22.18, the first release that runs `.ts` files by
+type stripping without a flag. Vercel's `skills` CLI has its own requirement; its
+current release needs Node.js 22.20 or newer.
 
 ### Install as a Vercel Agent Skill
 
@@ -132,8 +133,18 @@ audit tooling outside this directory.
 node tools/cli.ts version                    # skill, registry, and upstream freshness
 node tools/cli.ts profile ./path/to/site      # what kind of site is this?
 node tools/cli.ts select ./path/to/site       # which rules apply, and why
+node tools/cli.ts capture https://example.com --write   # record what it serves
 node tools/cli.ts audit ./path/to/site        # run the checks, report findings
 ```
+
+`capture` is what makes the rest useful against a real site. Most of the suite
+reads what a crawler received rather than what the repository says it renders, so
+a source tree is not enough input: without a `snapshot.json` every runtime-level
+check reports `NEEDS_RUNTIME`, which is the honest answer and not a useful one.
+`capture` records the response, status, headers, and redirect chain for a bounded
+same-origin walk and writes them where `audit` looks. It uses no browser and no
+dependency - just `fetch` - so it records the bytes the server sent, which is what
+every check except the post-hydration ones inspects.
 
 `version` is the freshness check the skill runs before any substantive work. It
 reports the skill version, the registry schema version, the commit the local
@@ -144,9 +155,11 @@ outcome, not a failure. `audit`, `select`, and `profile` embed `skill_version`
 and `registry_version` in their JSON output without touching the network.
 
 `profile`, `select`, and `audit` never modify the project they inspect. With
-`--write` they may persist reports under `reports/`. Registry-maintenance
-commands are separate: `docs --write` regenerates derived documentation and
-schemas, while the `bench` and `metrics` npm scripts refresh their reports.
+`--write` they may persist a report under `reports/`, which is entirely generated
+and safe to delete. Registry-maintenance commands are separate: `docs --write`
+regenerates derived documentation and schemas. The metrics and benchmark figures
+quoted in this file are computed in memory each time `docs` runs, so the number
+above is the number this commit produces rather than a committed copy of one.
 
 Registry maintenance and self-checks:
 
@@ -158,10 +171,22 @@ npm run metrics         # the machine-readable metrics report
 npm run stale           # requirements overdue for source re-verification
 npm run sources         # the source manifest, one row per citation
 npm run check-sources   # live reachability of every cited URL
-npm run bench           # score the fixture cases, record the result
+npm run bench           # score the fixture cases
+npm run bench:check     # the same, writing nothing
 npm run docs:check       # fail if any generated artifact has drifted
-npm run ci              # all of the above that do not need the network
+npm run typecheck        # the TypeScript annotations, which Node otherwise ignores
+npm run ci              # everything above that belongs in a pull request
 ```
+
+`npm run ci` is the whole pull-request gate and is what the workflow runs.
+`check-sources` and `stale-requirements --strict` are deliberately outside it: the
+first needs the network and the second needs the calendar, and neither says
+anything about the change under review.
+
+`npm run ci` does need the network for one step. `typecheck` installs TypeScript
+and `@types/node` with `--no-save --no-package-lock`, which writes to
+`node_modules/` and to neither `package.json` nor a lockfile. Nothing else in the
+gate reaches the network, and nothing in the package needs an install to run.
 
 To regenerate derived Markdown, schemas, and indexes after editing canonical
 records, run `npm run docs -- --write`. Plain `npm run docs` is read-only.
@@ -300,7 +325,7 @@ tests/            node:test suites: registry, tools, checks, regression
 references/       deep reference documents the agent reads on demand
 assets/templates/ report templates
 agents/           agent-framework definitions
-reports/          generated; not authoritative, and safe to delete
+reports/          generated on demand, gitignored, and safe to delete
 SKILL.md          the agent orchestrator instructions
 ```
 

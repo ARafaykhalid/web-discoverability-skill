@@ -1,11 +1,11 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-08-31T18:00:35.468Z",
+  "generated_at": "2026-10-03T12:35:33.474Z",
   "requirements_total": 224,
   "requirements_unique": 224,
   "requirements_with_sources": 204,
   "requirements_with_verification": 224,
-  "requirements_with_tests": 36,
+  "requirements_with_tests": 43,
   "requirements_with_confidence": 224,
   "duplicate_count": 0,
   "near_duplicate_count": 0,
@@ -13,8 +13,8 @@
   "circular_dependency_count": 0,
   "requirements_removed": 80,
   "requirements_deferred": 336,
-  "checks_defined": 36,
-  "check_coverage_ratio": 0.1607,
+  "checks_defined": 42,
+  "check_coverage_ratio": 0.192,
   "registry_valid": true,
   "validation_errors": 0,
   "level_candidate_counts": {
@@ -50,6 +50,6 @@
   "benchmark_recall": 1,
   "false_positive_rate": 0,
   "false_negative_rate": 0,
-  "benchmark_cases": 12,
+  "benchmark_cases": null,
   "benchmark_scope": "fixture projects, checked subset of the registry only"
 }

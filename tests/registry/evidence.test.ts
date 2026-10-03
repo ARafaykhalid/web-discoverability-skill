@@ -11,6 +11,7 @@ import assert from 'node:assert/strict';
 
 import { loadRegistry, tokenSimilarity } from '../../tools/lib/registry.ts';
 import { validate } from '../../tools/lib/validate.ts';
+import { assertPopulated, where, rulesFrom, isValidIsoDay, TODAY } from '../helpers.ts';
 import {
   EVIDENCE_TIERS,
   EVIDENCE_TIER_VALUES,
@@ -21,37 +22,12 @@ import {
 } from '../../tools/lib/model.ts';
 
 const { records } = loadRegistry();
-const TODAY = new Date().toISOString().slice(0, 10);
-
-function assertPopulated(list, what) {
-  assert.ok(
-    Array.isArray(list) && list.length > 0,
-    `${what} is empty, so every per-item assertion below would pass without inspecting anything`,
-  );
-}
-
-function where(record) {
-  return `${record.__file ?? '?'}:${record.__line ?? '?'}`;
-}
-
 function isolatedRecord(base, overrides = {}) {
   const clone = structuredClone(base);
   delete clone.depends_on;
   delete clone.conflicts_with;
   delete clone.supersedes;
   return Object.assign(clone, overrides);
-}
-
-function rulesFrom(result) {
-  return new Set(result.errors.map((e) => e.rule));
-}
-
-function isValidIsoDay(value) {
-  const text = String(value);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
-  const [y, m, d] = text.split('-').map(Number);
-  const parsed = new Date(Date.UTC(y, m - 1, d));
-  return parsed.getUTCFullYear() === y && parsed.getUTCMonth() === m - 1 && parsed.getUTCDate() === d;
 }
 
 const externalClaim = records.filter((r) => TIERS_REQUIRING_SOURCES.includes(r.evidence_tier));

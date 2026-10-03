@@ -9,7 +9,11 @@ safe to apply.
 
 Requirements:
 
-- Node.js 20.6 or newer for the bundled tooling.
+- The Node.js version in `package.json`'s `engines.node` for the bundled tooling. That
+  field is the single statement of the floor; it is 22.18 because that is the first
+  release that runs `.ts` files by native type stripping without a flag, which is
+  how this package stays dependency-free. Do not restate the number here - it
+  drifted once already, with this file claiming a floor the tooling cannot run on.
 - Node.js 22.20 or newer when using the current Vercel `skills` CLI.
 - No package dependencies and no build step.
 

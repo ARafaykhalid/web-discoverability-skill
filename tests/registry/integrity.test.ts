@@ -12,22 +12,12 @@ import assert from 'node:assert/strict';
 import { loadRegistry, loadRemoved, loadDeferred, normalizeText } from '../../tools/lib/registry.ts';
 import { validate, findDependencyCycles } from '../../tools/lib/validate.ts';
 import { ID_PATTERN } from '../../tools/lib/model.ts';
+import { assertPopulated, where, rulesFrom } from '../helpers.ts';
 
 const { records } = loadRegistry();
 const removed = loadRemoved();
 const deferred = loadDeferred();
 const byId = new Map(records.map((r) => [r.id, r]));
-
-function assertPopulated(list, what) {
-  assert.ok(
-    Array.isArray(list) && list.length > 0,
-    `${what} is empty, so every per-item assertion below would pass without inspecting anything`,
-  );
-}
-
-function where(record) {
-  return `${record.__file ?? '?'}:${record.__line ?? '?'}`;
-}
 
 /** A well-formed id that no population has allocated, derived from the data. */
 function unallocatedId() {
@@ -50,10 +40,6 @@ function isolatedRecord(overrides = {}) {
   delete clone.conflicts_with;
   delete clone.supersedes;
   return Object.assign(clone, overrides);
-}
-
-function rulesFrom(result) {
-  return new Set(result.errors.map((e) => e.rule));
 }
 
 /** Depth-first cycle search with an explicit colour map. Returns id paths. */

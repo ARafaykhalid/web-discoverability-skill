@@ -8,7 +8,8 @@
  */
 import { isAbsoluteUrl } from '../html.ts';
 import {
-  pageCheck, location, ev, linkTags, headLinkTags, hasHead, pathOf,
+  pageCheck, gate, findingsFor, location, ev, linkTags, headLinkTags, hasHead, pathOf,
+  sameUrl, declaresNoindex, robotsDirectives,
 } from '../check-support.ts';
 
 /**
@@ -155,4 +156,88 @@ const canonicalNoTrackingParams = {
   },
 };
 
-export default [canonicalSelfReferencingAbsolute, canonicalNoTrackingParams];
+/**
+ * Whether the URL a canonical names is one the capture can vouch for.
+ *
+ * Only a response proves this. A canonical is a promise about another address, and
+ * a target the capture never visited is unproven rather than broken - reporting it
+ * would manufacture findings about requests nobody made, which is the failure mode
+ * the internal-link check is careful to avoid.
+ */
+function pagesByUrl(pages) {
+  const byUrl = new Map();
+  for (const page of pages) {
+    for (const address of [page.url, ...(page.redirect_chain || [])]) {
+      const key = pathOf(address);
+      if (key && !byUrl.has(key)) byUrl.set(key, page);
+    }
+  }
+  return byUrl;
+}
+
+const canonicalTargetResolves = {
+  id: 'canonical-target-resolves',
+  requirements: ['SEO-051'],
+  level: 'RUNTIME',
+  title: 'Every canonical names a target that returns 200 and stays indexable',
+  run(snapshot) {
+    const blocked = gate(snapshot);
+    if (blocked) return blocked;
+
+    const targets = pagesByUrl(snapshot.pages);
+    const items = [];
+
+    for (const page of snapshot.pages) {
+      const html = page.rendered_html ?? page.raw_html;
+      if (!html) continue;
+
+      for (const tag of linkTags(html, 'canonical')) {
+        const href = (tag.attrs.href || '').trim();
+        if (!href || !isAbsoluteUrl(href)) continue;
+        const key = pathOf(href);
+        const target = key ? targets.get(key) : null;
+        if (!target) continue;
+        // A page that canonicalises to itself and asks not to be indexed is
+        // coherent, not defective: it is excluded from the index and its canonical
+        // names the address it would have at. Only a canonical pointing at some
+        // *other* excluded address is the contradiction this requirement is about,
+        // and `canonical-self-referencing-absolute` already governs the self case.
+        if (sameUrl(target.url, page.url)) continue;
+
+        const evidenceFor = (observed) => [
+          ev('RENDERED_HTML', { url: page.url, observed }),
+          ev('HTTP_STATUS', { url: target.url, status: target.status }),
+        ];
+
+        if (target.redirect_chain?.length || target.status !== 200) {
+          items.push({
+            requirement_id: 'SEO-051',
+            location: location(page, tag.index),
+            severity: 'HIGH',
+            detail: `canonical names ${target.url}, which returned ${target.status}${target.redirect_chain?.length ? ` after ${target.redirect_chain.length} redirect(s)` : ''} rather than serving the document directly`,
+            evidence: evidenceFor({ canonical: href, target_status: target.status, target_chain: target.redirect_chain }),
+          });
+        }
+
+        if (declaresNoindex(target)) {
+          items.push({
+            requirement_id: 'SEO-051',
+            location: location(page, tag.index),
+            severity: 'HIGH',
+            detail: `canonical names ${target.url}, which asks not to be indexed, so the page points its identity at an excluded address`,
+            evidence: [
+              ...evidenceFor({ canonical: href, target_noindex: true }),
+              ev('RENDERED_HTML', {
+                url: target.url,
+                observed: robotsDirectives(target).map((d) => `${d.source}: ${d.value}`),
+              }),
+            ],
+          });
+        }
+      }
+    }
+    return findingsFor(canonicalTargetResolves, items);
+  },
+};
+
+export default [canonicalSelfReferencingAbsolute, canonicalNoTrackingParams, canonicalTargetResolves];

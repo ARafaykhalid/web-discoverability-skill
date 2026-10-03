@@ -6,7 +6,7 @@
  * from a page override. Reading served output is what makes the duplicate visible.
  */
 import {
-  pageCheck, gate, findingsFor, location, ev, metaTagsAnywhere, linkTags, sameUrl,
+  gate, findingsFor, location, ev, metaTagsAnywhere, linkTags, sameUrl,
 } from '../check-support.ts';
 
 /**

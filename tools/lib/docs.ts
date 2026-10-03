@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import {
+  includesValue,
   DOMAINS,
   LEVELS,
   SEVERITIES,
@@ -25,6 +26,8 @@ import {
   PROFILE_PREDICATES,
   ACTIVATIONS,
   CLASSIFICATIONS,
+  DEFERRED_READMISSION_CRITERIA,
+  DEFERRED_ORIGIN,
   RUNTIME_SENSITIVE_DOMAINS,
   REQUIRED_FIELDS,
   OPTIONAL_FIELDS,
@@ -74,7 +77,9 @@ function countBy(records, get) {
 
 /** JSON Schema for one requirement record. Generated from model.ts. */
 export function requirementSchema() {
-  const enumProp = (values, description) => ({ type: 'string', enum: values, description });
+  // `description` is optional: six call sites pass only the values, and the schema is
+  // equally valid without a description for an enum whose name is self-explanatory.
+  const enumProp = (values, description?) => ({ type: 'string', enum: values, description });
 
   return {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -169,15 +174,18 @@ export function ledgerSchema() {
     description: 'A reviewed requirement that is not active. IDs recorded here are never reused.',
     type: 'object',
     additionalProperties: false,
-    required: ['id', 'title', 'classification', 'reason'],
+    required: ['id', 'title', 'classification'],
     properties: {
       id: { type: 'string', pattern: ID_PATTERN.source },
       title: { type: 'string', minLength: 8, description: 'The title as it existed before review.' },
       classification: { type: 'string', enum: CLASSIFICATIONS },
-      reason: { type: 'string', minLength: 20, description: 'Why this is not an active requirement.' },
+      reason: { type: 'string', minLength: 20, description: 'Why this is not an active requirement. Required in removed.jsonl.' },
       domain: { type: 'string' },
       replaced_by: { type: 'array', items: { type: 'string', pattern: ID_PATTERN.source }, uniqueItems: true },
-      blocker: { type: 'string', description: 'For deferred entries: what is missing before it can be activated.' },
+      blocker: {
+        type: 'string',
+        description: 'For a deferred entry held back for a reason other than rewording: what is missing before it can be activated. Entries classified NEEDS_REWORDING need no blocker; the shared criteria in tools/lib/model.ts cover them.',
+      },
       reviewed_on: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
     },
   };
@@ -256,7 +264,7 @@ export function manifest({ records, removed = [], deferred = [], checks = [] }) 
       file: `${domain.domain}.jsonl`,
       count: list.length,
       ids: list.map((r) => r.id).sort(),
-      runtime_sensitive: RUNTIME_SENSITIVE_DOMAINS.includes(domain.domain),
+      runtime_sensitive: includesValue(RUNTIME_SENSITIVE_DOMAINS, domain.domain),
     };
   }
 
@@ -296,6 +304,20 @@ export function registryIndexMarkdown({ records, removed = [], deferred = [], ch
     `${records.length} active requirements across ${DOMAINS.length} domains.`,
     `${removed.length} retired and ${deferred.length} deferred IDs are recorded in the ledgers; retired IDs are never reused.`,
     '',
+    '## Deferred IDs',
+    '',
+    'The deferred ledger holds IDs reviewed out of the active registry and not yet specified well enough to promote.',
+    'They are not a roadmap: an ID is there because it was reviewed and the review found it wanting.',
+    '',
+    DEFERRED_ORIGIN,
+    '',
+    'Re-admission requires all of:',
+    '',
+    DEFERRED_READMISSION_CRITERIA.split('\n').map((line) => `- ${line}`).join('\n'),
+    '',
+    'These criteria are stated once because they are the same for every entry classified `NEEDS_REWORDING`.',
+    'An entry deferred for any other reason carries its own `blocker` instead.',
+    '',
     'Columns: `Chk` marks a requirement with a deterministic check in `tools/lib/checks/`.',
     'Requirements without one are verified by the documented manual method and are counted as unchecked in `reports/metrics.json`.',
     '',
@@ -306,7 +328,7 @@ export function registryIndexMarkdown({ records, removed = [], deferred = [], ch
     if (!list.length) continue;
     lines.push(`## ${domain.title} (\`${domain.domain}\`)`);
     lines.push('');
-    lines.push(`Activation: \`${domain.activation}\` · ${list.length} requirements${RUNTIME_SENSITIVE_DOMAINS.includes(domain.domain) ? ' · runtime-sensitive' : ''}`);
+    lines.push(`Activation: \`${domain.activation}\` · ${list.length} requirements${includesValue(RUNTIME_SENSITIVE_DOMAINS, domain.domain) ? ' · runtime-sensitive' : ''}`);
     lines.push('');
     lines.push(
       table(
@@ -436,7 +458,7 @@ export function vocabularyMarkdown() {
     '',
     table(
       ['Domain', 'Title', 'Activation fact', 'Runtime-sensitive'],
-      DOMAINS.map((d) => [`\`${d.domain}\``, d.title, `\`${d.activation}\``, RUNTIME_SENSITIVE_DOMAINS.includes(d.domain) ? 'yes' : '-']),
+      DOMAINS.map((d) => [`\`${d.domain}\``, d.title, `\`${d.activation}\``, includesValue(RUNTIME_SENSITIVE_DOMAINS, d.domain) ? 'yes' : '-']),
     ),
     '',
     'A runtime-sensitive domain describes output that a framework head-merge, an edge rewrite, or hydration can change.',
@@ -448,7 +470,7 @@ export function vocabularyMarkdown() {
     '',
     '## Categories',
     '',
-    table(['Category', 'Experimental'], CATEGORIES.map((c) => [`\`${c}\``, EXPERIMENTAL_CATEGORIES.includes(c) ? 'yes' : '-'])),
+    table(['Category', 'Experimental'], CATEGORIES.map((c) => [`\`${c}\``, includesValue(EXPERIMENTAL_CATEGORIES, c) ? 'yes' : '-'])),
     '',
     '## Change safety',
     '',
@@ -493,7 +515,7 @@ export function vocabularyMarkdown() {
     '',
     table(
       ['Framework', 'Adapter + fixture'],
-      FRAMEWORKS.filter((f) => f !== 'any').map((f) => [`\`${f}\``, FRAMEWORKS_WITH_ADAPTERS.includes(f) ? 'yes' : 'generic guidance only']),
+      FRAMEWORKS.filter((f) => f !== 'any').map((f) => [`\`${f}\``, includesValue(FRAMEWORKS_WITH_ADAPTERS, f) ? 'yes' : 'generic guidance only']),
     ),
     '',
     '## Search surfaces',
@@ -554,7 +576,7 @@ export function evidenceMarkdown({ records, sources }) {
     '',
     table(
       ['Category', 'Requirements', 'Experimental'],
-      CATEGORIES.map((c) => [`\`${c}\``, String(categoryCounts.get(c) || 0), EXPERIMENTAL_CATEGORIES.includes(c) ? 'yes' : '-']),
+      CATEGORIES.map((c) => [`\`${c}\``, String(categoryCounts.get(c) || 0), includesValue(EXPERIMENTAL_CATEGORIES, c) ? 'yes' : '-']),
     ),
     '',
     '## Language rules',
@@ -582,7 +604,7 @@ export function evidenceMarkdown({ records, sources }) {
     '',
     table(
       ['Organization', 'Citations'],
-      Object.entries(sources.by_organization)
+      (Object.entries(sources.by_organization) as [string, number][])
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([org, count]) => [org, String(count)]),
     ),
@@ -650,9 +672,11 @@ function loadCaseFiles(dir) {
 }
 
 /** The benchmarks/README.md coverage block. Presence of a case decides each row. */
-export function fixtureCoverageMarkdown({ cases = [], benchmarks = null }) {
+export function fixtureCoverageMarkdown({ cases = [], benchmarks = null }: { cases?: { id: string }[]; benchmarks?: { cases?: { case_id: string; counts?: { true_positives: number; true_negatives: number } }[] } | null } = {}) {
   const byId = new Map(cases.map((entry) => [entry.id, entry]));
-  const scoredById = new Map((benchmarks?.cases || []).map((score) => [score.case_id, score]));
+  const scoredById = new Map<string, { counts?: { true_positives: number; true_negatives: number } }>(
+    (benchmarks?.cases || []).map((score) => [score.case_id, score]),
+  );
 
   const rows = INTENDED_FIXTURES.map(([label, caseId, why]) => {
     const benchCase = byId.get(caseId);
@@ -778,6 +802,19 @@ export function hasBlock(text, marker) {
  * CLI can either write them or diff them without duplicating the generation
  * logic between --write and --check.
  */
+/**
+ * An in-place generated block.
+ *
+ * `missing` means the target file or its GENERATED markers were absent, so there
+ * is nothing to diff; `updated` is the content with the block replaced. Exactly one
+ * of the two is present, which is why this is a union rather than one shape with
+ * two optional fields - `original` is read on the happy path and `missing` on the
+ * other, and reading the wrong one is a silent no-op rather than an error.
+ */
+export type DocsBlock =
+  | { path: string; marker: string; content: string; missing: string }
+  | { path: string; marker: string; content: string; original: string; updated: string };
+
 export function generateArtifacts({ records, removed = [], deferred = [], checks = [], metrics, sources, benchmarks = null, root = ROOT }) {
   const files = [
     { path: 'requirements/manifest.json', content: `${JSON.stringify(manifest({ records, removed, deferred, checks }), null, 2)}\n` },
@@ -797,7 +834,7 @@ export function generateArtifacts({ records, removed = [], deferred = [], checks
   // table is a function of what is on disk in benchmarks/cases/, so a caller that
   // forgot to pass them would silently generate a table claiming no fixtures
   // exist - and `docs --check` would then demand that wrong table be committed.
-  const blocks = [
+  const blocks: { path: string; marker: string; content: string }[] = [
     { path: 'README.md', marker: 'metrics', content: metricsBlockMarkdown({ metrics, benchmarks }) },
     {
       path: 'benchmarks/README.md',
@@ -806,7 +843,7 @@ export function generateArtifacts({ records, removed = [], deferred = [], checks
     },
   ];
 
-  const resolved = blocks.map((block) => {
+  const resolved = blocks.map((block): DocsBlock => {
     const path = join(root, block.path);
     if (!existsSync(path)) {
       return { ...block, missing: `${block.path} does not exist` };

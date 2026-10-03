@@ -16,6 +16,7 @@ import assert from 'node:assert/strict';
 import { loadRegistry } from '../../tools/lib/registry.ts';
 import { findForbiddenClaims } from '../../tools/lib/validate.ts';
 import { FORBIDDEN_CLAIM_PATTERNS } from '../../tools/lib/model.ts';
+import { assertPopulated, where } from '../helpers.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const VALIDATE_SOURCE = join(HERE, '..', '..', 'tools', 'lib', 'validate.ts');
@@ -61,17 +62,6 @@ const DISCLAIMER_PREFIX = 'Never write that ';
 
 /** Members of the CLAUSE_BOUNDARY character class in validate.ts. */
 const CLAUSE_BOUNDARIES = ['.', ';', ':', '!', '?', ',', '(', ')', '\n', '—', '–'];
-
-function assertPopulated(list, what) {
-  assert.ok(
-    Array.isArray(list) && list.length > 0,
-    `${what} is empty, so every per-item assertion below would pass without inspecting anything`,
-  );
-}
-
-function where(record) {
-  return `${record.__file ?? '?'}:${record.__line ?? '?'}`;
-}
 
 describe('registry prose makes no unsupported outcome claim', () => {
   it('no promoted record trips findForbiddenClaims in any scanned field', () => {

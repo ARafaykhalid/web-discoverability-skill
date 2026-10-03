@@ -123,35 +123,56 @@ Use native framework ownership rather than forcing a universal file layout:
 Detailed adapters are in
 [references/framework-adapters.md](references/framework-adapters.md).
 
-## CI integration
+## Auditing a served site
 
-The repository itself has no install step:
+Most of the suite reads what a crawler actually receives, so a repository alone is
+not enough input. `capture` records it:
 
-```yaml
-name: Discoverability skill checks
-
-on:
-  push:
-  pull_request:
-
-jobs:
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-      - run: npm run validate
-      - run: npm run quality
-      - run: npm run bench:check
-      - run: npm run docs:check
-      - run: npm test
+```bash
+node tools/cli.ts capture https://example.com --max-pages 100 --write
+node tools/cli.ts audit . --level RECOMMENDED
 ```
 
-`npm run check-sources` performs live network requests and is better suited to a
-scheduled maintenance job. `stale-requirements --strict` is calendar-driven and
-should also run on a schedule rather than blocking unrelated pull requests.
+The first command writes `snapshot.json` plus `captures/*.html` into the working
+directory; the second reads it. Without a capture, `RUNTIME`-level checks report
+`NEEDS_RUNTIME` rather than guessing from source, which is the correct answer and
+not a very useful one on a live site.
+
+Options worth knowing:
+
+| Option | Effect |
+| --- | --- |
+| `--max-pages N` | Bound the walk. Defaults to 50. |
+| `--sitemap URL` | Seed from every `<loc>` in a sitemap. |
+| `--out DIR` | Where to write. Defaults to the working directory. |
+| `--json` | Machine-readable, without writing. |
+
+The walk is same-origin only, follows redirects by hand so the chain is recorded,
+and uses no headless browser: it records the bytes the server returned, which is
+what every check except the post-hydration ones inspects.
+
+## CI integration
+
+The repository's own workflow is [.github/workflows/ci.yml](.github/workflows/ci.yml).
+It runs `npm run ci`, which is the same gate to use here:
+
+```bash
+npm run ci
+```
+
+There is no install step and no lockfile, because the package declares zero
+dependencies - so there is nothing to install to *run* the tooling.
+
+`npm run typecheck` is the exception and the workflow says so where it happens:
+it installs TypeScript and `@types/node` with `--no-save --no-package-lock` into
+`node_modules/`, touching neither `package.json` nor a lockfile. It exists because
+Node erases TypeScript annotations without validating them, so without it a wrong
+interface or a non-erasable annotation reaches a user of the skill as a runtime
+crash with no build step to catch it.
+
+`npm run check-sources` makes live HTTP requests to every cited URL and belongs in
+a scheduled job; `stale-requirements --strict` is calendar-driven and belongs in one
+too.
 
 ## Common conflicts
 

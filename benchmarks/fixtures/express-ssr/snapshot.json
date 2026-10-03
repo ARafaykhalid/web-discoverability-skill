@@ -69,10 +69,14 @@
       "status": 301,
       "headers": {
         "content-type": "text/html; charset=utf-8",
-        "location": "/pricing"
+        "location": "/pricing",
+        "cache-control": "public, max-age=0, must-revalidate"
       },
       "redirect_chain": [
-        { "status": 301, "url": "https://example.com/pricing" }
+        {
+          "status": 301,
+          "url": "https://example.com/pricing"
+        }
       ],
       "indexable": true
     }

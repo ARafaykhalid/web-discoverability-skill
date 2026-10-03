@@ -10,7 +10,7 @@ support only a low-confidence effect claim, because eligibility is not inclusion
 
 | Tier | Definition | Active requirements |
 | --- | --- | --- |
-| A | Official specification or first-party platform/framework documentation. | 177 |
+| A | Official specification or first-party platform/framework documentation. | 179 |
 | B | Strong technical consensus across multiple authoritative technical sources, or well-established implementation behaviour. | 23 |
 | C | Empirical or observational: reproducible experiments, independent technical studies, observed crawler behaviour. | 0 |
 | D | Experimental or speculative: emerging AI-search behaviour, undocumented crawler behaviour, hypotheses about retrieval systems. | 4 |
@@ -20,7 +20,7 @@ support only a low-confidence effect claim, because eligibility is not inclusion
 
 | Confidence | Requirements |
 | --- | --- |
-| HIGH | 182 |
+| HIGH | 184 |
 | MEDIUM | 41 |
 | LOW | 1 |
 
@@ -35,8 +35,8 @@ Categories keep established technical SEO separate from experimental GEO/LLMO in
 | `STRUCTURED_DATA_ELIGIBILITY` | 22 | - |
 | `CONTENT_QUALITY` | 20 | - |
 | `ACCESSIBILITY` | 18 | - |
-| `AI_CRAWLER_ACCESS` | 4 | - |
-| `AI_RETRIEVAL` | 2 | - |
+| `AI_CRAWLER_ACCESS` | 5 | - |
+| `AI_RETRIEVAL` | 3 | - |
 | `EMERGING_GEO` | 4 | yes |
 | `SECURITY_PRIVACY` | 24 | - |
 | `OPERATIONS` | 22 | - |
@@ -53,9 +53,9 @@ They may not promise search position, index inclusion, AI citation, or outcomes 
 
 | Metric | Value |
 | --- | --- |
-| Citations | 236 |
-| Unique URLs | 132 |
-| First-party (official) | 228 |
+| Citations | 272 |
+| Unique URLs | 138 |
+| First-party (official) | 264 |
 | Third-party | 8 |
 | Requirements in tiers A-D missing a citation | 0 |
 
@@ -63,7 +63,7 @@ They may not promise search position, index inclusion, AI citation, or outcomes 
 
 | Organization | Citations |
 | --- | --- |
-| Google | 140 |
+| Google | 170 |
 | IETF | 27 |
 | W3C | 20 |
 | schema.org | 9 |
@@ -71,12 +71,16 @@ They may not promise search position, index inclusion, AI citation, or outcomes 
 | Open Graph protocol | 6 |
 | sitemaps.org | 6 |
 | llms.txt project | 4 |
+| OpenAI | 4 |
 | OWASP | 4 |
+| Anthropic | 3 |
 | IndexNow | 3 |
-| OpenAI | 3 |
-| Anthropic | 2 |
 | Microsoft | 2 |
+| Apple | 1 |
+| Common Crawl | 1 |
 | IANA | 1 |
+| Meta | 1 |
+| Perplexity | 1 |
 | RSS Advisory Board | 1 |
 
 The full manifest, with the date each URL was last checked, is `reports/sources.json`

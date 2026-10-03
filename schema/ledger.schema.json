@@ -8,8 +8,7 @@
   "required": [
     "id",
     "title",
-    "classification",
-    "reason"
+    "classification"
   ],
   "properties": {
     "id": {
@@ -41,7 +40,7 @@
     "reason": {
       "type": "string",
       "minLength": 20,
-      "description": "Why this is not an active requirement."
+      "description": "Why this is not an active requirement. Required in removed.jsonl."
     },
     "domain": {
       "type": "string"
@@ -56,7 +55,7 @@
     },
     "blocker": {
       "type": "string",
-      "description": "For deferred entries: what is missing before it can be activated."
+      "description": "For a deferred entry held back for a reason other than rewording: what is missing before it can be activated. Entries classified NEEDS_REWORDING need no blocker; the shared criteria in tools/lib/model.ts cover them."
     },
     "reviewed_on": {
       "type": "string",

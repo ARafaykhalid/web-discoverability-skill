@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, extname, sep } from 'node:path';
-import type { Framework, ProfilePredicate } from './model.ts';
-import { PROFILE_PREDICATES, FRAMEWORKS, FRAMEWORKS_WITH_ADAPTERS } from './model.ts';
+import { PROFILE_PREDICATES, FRAMEWORKS, FRAMEWORKS_WITH_ADAPTERS, includesValue } from './model.ts';
 
 /**
  * Tri-state facts.
@@ -184,7 +183,7 @@ function fact(value, evidence) {
  * only names the framework implies a depth of coverage that does not exist.
  */
 function hasAdapter(framework) {
-  return FRAMEWORKS_WITH_ADAPTERS.includes(framework);
+  return includesValue(FRAMEWORKS_WITH_ADAPTERS, framework);
 }
 
 /**
@@ -196,7 +195,7 @@ function hasAdapter(framework) {
  * production origin, a CMS-driven catalogue), and `false` only when the
  * repository positively demonstrates absence.
  */
-export function detectProfile(root: string, { runtimeAvailable = false } = {}): Profile {
+export function detectProfile(root: string, { runtimeAvailable = false, captureOrigin = null } = {}): Profile {
   const project = scanProject(root);
   const problems = [];
   const pkgPath = join(root, 'package.json');
@@ -335,14 +334,19 @@ export function detectProfile(root: string, { runtimeAvailable = false } = {}): 
   const metadataBaseHits = grep(project, /metadataBase|siteUrl|SITE_URL|PUBLIC_SITE_URL|canonical.*https?:\/\//i);
 
   // A repository can look non-public while being deployed publicly. Anything we
-  // cannot prove from the repository stays `unknown`.
-  const publicSite = framework === 'unknown' ? UNKNOWN : TRUE;
+  // cannot prove from the repository stays `unknown`. A capture is the exception:
+  // `wds capture` only records what an HTTP request to the origin actually
+  // returned, so a directory holding pages is direct evidence the site is public -
+  // without it, a captured live site has no framework for the detector to find,
+  // every domain activation is `uncertain`, and the selector applies nothing.
+  const captureEvidence = captureOrigin ? [`snapshot.json origin ${captureOrigin}`] : [];
+  const publicSite = framework === 'unknown' ? (runtimeAvailable ? TRUE : UNKNOWN) : TRUE;
 
   const facts = {
-    public_site: fact(publicSite, frameworkEvidence),
+    public_site: fact(publicSite, [...frameworkEvidence, ...captureEvidence].slice(0, 5)),
     javascript_app: fact(
-      isJsFramework || clientScriptHits.length ? TRUE : framework === 'unknown' ? UNKNOWN : FALSE,
-      [...frameworkEvidence, ...clientScriptHits].slice(0, 5),
+      isJsFramework || clientScriptHits.length ? TRUE : framework === 'unknown' ? (runtimeAvailable ? FALSE : UNKNOWN) : FALSE,
+      [...frameworkEvidence, ...captureEvidence, ...clientScriptHits].slice(0, 5),
     ),
     client_rendered: fact(clientRendered, frameworkEvidence),
     server_rendered: fact(serverRendered, frameworkEvidence),
@@ -408,7 +412,7 @@ export function detectProfile(root: string, { runtimeAvailable = false } = {}): 
         problems.push('project-profile.json facts must contain an object');
       } else {
         for (const [key, value] of Object.entries(override.facts || {})) {
-          if (!PROFILE_PREDICATES.includes(key)) {
+          if (!includesValue(PROFILE_PREDICATES, key)) {
             problems.push(`project-profile.json contains unknown fact ${key}`);
             continue;
           }

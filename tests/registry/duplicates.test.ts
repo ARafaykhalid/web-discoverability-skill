@@ -58,11 +58,20 @@ describe('similarity primitives', () => {
     );
   });
 
-  it('DUPLICATE_THRESHOLD is a usable Jaccard threshold', () => {
-    assert.equal(typeof DUPLICATE_THRESHOLD, 'number');
+  it('DUPLICATE_THRESHOLD separates a reworded title from an unrelated one', () => {
+    // Behaviour, not a range check. `DUPLICATE_THRESHOLD` is a hardcoded 0.6, and
+    // asserting that a number is between 0 and 1 tests the author, not the code.
+    // What matters is that the cutoff it encodes fires on the pair it exists for
+    // and stays quiet on a pair that merely shares vocabulary.
+    const reworded = tokenSimilarity('Serve one canonical URL per indexable page', 'Serve a single canonical URL per indexable page');
+    const unrelated = tokenSimilarity('Serve one canonical URL per indexable page', 'Bind every form control to a persistent label');
     assert.ok(
-      DUPLICATE_THRESHOLD > 0 && DUPLICATE_THRESHOLD < 1,
-      `DUPLICATE_THRESHOLD must sit strictly between 0 and 1 to mean anything as a Jaccard cutoff (got ${DUPLICATE_THRESHOLD})`,
+      reworded >= DUPLICATE_THRESHOLD,
+      `a reworded title must be caught at ${DUPLICATE_THRESHOLD}; it scored ${reworded}`,
+    );
+    assert.ok(
+      unrelated < DUPLICATE_THRESHOLD,
+      `an unrelated title must not be caught at ${DUPLICATE_THRESHOLD}; it scored ${unrelated}`,
     );
   });
 

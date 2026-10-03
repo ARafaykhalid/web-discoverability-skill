@@ -59,6 +59,12 @@ file changes.
 0. Run the freshness check above and record its outcome before doing anything else.
 1. Read [references/discovery-applicability.md](references/discovery-applicability.md), inspect the target repository, and build one compact profile.
 2. Run `node "$SKILL_ROOT/tools/cli.ts" profile <project>` and review the detected facts and unknowns.
+   If the project is served at a URL the agent may reach, record what it returns
+   first - `node "$SKILL_ROOT/tools/cli.ts" capture <origin> --max-pages 100 --write`
+   writes the `snapshot.json` that `audit` reads. Without it every RUNTIME-level
+   check reports `NEEDS_RUNTIME`, which is honest and nearly useless, because the
+   package does not infer served output from source. Only do this when the
+   environment permits network access and the user has not forbidden it.
 3. Run `node "$SKILL_ROOT/tools/cli.ts" select <project> --level <level>` to preview candidate requirements.
 4. Load only the selected records from `requirements/*.jsonl` or the linked pages in `requirements/by-id/`.
 5. Read [references/framework-adapters.md](references/framework-adapters.md) and the relevant search-surface references.
@@ -121,12 +127,17 @@ shopping visibility, featured snippets, or AI citations.
 In a writable checkout, regenerate with:
 
 ```bash
-npm run metrics
 npm run docs -- --write
 ```
 
-Validate with `npm run validate`, `npm run quality`, `npm run docs:check`,
-`npm run bench`, and `npm test`.
+That regenerates every derived document, the schemas, and the metrics and
+benchmark figures quoted in `README.md`; those figures are computed in memory
+during the run, so there is no committed report that can go stale.
+
+The single gate is `npm run ci`, which is `validate`, `quality`, `sources`,
+`bench:check`, `docs:check`, and `test`. `npm run check-sources` and
+`npm run stale-requirements --strict` need the network and the calendar, so they
+belong on a schedule rather than in a pull-request gate.
 
 ## Resources
 

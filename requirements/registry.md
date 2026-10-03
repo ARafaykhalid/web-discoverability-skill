@@ -2,8 +2,26 @@
 
 # Requirement registry index
 
-224 active requirements across 37 domains.
+226 active requirements across 37 domains.
 80 retired and 336 deferred IDs are recorded in the ledgers; retired IDs are never reused.
+
+## Deferred IDs
+
+The deferred ledger holds IDs reviewed out of the active registry and not yet specified well enough to promote.
+They are not a roadmap: an ID is there because it was reviewed and the review found it wanting.
+
+The v1 catalogue carried a title, a minimum level, and a category per ID. Its description field was one shared boilerplate sentence, its evidence-type list was all 17 legacy types verbatim, and its verification method was one of three domain-wide skeletons. None of that is a specification, so none of it was promoted.
+
+Re-admission requires all of:
+
+- A `statement` that asserts a testable condition, not the title restated.
+- A `rationale` written in language the evidence tier supports.
+- An `implementation` concrete enough to act on without guessing.
+- A `verification.method` describing an observation, plus the `verification.evidence` types it produces.
+- At least one entry in `sources`, with the record tier matched by at least one citation.
+
+These criteria are stated once because they are the same for every entry classified `NEEDS_REWORDING`.
+An entry deferred for any other reason carries its own `blocker` instead.
 
 Columns: `Chk` marks a requirement with a deterministic check in `tools/lib/checks/`.
 Requirements without one are verified by the documented manual method and are counted as unchecked in `reports/metrics.json`.
@@ -15,12 +33,12 @@ Activation: `always` · 7 requirements · runtime-sensitive
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | SEO-017 | [Serve the site from one production HTTPS origin](by-id/SEO-017.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
-| SEO-019 | [Return an accurate HTTP status code for every public route state](by-id/SEO-019.md) | LITE | CRITICAL | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-019 | [Return an accurate HTTP status code for every public route state](by-id/SEO-019.md) | LITE | CRITICAL | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-020 | [Prevent query-parameter variants from creating crawlable duplicates](by-id/SEO-020.md) | LITE | MEDIUM | A | MEDIUM | REVIEW_REQUIRED | - |
 | SEO-022 | [Enforce a single trailing-slash form per path](by-id/SEO-022.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-024 | [Preserve inbound URLs across migrations with a permanent redirect map](by-id/SEO-024.md) | RECOMMENDED | CRITICAL | A | HIGH | REVIEW_REQUIRED | - |
-| SEO-025 | [Resolve every redirect in one hop without loops](by-id/SEO-025.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | - |
-| SEO-026 | [Return 404 or 410 for removed resources instead of an empty 200 page](by-id/SEO-026.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-025 | [Resolve every redirect in one hop without loops](by-id/SEO-025.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
+| SEO-026 | [Return 404 or 410 for removed resources instead of an empty 200 page](by-id/SEO-026.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
 
 ## Document metadata (`metadata`)
 
@@ -42,7 +60,7 @@ Activation: `always` · 9 requirements · runtime-sensitive
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | SEO-049 | [Emit one absolute self-referencing canonical per indexable page](by-id/SEO-049.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
-| SEO-051 | [Point every canonical at a URL that returns 200 and stays indexable](by-id/SEO-051.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-051 | [Point every canonical at a URL that returns 200 and stays indexable](by-id/SEO-051.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-052 | [Strip tracking and session parameters from canonical values](by-id/SEO-052.md) | LITE | MEDIUM | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-053 | [Consolidate duplicate route aliases onto one canonical URL](by-id/SEO-053.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-054 | [Link internally to the canonical form of each destination](by-id/SEO-054.md) | RECOMMENDED | MEDIUM | A | MEDIUM | REVIEW_REQUIRED | - |
@@ -86,7 +104,7 @@ Activation: `always` · 6 requirements · runtime-sensitive
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | SEO-097 | [Maintain a declared inventory of the routes intended to be indexable](by-id/SEO-097.md) | RECOMMENDED | MEDIUM | INTERNAL | HIGH | SAFE_AUTOMATIC | - |
-| SEO-098 | [Keep authenticated and administrative routes out of the index](by-id/SEO-098.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-098 | [Keep authenticated and administrative routes out of the index](by-id/SEO-098.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-099 | [Block indexing of non-production hosts](by-id/SEO-099.md) | LITE | CRITICAL | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-101 | [Exclude internal search result pages from the index](by-id/SEO-101.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-102 | [Suppress indexing of pages that render no substantive content](by-id/SEO-102.md) | RECOMMENDED | MEDIUM | A | MEDIUM | REVIEW_REQUIRED | - |
@@ -140,7 +158,7 @@ Activation: `public_site` · 6 requirements
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | SEO-194 | [Never fabricate credentials or first-hand experience](by-id/SEO-194.md) | LITE | CRITICAL | A | HIGH | BLOCKED | - |
-| SEO-195 | [Give each page one visible primary heading](by-id/SEO-195.md) | LITE | MEDIUM | B | MEDIUM | REVIEW_REQUIRED | - |
+| SEO-195 | [Give each page one visible primary heading](by-id/SEO-195.md) | LITE | MEDIUM | B | MEDIUM | REVIEW_REQUIRED | yes |
 | SEO-196 | [Keep critical information in crawlable text](by-id/SEO-196.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-198 | [Structure body content with a nested heading outline](by-id/SEO-198.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-200 | [Publish dates that reflect real creation or revision](by-id/SEO-200.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | - |
@@ -156,7 +174,7 @@ Activation: `public_site` · 5 requirements
 | SEO-212 | [Keep internal links pointing at URLs that resolve](by-id/SEO-212.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-213 | [Expose a breadcrumb trail on deeply nested pages](by-id/SEO-213.md) | RECOMMENDED | LOW | B | MEDIUM | REVIEW_REQUIRED | - |
 | SEO-217 | [Avoid linking prominently to routes excluded from the index](by-id/SEO-217.md) | RECOMMENDED | MEDIUM | B | MEDIUM | REVIEW_REQUIRED | - |
-| SEO-222 | [Keep every indexable page within a bounded click depth](by-id/SEO-222.md) | RECOMMENDED | LOW | B | LOW | REVIEW_REQUIRED | - |
+| SEO-222 | [Keep every indexable page within a bounded click depth](by-id/SEO-222.md) | RECOMMENDED | LOW | B | LOW | REVIEW_REQUIRED | yes |
 
 ## Image discoverability and delivery (`images`)
 
@@ -240,11 +258,11 @@ Activation: `public_site` · 5 requirements · runtime-sensitive
 
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| SEO-337 | [Declare an explicit cache policy on every response](by-id/SEO-337.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-337 | [Declare an explicit cache policy on every response](by-id/SEO-337.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-338 | [Serve versioned static assets under immutable directives](by-id/SEO-338.md) | RECOMMENDED | LOW | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-339 | [Keep private responses out of shared caches](by-id/SEO-339.md) | LITE | CRITICAL | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-340 | [Match document freshness to how often content changes](by-id/SEO-340.md) | RECOMMENDED | MEDIUM | A | MEDIUM | REVIEW_REQUIRED | - |
-| SEO-345 | [Vary responses only on headers that change the body](by-id/SEO-345.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-345 | [Vary responses only on headers that change the body](by-id/SEO-345.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | yes |
 
 ## Back-forward cache and page lifecycle (`bfcache`)
 
@@ -278,7 +296,7 @@ Activation: `always` · 6 requirements
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | SEO-385 | [Keep credentials out of public code and responses](by-id/SEO-385.md) | LITE | CRITICAL | B | HIGH | REVIEW_REQUIRED | - |
 | SEO-388 | [Detect injected links and unauthorized redirects](by-id/SEO-388.md) | RECOMMENDED | CRITICAL | A | HIGH | REVIEW_REQUIRED | - |
-| SEO-390 | [Declare a transport security policy on the production origin](by-id/SEO-390.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-390 | [Declare a transport security policy on the production origin](by-id/SEO-390.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-391 | [Reject redirect targets the application does not own](by-id/SEO-391.md) | RECOMMENDED | HIGH | B | HIGH | REVIEW_REQUIRED | - |
 | SEO-393 | [Keep source maps and debug output off production responses](by-id/SEO-393.md) | RECOMMENDED | MEDIUM | B | HIGH | REVIEW_REQUIRED | - |
 | SEO-394 | [Prevent user input from reaching indexing directives](by-id/SEO-394.md) | RECOMMENDED | HIGH | B | HIGH | REVIEW_REQUIRED | - |
@@ -311,20 +329,21 @@ Activation: `has_cdn_or_waf` · 6 requirements · runtime-sensitive
 
 ## AI crawler policy (`ai-crawlers`)
 
-Activation: `public_site` · 6 requirements
+Activation: `public_site` · 7 requirements
 
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | SEO-289 | [Record the declared purpose of each automated client before setting policy](by-id/SEO-289.md) | LITE | HIGH | B | HIGH | REVIEW_REQUIRED | - |
-| SEO-291 | [Set training access policy separately from search indexing policy](by-id/SEO-291.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-291 | [Set training access policy separately from search indexing policy](by-id/SEO-291.md) | LITE | HIGH | A | HIGH | REVIEW_REQUIRED | yes |
 | SEO-293 | [Distinguish retrieval tokens from training tokens for one operator](by-id/SEO-293.md) | RECOMMENDED | MEDIUM | A | MEDIUM | REVIEW_REQUIRED | - |
 | SEO-295 | [Allow user-triggered fetching of pages the reader can already open](by-id/SEO-295.md) | RECOMMENDED | MEDIUM | B | MEDIUM | REVIEW_REQUIRED | - |
 | SEO-302 | [Enforce one crawler policy across robots.txt and the edge](by-id/SEO-302.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | - |
 | SEO-303 | [Confirm client identity by reverse DNS rather than the user-agent string](by-id/SEO-303.md) | RECOMMENDED | HIGH | A | HIGH | REVIEW_REQUIRED | - |
+| SEO-642 | [Give a robots.txt group only to a token a request actually sends](by-id/SEO-642.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | yes |
 
 ## AI retrieval readiness (`ai-retrieval`)
 
-Activation: `public_site` · 6 requirements
+Activation: `public_site` · 7 requirements
 
 | ID | Title | Level | Sev | Tier | Conf | Safety | Chk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -334,6 +353,7 @@ Activation: `public_site` · 6 requirements
 | SEO-282 | [Give each section a stable fragment identifier](by-id/SEO-282.md) | RECOMMENDED | LOW | A | MEDIUM | REVIEW_REQUIRED | - |
 | SEO-287 | [Record AI surface observations as experimental evidence](by-id/SEO-287.md) | RECOMMENDED | MEDIUM | INTERNAL | HIGH | BLOCKED | - |
 | SEO-288 | [Publish corrections in the page body rather than only a changelog](by-id/SEO-288.md) | RECOMMENDED | MEDIUM | INTERNAL | HIGH | REVIEW_REQUIRED | - |
+| SEO-641 | [Satisfy search eligibility rather than a separate set of AI requirements](by-id/SEO-641.md) | RECOMMENDED | MEDIUM | A | HIGH | REVIEW_REQUIRED | - |
 
 ## llms.txt machine-readable guidance (`llms-txt`)
 

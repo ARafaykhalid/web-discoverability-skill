@@ -4,13 +4,13 @@ import { dirname, join, resolve } from 'node:path';
 import { ROOT, loadAll, sortRecords } from './lib/registry.ts';
 import { validate, summarizeByRule, findForbiddenClaims } from './lib/validate.ts';
 import { qualityReport, metricsReport, staleReport, sourceManifest, checkSources } from './lib/report.ts';
-import { detectProfile } from './lib/profile.ts';
 import { loadSnapshot } from './lib/snapshot.ts';
 import { selectRequirements } from './lib/select.ts';
 import { loadChecks, runChecks } from './lib/checks/index.ts';
 import { runBenchmarks } from './lib/bench.ts';
 import { generateArtifacts } from './lib/docs.ts';
 import { checkVersion, localVersionFields } from './lib/version.ts';
+import { captureSite, writeCapture } from './lib/capture.ts';
 
 /**
  * `wds` - the one entry point.
@@ -116,22 +116,7 @@ async function cmdQuality(flags) {
 async function cmdMetrics(flags) {
   const { records, removed, deferred } = loadRegistryOrExit();
   const checks = await loadChecksSafe();
-
-  // Benchmark figures are read from the last recorded run rather than invented.
-  // The case total lives in the aggregate as `case_count`; `cases` is the per-case
-  // array, so it is only a fallback for a report written without the aggregate.
-  let benchmarks = null;
-  const benchPath = join(REPORTS_DIR, 'benchmarks.json');
-  if (existsSync(benchPath)) {
-    const raw = JSON.parse(readFileSync(benchPath, 'utf8'));
-    benchmarks = {
-      precision: raw.precision,
-      recall: raw.recall,
-      false_positive_rate: raw.false_positive_rate,
-      false_negative_rate: raw.false_negative_rate,
-      cases: raw.case_count ?? raw.cases?.length ?? null,
-    };
-  }
+  const benchmarks = await runBenchmarkFigures(records);
 
   const metrics = metricsReport({ records, removed, deferred, checks, benchmarks, today: flags.today });
   if (flags.write) print(`wrote ${writeReport('metrics.json', metrics)}`);
@@ -251,7 +236,9 @@ function cmdProfile(flags, positional) {
 function cmdSelect(flags, positional) {
   const { records } = loadRegistryOrExit();
   const target = resolve(positional[0] ?? process.cwd());
-  const profile = detectProfile(target, { runtimeAvailable: existsSync(join(target, 'snapshot.json')) });
+  // The snapshot's own profile, not a second detectProfile call: select and audit
+  // must not be able to disagree about what the project is.
+  const profile = loadSnapshot(target).profile;
   const level = typeof flags.level === 'string' ? flags.level.toUpperCase() : 'RECOMMENDED';
   const domains = typeof flags.domains === 'string' ? flags.domains.split(',').map((d) => d.trim()) : null;
   const selection = selectRequirements({ records, profile, level, domains });
@@ -301,7 +288,8 @@ async function cmdAudit(flags, positional) {
   const target = resolve(positional[0] ?? process.cwd());
   const snapshot = loadSnapshot(target);
   const level = typeof flags.level === 'string' ? flags.level.toUpperCase() : 'RECOMMENDED';
-  const selection = selectRequirements({ records, profile: snapshot.profile, level });
+  const domains = typeof flags.domains === 'string' ? flags.domains.split(',').map((d) => d.trim()) : null;
+  const selection = selectRequirements({ records, profile: snapshot.profile, level, domains });
   const applicableIds = selection.applicable.map((entry) => entry.record.id);
   const checks = await loadChecksSafe();
   const { results, findings, counts } = await runChecks(snapshot, { checks, requirementIds: applicableIds });
@@ -315,6 +303,8 @@ async function cmdAudit(flags, positional) {
     has_adapter: snapshot.profile.has_adapter,
     runtime_available: snapshot.hasRuntime,
     level,
+    /** Null unless --domains narrowed the run; recorded so a scoped report is self-describing. */
+    domains,
     selection: selection.counts,
     check_counts: counts,
     findings: findings.map((finding) => {
@@ -345,7 +335,7 @@ async function cmdAudit(flags, positional) {
 
   print(`${target}`);
   print(`framework=${output.framework} (${output.has_adapter ? 'adapter-backed' : 'generic guidance only'}) runtime=${output.runtime_available ? 'yes' : 'no'} level=${level}`);
-  print(`applicable=${selection.counts.APPLICABLE} uncertain=${selection.counts.UNCERTAIN} not_applicable=${selection.counts.NOT_APPLICABLE}`);
+  print(`applicable=${selection.counts.APPLICABLE} uncertain=${selection.counts.UNCERTAIN} not_applicable=${selection.counts.NOT_APPLICABLE}${domains ? ` (domains: ${domains.join(', ')})` : ''}`);
   print('');
   for (const finding of output.findings) {
     print(`${finding.severity ?? 'MEDIUM'}  ${finding.requirement_id}  ${finding.check_id}  ${finding.location}`);
@@ -397,23 +387,10 @@ async function cmdBench(flags) {
 async function cmdDocs(flags) {
   const { records, removed, deferred } = loadRegistryOrExit();
   const checks = await loadChecksSafe();
-  const benchPath = join(REPORTS_DIR, 'benchmarks.json');
-  const benchmarks = existsSync(benchPath) ? JSON.parse(readFileSync(benchPath, 'utf8')) : null;
-  const metrics = metricsReport({
-    records,
-    removed,
-    deferred,
-    checks,
-    benchmarks: benchmarks && {
-      precision: benchmarks.precision,
-      recall: benchmarks.recall,
-      false_positive_rate: benchmarks.false_positive_rate,
-      false_negative_rate: benchmarks.false_negative_rate,
-      cases: benchmarks.case_count ?? benchmarks.cases?.length ?? null,
-    },
-  });
+  const full = await runBenchmarks({ records });
+  const metrics = metricsReport({ records, removed, deferred, checks, benchmarks: full });
   const sources = sourceManifest({ records });
-  const { files, blocks } = generateArtifacts({ records, removed, deferred, checks, metrics, sources, benchmarks });
+  const { files, blocks } = generateArtifacts({ records, removed, deferred, checks, metrics, sources, benchmarks: full });
 
   const drift = [];
   for (const file of files) {
@@ -436,12 +413,14 @@ async function cmdDocs(flags) {
     drift.push('requirements/by-id is missing');
   }
   for (const block of blocks) {
-    if (block.missing) {
+    // `missing` and `updated` are mutually exclusive by construction (docs.ts
+    // returns one or the other), so the presence of `missing` is the discriminator.
+    if ('missing' in block) {
       drift.push(block.missing);
       continue;
     }
-    if (block.original !== block.updated) drift.push(`${block.path} (GENERATED:${block.marker})`);
-    if (flags.write) writeFileSync(join(ROOT, block.path), block.updated);
+    if ('original' in block && block.original !== block.updated) drift.push(`${block.path} (GENERATED:${block.marker})`);
+    if ('updated' in block && flags.write) writeFileSync(join(ROOT, block.path), block.updated);
   }
 
   // Documentation must not make claims the evidence model forbids, so the same
@@ -480,6 +459,71 @@ async function cmdDocs(flags) {
   if (claimProblems.length) fail(`${claimProblems.length} unsupported claims in documentation`);
 }
 
+/**
+ * Run the benchmark suite and return only the figures a report quotes.
+ *
+ * These were read off `reports/benchmarks.json`, which had to be committed for the
+ * documentation blocks to have numbers in them, and which could therefore go stale
+ * without anything noticing: `docs --check` compared the generated block against
+ * the *committed* benchmark file, so a benchmark that had since started failing
+ * still produced a clean docs check and a green table of last month's numbers.
+ * Running the suite here makes the number in the README the number this commit
+ * produces, at the cost of a few seconds per docs run.
+ */
+async function runBenchmarkFigures(records) {
+  const { precision, recall, false_positive_rate, false_negative_rate, verification_accuracy, case_count, cases_passed } =
+    await runBenchmarks({ records });
+  // `metricsReport` reads `.cases` for the case total, and the aggregate calls that
+  // figure `case_count` because `cases` is the per-case array. Both names appear
+  // in bench.ts on purpose; mapping between them happens here, once.
+  return {
+    precision,
+    recall,
+    false_positive_rate,
+    false_negative_rate,
+    verification_accuracy,
+    case_count,
+    cases_passed,
+    cases: case_count,
+  };
+}
+
+/* ---------------------------------------------------------------- capture */
+
+/**
+ * Record what a served origin actually returns.
+ *
+ * This is the input every RUNTIME-level check needs and the reason the skill can
+ * audit a real site rather than only its own fixtures. Read-only unless --write,
+ * like every other command.
+ */
+async function cmdCapture(flags, positional) {
+  const origin = positional[0];
+  if (!origin) {
+    fail(`capture needs an origin, e.g. 'wds capture https://example.com --write'`);
+    return;
+  }
+  const out = resolve(typeof flags.out === 'string' ? flags.out : process.cwd());
+  const result = await captureSite(origin, positional.slice(1), {
+    maxPages: flags['max-pages'] ? Number(flags['max-pages']) : undefined,
+    sitemap: typeof flags.sitemap === 'string' ? flags.sitemap : undefined,
+    timeoutMs: flags['timeout-ms'] ? Number(flags['timeout-ms']) : undefined,
+    concurrency: flags.concurrency ? Number(flags.concurrency) : undefined,
+  });
+
+  if (flags.write) print(`wrote ${writeCapture(result, out)}`);
+  if (flags.json) print({ origin: result.origin, captured_at: result.captured_at, pages: result.pages, errors: result.errors });
+  else {
+    print(`${result.origin}  captured ${result.pages.length} page(s) at ${result.captured_at}`);
+    for (const page of result.pages) {
+      const redirect = page.redirect_chain.length ? ` via ${page.redirect_chain.length} redirect(s)` : '';
+      print(`  ${page.status}  ${page.url}${redirect}${page.indexable ? '' : '  [noindex]'}`);
+    }
+    for (const error of result.errors) print(`  ERROR  ${error.url}  ${error.error}`);
+    if (!flags.write) print(`\nnot written. Re-run with --write to save ${join(out, 'snapshot.json')} where 'wds audit' will read it.`);
+  }
+}
+
 /* -------------------------------------------------------------- dispatch */
 
 const USAGE = `wds <command> [options]
@@ -493,7 +537,9 @@ const USAGE = `wds <command> [options]
   check-sources  [--write]      live reachability of every cited URL
   profile        <dir>          detected site profile with per-fact evidence
   select         <dir> [--level LITE|RECOMMENDED|EXTRA|ULTRA] [--domains a,b]
-  audit          <dir> [--level LITE|RECOMMENDED|EXTRA|ULTRA] [--write]
+  audit          <dir> [--level LITE|RECOMMENDED|EXTRA|ULTRA] [--domains a,b] [--write]
+  capture        <origin> [paths...] [--sitemap url] [--max-pages N] [--out dir] [--write]
+                 record served output as snapshot.json so RUNTIME checks can run
   bench          [--case id[,id]] [--write]  score fixture cases
   docs           [--write|--check]
 
@@ -524,6 +570,7 @@ async function main() {
     case 'profile': return cmdProfile(flags, positional);
     case 'select': return cmdSelect(flags, positional);
     case 'audit': return cmdAudit(flags, positional);
+    case 'capture': return cmdCapture(flags, positional);
     case 'bench': return cmdBench(flags);
     case 'docs': return cmdDocs(flags);
     case undefined:

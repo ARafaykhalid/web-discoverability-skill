@@ -6,13 +6,10 @@ yarn-error.log*
 pnpm-debug.log*
 .npm/
 
-# Generated reports. Two are committed deliberately, because documentation cites
-# their numbers and CI regenerates them to prove the numbers are current:
-#   reports/metrics.json     - the quality metrics referenced by README.md
-#   reports/benchmarks.json  - the benchmark results referenced by BENCHMARKS.md
-reports/*
-!reports/metrics.json
-!reports/benchmarks.json
+# Generated reports. Everything here is derived: the metrics and benchmark figures
+# quoted in README.md are computed in memory by `wds docs`, so committing a copy
+# could only ever be a copy that had gone stale.
+reports/
 
 # OS & editor
 .DS_Store

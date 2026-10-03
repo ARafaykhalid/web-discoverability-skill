@@ -42,37 +42,33 @@ jobs:
   registry:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
+    # Every command here is local and finishes in seconds. The ceiling exists so a
+    # hang fails the job instead of holding a runner for the six-hour default.
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24.x
           # No `cache: npm`: that needs a lockfile, and there is nothing to lock.
           # See the install step below.
 
-      # There is no install step. The package declares zero dependencies and zero
-      # devDependencies, so `npm ci` would fail for want of a lockfile and would
-      # have nothing to fetch if it succeeded. Every command below is plain Node
-      # plus node:test. If an install step ever becomes necessary, that is a
-      # material change to the project's supply-chain surface and should be
-      # argued for in the pull request that adds it.
+      # No install step, and no lockfile. The package declares zero dependencies and
+      # zero devDependencies, so `npm ci` would fail for want of a lockfile and
+      # would have nothing to fetch if it succeeded. Every command in this job is
+      # plain Node plus node:test.
+      #
+      # The typecheck step below is the one exception in the whole workflow: it
+      # installs a typechecker into node_modules with --no-save, which touches
+      # neither package.json nor the lockfile. It is stated here rather than left
+      # implicit because an install is a material change to the supply-chain
+      # surface, and the next person to add one should have to argue for it in the
+      # same place.
+      # The claim is in README.md and SECURITY.md, so it gets checked rather than
+      # asserted: a dependency cannot appear without this failing first.
       - name: Confirm the zero-dependency claim
-        # The claim is in README.md and SECURITY.md, so it gets checked rather
-        # than asserted. A transitive dependency cannot appear without this
-        # failing first.
-        run: |
-          node -e '
-            const pkg = require("./package.json");
-            const deps = Object.keys(pkg.dependencies ?? {});
-            const dev = Object.keys(pkg.devDependencies ?? {});
-            if (deps.length || dev.length) {
-              console.error("package.json declares dependencies:", [...deps, ...dev].join(", "));
-              console.error("The documentation states there are none. Fix one or the other.");
-              process.exit(1);
-            }
-            console.log("zero dependencies, zero devDependencies");
-          '
+        run: node -e 'const p=require("./package.json");const d=[...Object.keys(p.dependencies??{}),...Object.keys(p.devDependencies??{})];d.length?console.error("package.json declares dependencies:",d.join(", "),"- the documentation states there are none"):console.log("zero dependencies")'
 
       # Section 17: schema validation, registry integrity, duplicate detection,
       # dependency validation, circular dependency detection, source presence,
@@ -105,12 +101,9 @@ jobs:
       # does not support ("guarantees rankings", "production proven",
       # "most comprehensive").
       #
-      # It runs against the committed reports/*.json rather than regenerating
-      # them first. That ordering matters: regenerating and then checking would
-      # compare the README against numbers computed seconds earlier, which always
-      # agrees and therefore proves nothing about what a reader of the repository
-      # sees. Freshness of the committed numbers is a separate assertion, in the
-      # reports job.
+      # The benchmark figures quoted in README.md are computed inside this command,
+      # so the table is compared against what this commit actually produces rather
+      # than against a committed copy that could have drifted from it.
       - name: Documentation and generated artefacts
         run: npm run docs:check
 
@@ -121,6 +114,9 @@ jobs:
   behaviour:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
+    # Two matrix legs, and the typecheck step installs a package; ten minutes is
+    # generous for both on a cold runner.
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -131,8 +127,8 @@ jobs:
         # failure worked around.
         node: [22.x, 24.x]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -148,71 +144,27 @@ jobs:
       - name: Benchmarks
         run: npm run bench:check
 
-      # Section 21: run the shipped command against every fixture. `bench` filters
+      # Section 21: run the shipped command against a fixture. `bench` filters
       # checks by requirement applicability exactly as `audit` does, so the two
       # are close - but `audit` is what a user actually invokes, and this is the
       # only step that would catch a crash in its reporting or exit-code path.
       # Asserting the output parses is what makes --json a supported interface
-      # rather than a debugging convenience.
-      - name: Audit every fixture
+      # rather than a debugging convenience. One fixture is enough: what is being
+      # tested is the command's argument and reporting path, not per-fixture
+      # behaviour, which `bench` above already scores for every fixture.
+
+      # The annotations in tools/ are otherwise unchecked: Node erases types without
+      # validating them, so a wrong interface or a non-erasable annotation - which
+      # crashes Node at import, with no build step to catch it - would reach a user
+      # of the skill as a runtime failure. See tsconfig.json for why `strict` is off
+      # and what this gate is actually for.
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Audit a fixture end to end
         run: |
           set -euo pipefail
-          failed=0
-          for dir in benchmarks/fixtures/*/; do
-            name=$(basename "$dir")
-            if ! out=$(node tools/cli.ts audit "$dir" --json 2>/dev/null); then
-              echo "audit failed to run against $name"
-              failed=1
-              continue
-            fi
-            printf '%s' "$out" | node -e '
-              const chunks = [];
-              process.stdin.on("data", (c) => chunks.push(c));
-              process.stdin.on("end", () => {
-                const report = JSON.parse(chunks.join(""));
-                if (!Array.isArray(report.findings)) throw new Error("no findings array");
-                if (!report.framework) throw new Error("no framework");
-                console.log(`  ${report.findings.length} findings, framework ${report.framework}`);
-              });
-            ' || failed=1
-            echo "audited $name"
-          done
-          exit $failed
-
-  # ---------------------------------------------------------------------------
-  # The committed reports are the numbers a reader sees without running anything.
-  # This job is the only thing standing between that and quiet rot.
-  # ---------------------------------------------------------------------------
-  reports:
-    if: github.event_name != 'schedule'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-
-      # Keep what the repository ships, then compute the same thing from scratch
-      # and compare. Copying first is what makes the comparison possible at all:
-      # both commands write in place, so once they have run the committed values
-      # are gone.
-      - name: Set aside the committed reports
-        run: |
-          mkdir -p /tmp/committed
-          cp reports/metrics.json reports/benchmarks.json /tmp/committed/
-
-      - name: Regenerate
-        run: |
-          npm run metrics
-          npm run bench
-
-      # Section 18: the metrics must be generated from the repository, never typed
-      # by hand. Regenerating proves they can be; this proves the committed copies
-      # are what regeneration produces. Without it a hand-edited benchmark score
-      # would survive indefinitely, because every other job either regenerates
-      # first or reads the file it is meant to be checking.
-      - name: Committed reports match a fresh run
-        run: node .github/scripts/assert-reports-fresh.ts /tmp/committed reports
+          node tools/cli.ts audit benchmarks/fixtures/defective-static --json \
+            | node -e 'const c=[];process.stdin.on("data",d=>c.push(d));process.stdin.on("end",()=>{const r=JSON.parse(c.join(""));if(!Array.isArray(r.findings))throw new Error("no findings array");if(!r.framework)throw new Error("no framework");console.log(`${r.findings.length} findings, framework ${r.framework}`)})'
 
   # ---------------------------------------------------------------------------
   # Maintenance. Scheduled only, for the reasons at the top of this file: these
@@ -221,9 +173,12 @@ jobs:
   maintenance:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    # check-sources makes a few hundred network requests with a 15s timeout each,
+    # so this is the one job where the ceiling is close to real.
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24.x
 

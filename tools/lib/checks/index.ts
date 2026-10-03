@@ -45,18 +45,27 @@ export interface CheckResult {
   detail: string;
 }
 
+/** The shape a check may return instead of a bare findings array. */
+interface ShapedResult {
+  status?: CheckStatus;
+  findings?: Finding[];
+  detail?: string;
+}
+
 const CHECKS_DIR = dirname(fileURLToPath(import.meta.url));
 
 export const CHECK_STATUSES = ['PASS', 'FAIL', 'NEEDS_RUNTIME', 'NOT_APPLICABLE', 'ERROR'] as const;
 
-let cache = null;
+let cache: CheckList | null = null;
 
 // A directory listing alone cannot distinguish an intentionally removed module
 // from an incomplete synced view. Keep the expected filenames explicit so
 // validation reports the latter instead of quietly reducing check coverage.
 export const EXPECTED_CHECK_MODULES = [
   'canonicals.ts',
+  'content.ts',
   'feeds.ts',
+  'headers.ts',
   'images.ts',
   'internal-linking.ts',
   'international.ts',
@@ -67,6 +76,7 @@ export const EXPECTED_CHECK_MODULES = [
   'sitemaps.ts',
   'social-preview.ts',
   'structured-data.ts',
+  'urls.ts',
 ];
 
 /**
@@ -80,14 +90,14 @@ export type CheckList = Check[] & { problems?: string[] };
 
 export async function loadChecks({ dir = CHECKS_DIR, reload = false } = {}): Promise<CheckList> {
   if (cache && !reload) return cache;
-  if (!existsSync(dir)) return [];
+  if (!existsSync(dir)) return [] as CheckList;
 
   const files = readdirSync(dir)
     .filter((name) => name.endsWith('.ts') && name !== 'index.ts')
     .sort();
 
-  const checks = [];
-  const problems = [];
+  const checks: Check[] = [];
+  const problems: string[] = [];
   if (dir === CHECKS_DIR) {
     for (const expected of EXPECTED_CHECK_MODULES) {
       if (!files.includes(expected)) problems.push(`missing expected check module: ${expected}`);
@@ -116,9 +126,12 @@ export async function loadChecks({ dir = CHECKS_DIR, reload = false } = {}): Pro
   }
 
   checks.sort((a, b) => a.id.localeCompare(b.id));
-  checks.problems = problems;
-  cache = checks;
-  return checks;
+  // Declared as `CheckList` so the `problems` property exists to be set; assigning it
+  // onto the bare array is what the intersection type exists for.
+  const list: CheckList = checks;
+  list.problems = problems;
+  cache = list;
+  return list;
 }
 
 function normalizeResult(check: Check, raw: unknown): CheckResult {
@@ -130,9 +143,10 @@ function normalizeResult(check: Check, raw: unknown): CheckResult {
       detail: '',
     };
   }
-  if (raw && typeof raw === 'object') {
-    const findings = raw.findings || [];
-    const status = raw.status || (findings.length ? 'FAIL' : 'PASS');
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    const shaped = raw as ShapedResult;
+    const findings = shaped.findings || [];
+    const status = shaped.status || (findings.length ? 'FAIL' : 'PASS');
     if (!CHECK_STATUSES.includes(status)) {
       return {
         check_id: check.id,
@@ -141,7 +155,7 @@ function normalizeResult(check: Check, raw: unknown): CheckResult {
         detail: `check returned unknown status ${status}`,
       };
     }
-    return { check_id: check.id, status, findings, detail: raw.detail || '' };
+    return { check_id: check.id, status, findings, detail: shaped.detail || '' };
   }
   return { check_id: check.id, status: 'ERROR', findings: [], detail: 'check returned no result' };
 }
@@ -165,7 +179,7 @@ export async function runChecks(
     return true;
   });
 
-  const results = [];
+  const results: CheckResult[] = [];
   for (const check of selected) {
     if (check.level === 'RUNTIME' && !snapshot.hasRuntime) {
       results.push({ ...needsRuntime(check), findings: [] });

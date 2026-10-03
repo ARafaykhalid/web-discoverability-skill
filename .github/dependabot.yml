@@ -1,0 +1,27 @@
+# Keeps the workflow's pinned actions current.
+#
+# The actions are pinned by commit SHA rather than by a mutable `@v4` tag, so a
+# compromised or silently republished tag cannot change what this repository runs.
+# The cost of pinning is that nothing bumps the pin by itself, and an action that
+# drifts out of support stays pinned to a release that no longer receives fixes.
+# That is what this file is for: it opens a pull request when a newer release
+# lands, and the SHA in ci.yml is updated in the same commit.
+#
+# There is no `package-ecosystem: npm` entry on purpose. The package declares no
+# dependencies, so there is nothing to update, and adding one would imply the
+# zero-dependency property is negotiable.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+    labels:
+      - dependencies
+      - ci
+    groups:
+      actions:
+        patterns:
+          - '*'

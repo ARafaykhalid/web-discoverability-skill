@@ -1,6 +1,6 @@
 {
   "name": "web-discoverability-skill",
-  "version": "4.0.0",
+  "version": "4.2.0",
   "description": "Evidence-tiered web and AI discoverability requirement registry, applicability engine, deterministic checks, and benchmark harness for autonomous coding agents.",
   "license": "MIT",
   "repository": {
@@ -43,9 +43,11 @@
     "audit": "node tools/cli.ts audit",
     "bench": "node tools/cli.ts bench --write",
     "bench:check": "node tools/cli.ts bench",
+    "typecheck": "npm install --no-save --no-package-lock typescript@5.8.3 @types/node@22 && tsc --noEmit -p tsconfig.json",
     "docs": "node tools/cli.ts docs",
     "docs:check": "node tools/cli.ts docs --check",
     "test": "node --test",
-    "ci": "npm run validate && npm run quality && npm run bench && npm run metrics && npm run docs:check && npm test"
+    "ci": "npm run validate && npm run quality && npm run sources && npm run bench:check && npm run docs:check && npm test && npm run typecheck",
+    "capture": "node tools/cli.ts capture"
   }
 }

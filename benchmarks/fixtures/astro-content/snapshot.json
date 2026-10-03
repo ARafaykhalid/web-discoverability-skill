@@ -6,7 +6,10 @@
     {
       "url": "/",
       "status": 200,
-      "headers": { "content-type": "text/html; charset=utf-8" },
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
       "redirect_chain": [],
       "raw_html_path": "dist/index.html",
       "rendered_html_path": "captures/index.rendered.html",
@@ -16,7 +19,10 @@
     {
       "url": "/about",
       "status": 200,
-      "headers": { "content-type": "text/html; charset=utf-8" },
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
       "redirect_chain": [],
       "raw_html_path": "dist/about.html",
       "source_file": "dist/about.html",
@@ -25,7 +31,10 @@
     {
       "url": "/docs/routing",
       "status": 200,
-      "headers": { "content-type": "text/html; charset=utf-8" },
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
       "redirect_chain": [],
       "raw_html_path": "dist/docs/routing.html",
       "source_file": "dist/docs/routing.html",
@@ -34,7 +43,10 @@
     {
       "url": "/docs/deploying",
       "status": 200,
-      "headers": { "content-type": "text/html; charset=utf-8" },
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
       "redirect_chain": [],
       "raw_html_path": "dist/docs/deploying.html",
       "source_file": "dist/docs/deploying.html",
@@ -43,7 +55,10 @@
     {
       "url": "/docs/experimental-endpoints",
       "status": 200,
-      "headers": { "content-type": "text/html; charset=utf-8" },
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
       "redirect_chain": [],
       "raw_html_path": "dist/docs/experimental-endpoints.html",
       "source_file": "dist/docs/experimental-endpoints.html",

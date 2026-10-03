@@ -132,7 +132,10 @@ export function loadSnapshot(root: string, { capture = undefined, profile = unde
     captureData = existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null;
   }
 
-  const resolvedProfile = profile ?? detectProfile(root, { runtimeAvailable: Boolean(captureData) });
+  const resolvedProfile = profile ?? detectProfile(root, {
+    runtimeAvailable: Boolean(captureData),
+    captureOrigin: captureData?.origin ?? null,
+  });
 
   const capturedPages = (captureData?.pages || []).map((entry) => pageFromCapture(root, entry));
   const staticPages = capturedPages.length ? [] : pagesFromStaticFiles(project);
@@ -187,12 +190,28 @@ export function loadSnapshot(root: string, { capture = undefined, profile = unde
   };
 }
 
-/** A finding is what a check emits. Location and evidence are mandatory. */
+/**
+ * One piece of evidence attached to a finding. `type` must be one the bound
+ * requirement declares in `verification.evidence`; `ev()` in check-support.ts
+ * builds these and refuses a detail key named `type`.
+ */
+export interface EvidenceItem {
+  type: string;
+  [detail: string]: unknown;
+}
+
+/**
+ * A finding is what a check emits. Location and evidence are mandatory.
+ *
+ * `evidence` is a list, not a string. It was declared `string` here while every
+ * check has always passed an array of evidence objects, so the one type in the
+ * package that describes a check's output was the one type nothing checked.
+ */
 export interface Finding {
   requirement_id: string;
   check_id: string;
   location: string;
-  evidence: string;
+  evidence: EvidenceItem[];
   severity?: string;
   detail?: string;
 }
@@ -202,7 +221,7 @@ export function finding({ requirement_id, check_id, location, evidence, severity
 }
 
 /** Emitted when a RUNTIME check cannot run because no capture exists. */
-export function needsRuntime(check: { id: string }) {
+export function needsRuntime(check: { id: string }): { check_id: string; status: 'NEEDS_RUNTIME'; detail: string } {
   return {
     check_id: check.id,
     status: 'NEEDS_RUNTIME',

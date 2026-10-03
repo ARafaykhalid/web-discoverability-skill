@@ -70,7 +70,7 @@ function findingMatches(expectation, finding) {
  * case listed. The case files say in prose that they do not pad the denominator;
  * this is the code that makes that true regardless of what the prose says.
  */
-const DID_NOT_INSPECT = new Set(['NEEDS_RUNTIME', 'NOT_APPLICABLE', 'ERROR']);
+const DID_NOT_INSPECT = new Set<string>(['NEEDS_RUNTIME', 'NOT_APPLICABLE', 'ERROR']);
 
 /**
  * Score one case.
@@ -80,11 +80,36 @@ const DID_NOT_INSPECT = new Set(['NEEDS_RUNTIME', 'NOT_APPLICABLE', 'ERROR']);
  * (neither a true negative nor a miss - it is reported separately as
  * not_measured, because counting it either way would be dishonest).
  */
-export function scoreCase(benchCase, { findings, results, records = [] }) {
+/**
+ * A scored case. `selection_problems` is attached after scoring when the case
+ * pins applicability, which is why it is declared rather than inferred: the
+ * scorer builds the object without it and `runBenchmarks` adds it later.
+ */
+export interface CaseScore {
+  case_id: string;
+  fixture: string;
+  counts: { true_positives: number; false_positives: number; false_negatives: number; true_negatives: number };
+  precision: number | null;
+  recall: number | null;
+  false_positive_rate: number | null;
+  false_negative_rate: number | null;
+  unnecessary_findings: number;
+  evidence_problems: unknown[];
+  safety_problems: unknown[];
+  selection_problems?: unknown[];
+  not_measured: unknown[];
+  true_positives: unknown[];
+  false_negatives: unknown[];
+  false_positives: unknown[];
+  passed: boolean;
+  error?: string;
+}
+
+export function scoreCase(benchCase, { findings, results, records = [] }): CaseScore {
   const expected = (benchCase.expected_findings || []).map(normalizeExpectation);
   const expectedClean = (benchCase.expected_non_findings || []).map(normalizeExpectation);
   const byId = new Map(records.map((r) => [r.id, r]));
-  const statusById = new Map(results.map((r) => [r.check_id, r.status]));
+  const statusById = new Map<string, string>(results.map((r) => [r.check_id, r.status]));
 
   const truePositives = [];
   const falseNegatives = [];

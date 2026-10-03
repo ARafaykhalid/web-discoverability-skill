@@ -22,9 +22,12 @@ import {
   ID_PATTERN,
   CLASSIFICATIONS,
   RUNTIME_SENSITIVE_DOMAINS,
+  includesValue,
   FORBIDDEN_CLAIM_PATTERNS,
 } from './model.ts';
 import { normalizeText, tokenSimilarity, isSubsumed } from './registry.ts';
+import type { LedgerRecord, Requirement } from './model.ts';
+import type { CheckList } from './checks/index.ts';
 
 /**
  * Jaccard title similarity at or above this is treated as a near-duplicate.
@@ -44,8 +47,15 @@ const MIN_STATEMENT_CHARS = 40;
 const MIN_IMPLEMENTATION_CHARS = 60;
 const MIN_METHOD_CHARS = 40;
 
-/** Fields whose text must be requirement-specific, never a per-domain template. */
-const SPECIFIC_TEXT_FIELDS = [
+/**
+ * Fields whose text must be requirement-specific, never a per-domain template.
+ *
+ * Typed, because the list is spread into further scans alongside bare
+ * `['name', getter]` pairs; untyped, TypeScript reads the union of those two
+ * shapes as `string | (r) => string` and every `get(record)` becomes a type
+ * error, which is what it did before this annotation existed.
+ */
+const SPECIFIC_TEXT_FIELDS: [string, (r: Requirement) => unknown][] = [
   ['statement', (r) => r.statement],
   ['rationale', (r) => r.rationale],
   ['implementation', (r) => r.implementation],
@@ -56,10 +66,17 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
+interface Diagnostic {
+  level: 'error' | 'warning';
+  rule: string;
+  message: string;
+  id: string | null;
+  file: string | null;
+  line: number | null;
+}
+
 class Diagnostics {
-  constructor() {
-    this.entries = [];
-  }
+  entries: Diagnostic[] = [];
 
   add(level, rule, message, record) {
     this.entries.push({
@@ -176,8 +193,10 @@ export function findForbiddenClaims(text) {
 }
 
 /** Depth-first cycle search over depends_on. Returns each cycle as an id path. */
-export function findDependencyCycles(records) {
-  const graph = new Map(records.map((r) => [r.id, (r.depends_on || []).filter((d) => typeof d === 'string')]));
+export function findDependencyCycles(records: Requirement[]) {
+  const graph = new Map<string, string[]>(
+    records.map((r) => [r.id, (r.depends_on ?? []).filter((d): d is string => typeof d === 'string')]),
+  );
   const state = new Map();
   const cycles = [];
   const stack = [];
@@ -382,7 +401,7 @@ function validateAppliesWhen(diag, record) {
       continue;
     }
     for (const predicate of list) {
-      if (!PROFILE_PREDICATES.includes(predicate)) {
+      if (!includesValue(PROFILE_PREDICATES, predicate)) {
         diag.error('applies-when-predicate', `unknown profile predicate ${JSON.stringify(predicate)} in applies_when.${key}`, record);
       }
     }
@@ -526,7 +545,12 @@ function validateRecordShape(diag, record, checkIds, today) {
   }
 
   // Forbidden claim language.
-  for (const [field, get] of [...SPECIFIC_TEXT_FIELDS, ['caution', (r) => r.caution], ['title', (r) => r.title]]) {
+  const scanned: [string, (r: Requirement) => unknown][] = [
+    ...SPECIFIC_TEXT_FIELDS,
+    ['caution', (r) => r.caution],
+    ['title', (r) => r.title],
+  ];
+  for (const [field, get] of scanned) {
     for (const hit of findForbiddenClaims(get(record))) {
       diag.error('claim-language', `${field} contains "${hit.match}": ${hit.why}`, record);
     }
@@ -645,9 +669,9 @@ function validateLedgers(diag, { records, removed, deferred }) {
   const active = new Set(records.map((r) => r.id));
   const seen = new Map();
 
-  for (const [name, entries, reasonField] of [
-    ['removed', removed || [], 'reason'],
-    ['deferred', deferred || [], 'blocker'],
+  for (const [name, entries] of [
+    ['removed', removed || []],
+    ['deferred', deferred || []],
   ]) {
     for (const entry of entries) {
       const context = { id: entry.id, __file: `${name}.jsonl`, __line: entry.__line };
@@ -660,8 +684,19 @@ function validateLedgers(diag, { records, removed, deferred }) {
       if (!CLASSIFICATIONS.includes(entry.classification)) {
         diag.error('ledger-classification', `${name}.jsonl classification must be one of ${CLASSIFICATIONS.join(', ')}`, context);
       }
-      if (!isNonEmptyString(entry[reasonField])) {
-        diag.error('ledger-reason', `${name}.jsonl entry needs a ${reasonField}`, context);
+      // A retired id has to say what replaced it or why nothing did. A deferred id
+      // held back only for rewording is covered by the criteria published once in
+      // DEFERRED_READMISSION_CRITERIA; anything else is held back for its own
+      // reason and has to say it.
+      const stated = entry.reason ?? entry.blocker;
+      if (!isNonEmptyString(stated) && !(name === 'deferred' && entry.classification === 'NEEDS_REWORDING')) {
+        diag.error(
+          'ledger-reason',
+          name === 'deferred'
+            ? `deferred.jsonl entry ${entry.id} is classified ${entry.classification}, which the shared re-admission criteria do not cover, so it needs a blocker`
+            : `removed.jsonl entry needs a reason`,
+          context,
+        );
       }
       if (active.has(entry.id)) {
         diag.error('ledger-id-active', `id ${entry.id} is in ${name}.jsonl but also active in the registry`, context);
@@ -707,8 +742,8 @@ function validateIdSpace(diag, { records, removed, deferred }) {
   }
   if (!allocated.size) return;
 
-  const highest = Math.max(...allocated);
-  const gaps = [];
+  const highest = Math.max(...[...allocated].map(Number));
+  const gaps: number[] = [];
   for (let n = 1; n <= highest; n += 1) if (!allocated.has(n)) gaps.push(n);
   if (!gaps.length) return;
 
@@ -758,6 +793,17 @@ function validateChecks(diag, records, checks) {
   }
 }
 
+/** What `validate` reads. Every field is required or defaulted; none is inferred. */
+export interface ValidateOptions {
+  records?: Requirement[];
+  removed?: LedgerRecord[];
+  deferred?: LedgerRecord[];
+  checks?: CheckList | null;
+  problems?: string[];
+  /** YYYY-MM-DD. Defaults to now, so a test can pin it. */
+  today?: string;
+}
+
 /**
  * Validate the whole registry.
  *
@@ -765,7 +811,7 @@ function validateChecks(diag, records, checks) {
  * without touching disk. Returns diagnostics plus counts; the caller decides how
  * to print and whether to exit non-zero.
  */
-export function validate({ records, removed = [], deferred = [], checks = null, problems = [], today = todayIso() } = {}) {
+export function validate({ records, removed = [], deferred = [], checks = null, problems = [], today = todayIso() }: ValidateOptions = {}) {
   const diag = new Diagnostics();
 
   for (const problem of problems) {
@@ -798,7 +844,7 @@ export function validate({ records, removed = [], deferred = [], checks = null, 
 }
 
 /** Group diagnostics by rule for compact reporting. */
-export function summarizeByRule(entries) {
+export function summarizeByRule(entries: Diagnostic[]) {
   const out = new Map();
   for (const entry of entries) {
     if (!out.has(entry.rule)) out.set(entry.rule, 0);

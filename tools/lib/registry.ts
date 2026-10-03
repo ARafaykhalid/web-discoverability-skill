@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Domain, LedgerRecord, Requirement } from './model.ts';
+import type { LedgerRecord, Requirement } from './model.ts';
 import { DOMAINS, cumulativeLevels } from './model.ts';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -105,7 +105,7 @@ export function levelsFor(record: Requirement) {
 
 /** Deterministic ordering used by every generated artifact. */
 export function sortRecords(records: Requirement[]): Requirement[] {
-  const domainOrder = new Map(DOMAINS.map((d, i) => [d.domain, i]));
+  const domainOrder = new Map<string, number>(DOMAINS.map((d, i) => [d.domain, i]));
   return [...records].sort((a, b) => {
     const d = (domainOrder.get(a.domain) ?? 99) - (domainOrder.get(b.domain) ?? 99);
     return d !== 0 ? d : a.id.localeCompare(b.id);

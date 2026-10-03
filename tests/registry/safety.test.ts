@@ -15,6 +15,7 @@ import assert from 'node:assert/strict';
 import { loadRegistry } from '../../tools/lib/registry.ts';
 import { validate, countControls } from '../../tools/lib/validate.ts';
 import { EXPERIMENTAL_CATEGORIES, RUNTIME_SENSITIVE_DOMAINS } from '../../tools/lib/model.ts';
+import { assertPopulated, where, rulesFrom } from '../helpers.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const VALIDATE_SOURCE = join(HERE, '..', '..', 'tools', 'lib', 'validate.ts');
@@ -29,17 +30,6 @@ const { records } = loadRegistry();
 const NOT_ACTIONABLE_TITLE = /^(measure|monitor|track|audit|align|consider|understand|plan)\b/i;
 const NOT_ACTIONABLE_SOURCE = '/^(measure|monitor|track|audit|align|consider|understand|plan)\\b/i';
 
-function assertPopulated(list, what) {
-  assert.ok(
-    Array.isArray(list) && list.length > 0,
-    `${what} is empty, so every per-item assertion below would pass without inspecting anything`,
-  );
-}
-
-function where(record) {
-  return `${record.__file ?? '?'}:${record.__line ?? '?'}`;
-}
-
 /** A real, valid record detached from its graph edges so it can validate alone. */
 function isolatedRecord(base, overrides = {}) {
   const clone = structuredClone(base);
@@ -47,10 +37,6 @@ function isolatedRecord(base, overrides = {}) {
   delete clone.conflicts_with;
   delete clone.supersedes;
   return Object.assign(clone, overrides);
-}
-
-function rulesFrom(result) {
-  return new Set(result.errors.map((e) => e.rule));
 }
 
 const plainBase = records.find((r) => !EXPERIMENTAL_CATEGORIES.includes(r.category));

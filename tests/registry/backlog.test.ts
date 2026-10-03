@@ -15,7 +15,8 @@ import assert from 'node:assert/strict';
 
 import { loadRegistry, loadRemoved, loadDeferred } from '../../tools/lib/registry.ts';
 import { validate } from '../../tools/lib/validate.ts';
-import { CLASSIFICATIONS, ID_PATTERN } from '../../tools/lib/model.ts';
+import { CLASSIFICATIONS, DEFERRED_ORIGIN, DEFERRED_READMISSION_CRITERIA, ID_PATTERN } from '../../tools/lib/model.ts';
+import { assertPopulated } from '../helpers.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TOOLS_LIB = join(HERE, '..', '..', 'tools', 'lib');
@@ -36,13 +37,6 @@ const REVIEW_TAXONOMY = [
   'UNSAFE',
   'NOT_ACTIONABLE',
 ];
-
-function assertPopulated(list, what) {
-  assert.ok(
-    Array.isArray(list) && list.length > 0,
-    `${what} is empty, so every per-item assertion below would pass without inspecting anything`,
-  );
-}
 
 function idNumber(id) {
   return Number(String(id).slice(4));
@@ -160,23 +154,45 @@ describe('deferred.jsonl', () => {
     );
   });
 
-  it('every deferred entry states a blocker and a classification', () => {
+  it('every deferred entry states why it is held back', () => {
     assertPopulated(deferred, 'deferred.jsonl');
     const problems = [];
     for (const entry of deferred) {
       const at = `deferred.jsonl:${entry.__line} (${entry.id})`;
-      if (typeof entry.blocker !== 'string' || !entry.blocker.trim()) problems.push(`${at} is missing a blocker`);
-      else if (entry.blocker.trim().length < 40) problems.push(`${at} blocker is too short to act on`);
       if (!CLASSIFICATIONS.includes(entry.classification)) {
         problems.push(`${at} classification ${JSON.stringify(entry.classification)} is not in the review taxonomy`);
+        continue;
       }
+      // NEEDS_REWORDING is covered by criteria published once in model.ts and
+      // generated into registry.md, so restating them on all 336 lines made the
+      // ledger 171KB of one paragraph. Anything else is held back for its own
+      // reason and has to say it, which is the part that can drift.
+      if (entry.classification === 'NEEDS_REWORDING') continue;
+      const stated = entry.blocker ?? entry.reason;
+      if (typeof stated !== 'string' || !stated.trim()) problems.push(`${at} is missing a blocker`);
+      else if (stated.trim().length < 40) problems.push(`${at} blocker is too short to act on`);
     }
     assert.deepEqual(
       problems,
       [],
-      'the blocker is what turns "not shipped" into a work item. Without it a deferred id is indistinguishable '
-        + 'from a silently abandoned one',
+      'a deferred entry must be traceable to a stated reason. The shared criteria cover rewording; anything '
+        + 'else is held back for its own blocker, without which it is indistinguishable from a silently '
+        + 'abandoned one',
     );
+  });
+
+  it('the shared re-admission criteria are published once and are specific', () => {
+    // The reason the ledger does not repeat these per line is that they exist
+    // somewhere authoritative. If they were only ever deleted from the JSONL, the
+    // deferred ids would carry no reason at all.
+    assert.ok(DEFERRED_READMISSION_CRITERIA.length > 200, 'the criteria are too thin to replace a per-entry blocker');
+    for (const needed of ['statement', 'rationale', 'implementation', 'verification', 'source']) {
+      assert.ok(
+        DEFERRED_READMISSION_CRITERIA.includes(needed),
+        `the criteria no longer mention ${needed}; a record could then be re-admitted without it`,
+      );
+    }
+    assert.match(DEFERRED_ORIGIN, /v1/, 'the origin of the deferred ids must stay stated');
   });
 });
 

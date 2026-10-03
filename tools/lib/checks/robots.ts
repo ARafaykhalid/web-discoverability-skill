@@ -377,10 +377,178 @@ const crawlIndexDirectiveConflict = {
   },
 };
 
+/* ------------------------------------------------------- AI crawler policy */
+
+/**
+ * Automated clients, classified by the purpose their operator documents for them.
+ *
+ * The classification is the whole point. "Block the AI bots" is not an
+ * instruction any file can carry out, because the operators do not send one
+ * token for one job: OpenAI documents separate training, search, and
+ * user-requested crawlers, and blocking the training token says nothing about
+ * the other two. A policy written against "AI" therefore blocks retrieval
+ * whenever it blocks training, which is the commonest way a site removes itself
+ * from AI answers by accident.
+ *
+ * Two facts here are not obvious and both change what a correct file looks like:
+ *
+ *   - `PRODUCT_CONTROL` tokens have no HTTP user-agent at all. Google states that
+ *     Google-Extended is not a separate crawler identity but an opt-out applied to
+ *     data collected by the user agents already visiting the site. Writing
+ *     `User-agent: Google-Extended` therefore matches no request, and treating it
+ *     as evidence of a training block would be reading a directive that cannot
+ *     fire.
+ *   - `USER_TRIGGERED` clients are requested by a person reading a page they can
+ *     already open, so refusing them is an access-control decision rather than a
+ *     discoverability one, and robots.txt is not the place to make it.
+ *
+ * Every token here is one an operator documents on its own site, and each is cited
+ * on SEO-291. That is a deliberate limit, not an oversight: a token whose operator
+ * publishes nothing cannot be classified from evidence, and a table padded with
+ * community-compiled lists is exactly the unverified assertion this package exists
+ * to keep out. Tokens published without first-party documentation are therefore
+ * absent, and an absent token is never reported - a file may name twenty crawlers
+ * this check has heard of none.
+ *
+ * Tokens are matched case-insensitively, which is what every operator's parser
+ * does.
+ */
+const AI_CLIENTS = [
+  // Search / AI-answer discovery. Blocking one of these is the mistake this check
+  // exists to name.
+  { token: 'OAI-SearchBot', operator: 'OpenAI', purpose: 'search' },
+  { token: 'Claude-SearchBot', operator: 'Anthropic', purpose: 'search' },
+  { token: 'PerplexityBot', operator: 'Perplexity', purpose: 'search' },
+  // User-triggered fetches, requested on behalf of a reader.
+  { token: 'ChatGPT-User', operator: 'OpenAI', purpose: 'user_action' },
+  { token: 'Claude-User', operator: 'Anthropic', purpose: 'user_action' },
+  { token: 'Perplexity-User', operator: 'Perplexity', purpose: 'user_action' },
+  { token: 'Google-CloudVertexBot', operator: 'Google', purpose: 'user_action' },
+  { token: 'meta-externalfetcher', operator: 'Meta', purpose: 'user_action' },
+  // Training / dataset collection. Declining this is a legitimate policy choice.
+  { token: 'GPTBot', operator: 'OpenAI', purpose: 'training' },
+  { token: 'ClaudeBot', operator: 'Anthropic', purpose: 'training' },
+  { token: 'CCBot', operator: 'Common Crawl', purpose: 'training' },
+  { token: 'meta-externalagent', operator: 'Meta', purpose: 'training' },
+  // Product controls. No HTTP user-agent; the directive matches no request.
+  { token: 'Google-Extended', operator: 'Google', purpose: 'product_control' },
+  { token: 'Applebot-Extended', operator: 'Apple', purpose: 'product_control' },
+];
+
+/** Purpose labels, spelled out once so a finding reads as prose. */
+const PURPOSE_LABEL = {
+  search: 'search and AI-answer discovery',
+  user_action: 'user-triggered fetching',
+  training: 'training or dataset collection',
+  product_control: 'a product-level control with no HTTP user-agent',
+};
+
+/**
+ * Every group in the file, merged per agent the way a crawler merges them, so a
+ * token named in two groups gets one decision.
+ */
+function groupsByAgent(text) {
+  const merged = new Map();
+  for (const group of robotsGroups(text).groups) {
+    for (const raw of group.agents) {
+      const agent = raw.trim().toLowerCase();
+      if (!merged.has(agent)) merged.set(agent, []);
+      merged.get(agent).push(group);
+    }
+  }
+  return merged;
+}
+
+/**
+ * Whether a named agent ends up disallowed at the site root.
+ *
+ * The root path is the only one that answers "is this client allowed on this site
+ * at all"; a narrower block such as `Disallow: /private` is a path-level decision
+ * and says nothing about discoverability of the public pages.
+ */
+function blockedAtRoot(text, agent) {
+  const groups = groupsByAgent(text).get(agent);
+  if (!groups) return false;
+  const rules = groups.flatMap((g) => g.rules);
+  return decideForPath({ rules }, '/').decision === 'disallow';
+}
+
+const aiCrawlerPolicyPurposeSeparated = {
+  id: 'ai-crawler-policy-purpose-separated',
+  requirements: ['SEO-291', 'SEO-642'],
+  level: 'SOURCE',
+  title: 'No crawler that feeds AI answers is blocked while training crawlers are allowed',
+  run(snapshot) {
+    const resource = snapshot.robots_txt;
+    if (!resource || !resource.text) {
+      return { status: 'NOT_APPLICABLE', findings: [], detail: 'no robots.txt in this project' };
+    }
+    const text = resource.text;
+    const wildcard = wildcardGroup(text);
+    const blockedAtRootByWildcard = wildcard ? decideForPath(wildcard, '/').decision === 'disallow' : false;
+
+    const named = new Map(
+      AI_CLIENTS.filter((client) => blockedAtRoot(text, client.token.toLowerCase()))
+        .map((client) => [client.purpose, client]),
+    );
+
+    const findings = [];
+
+    // The specific mistake: retrieval is refused and training is permitted. The
+    // site has chosen to be in models and out of answers, which is rarely what
+    // either decision was aiming at.
+    if (named.has('search') && !named.has('training')) {
+      const client = named.get('search');
+      findings.push(finding({
+        requirement_id: 'SEO-291',
+        check_id: 'ai-crawler-policy-purpose-separated',
+        location: resource.path,
+        severity: 'HIGH',
+        detail: `robots.txt blocks ${client.token} (${PURPOSE_LABEL.search}) at the site root while allowing every training crawler, so the site is excluded from ${client.operator} answers and admitted to model training; the two are separate policies and are usually not both intended`,
+        evidence: [ev('ROBOTS_TXT', { path: resource.path, blocked: [...named.values()].map((c) => c.token), allowed_training: true })],
+      }));
+    }
+
+    // The other half of the same mistake: a blanket block. `User-agent: *` with a
+    // root disallow takes the search crawlers with it, including the ones the
+    // operator's own organic results depend on.
+    if (blockedAtRootByWildcard && !named.size) {
+      findings.push(finding({
+        requirement_id: 'SEO-291',
+        check_id: 'ai-crawler-policy-purpose-separated',
+        location: resource.path,
+        severity: 'HIGH',
+        detail: 'robots.txt disallows the site root to every crawler (`User-agent: *`), which removes the pages from AI answers and from ordinary search results alike; declining AI training is done with the documented training tokens, not with a blanket block',
+        evidence: [ev('ROBOTS_TXT', { path: resource.path, wildcard_block: true, named_ai_tokens: 0 })],
+      }));
+    }
+
+    // A product-control token cannot be enforced by a robots.txt group at all, so
+    // a file that relies on one records a decision it does not make.
+    for (const client of AI_CLIENTS) {
+      if (client.purpose !== 'product_control') continue;
+      const agent = client.token.toLowerCase();
+      if (!groupsByAgent(text).has(agent)) continue;
+      if (!/^(?:https?:\/\/)?[^/]/i.test(agent)) continue;
+      findings.push(finding({
+        requirement_id: 'SEO-642',
+        check_id: 'ai-crawler-policy-purpose-separated',
+        location: resource.path,
+        severity: 'MEDIUM',
+        detail: `robots.txt declares a group for ${client.token}, which ${client.operator} documents as a product-level control rather than a crawler identity; the group matches no request, so the file records an intent the wire never enforces`,
+        evidence: [ev('ROBOTS_TXT', { path: resource.path, token: client.token, purpose: client.purpose })],
+      }));
+    }
+
+    return findingsFor(aiCrawlerPolicyPurposeSeparated, findings);
+  },
+};
+
 export default [
   robotsTxtPresent,
   robotsSitemapReference,
   robotsGroupContradiction,
   robotsMetaNoindexUnintended,
   crawlIndexDirectiveConflict,
+  aiCrawlerPolicyPurposeSeparated,
 ];

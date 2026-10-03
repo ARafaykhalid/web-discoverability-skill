@@ -1,5 +1,5 @@
 import type { Level, Requirement } from './model.ts';
-import { DOMAINS, LEVELS, cumulativeLevels } from './model.ts';
+import { DOMAINS, LEVELS, cumulativeLevels, includesValue } from './model.ts';
 import type { Applicability, Profile } from './profile.ts';
 import { evaluateApplicability, UNKNOWN } from './profile.ts';
 
@@ -67,8 +67,18 @@ export function levelIncludes(level, record) {
  * Returns every candidate with its applicability verdict rather than silently
  * dropping records, so a report can always explain why something was skipped.
  */
-export function selectRequirements({ records, profile, level = 'RECOMMENDED', domains = null } = {}): Selection {
-  if (!LEVELS.includes(level)) {
+/** What `selectRequirements` reads. */
+export interface SelectOptions {
+  records?: Requirement[];
+  profile?: Profile;
+  /** A string until `selectRequirements` checks it against LEVELS. */
+  level?: string;
+  /** Restrict to these domains. null means every declared domain. */
+  domains?: string[] | null;
+}
+
+export function selectRequirements({ records, profile, level = 'RECOMMENDED', domains = null }: SelectOptions = {}): Selection {
+  if (!includesValue(LEVELS, level)) {
     throw new Error(`unknown level ${level}; expected one of ${LEVELS.join(', ')}`);
   }
 
@@ -121,7 +131,7 @@ export function selectRequirements({ records, profile, level = 'RECOMMENDED', do
   );
 
   return {
-    level,
+    level: level as Level,
     counts,
     total: evaluated.length,
     activation: [...activation.entries()].map(([domain, state]) => ({ domain, ...state })),

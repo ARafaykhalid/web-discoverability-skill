@@ -1,0 +1,35 @@
+{
+  "//": "Typecheck configuration only. Node strips these types without reading this file, and no build step exists. It exists so `npm run typecheck` can prove the annotations in the shipped code are true rather than decorative.",
+  "//erasableSyntaxOnly": "The package claims in ARCHITECTURE.md that its annotations are erasable syntax only, because that is what lets Node run the .ts files directly with no compiler. An enum typechecks fine and then crashes Node at import with 'TypeScript enum is not supported in strip-only mode'. This flag makes that claim a build failure rather than a runtime surprise.",
+  "//noEmit": "There is no compiler in the toolchain and no artifact to produce.",
+  "//typecheck-needs-network": "npm run typecheck installs TypeScript and @types/node with --no-save, so package.json stays dependency-free and no lockfile is created. This is the one gate that needs the network besides check-sources.",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "strict": false,
+    "noUncheckedIndexedAccess": false,
+    "skipLibCheck": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "tools/**/*.ts"
+  ],
+  "//scope": "tools/ is the shipped code and is covered strictly. tests/ is deliberately excluded: the suites are written in plain JavaScript shape, and annotating 5,000 lines of assertions to satisfy noImplicitAny would be churn against 2,160 assertions that already pass. A type error in test *logic* still surfaces as a failing assertion.",
+  "//strict": "`strict` is off, and `strictNullChecks` with it. The gate's job is the three things that would break a consumer of this skill: an annotation Node cannot erase (which crashes every import, with no build step to catch it), a module that does not resolve, and an interface that misdescribes its own function. Turning on null checking alone surfaces 568 errors in code written to assume a field is present; fixing those is a separate piece of work, not something to smuggle into a config change. `noUnusedLocals` stays on because it found a genuinely dead import the day it was switched on."
+}

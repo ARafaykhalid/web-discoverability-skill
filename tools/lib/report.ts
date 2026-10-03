@@ -1,7 +1,33 @@
 import { DOMAINS, TIERS_REQUIRING_SOURCES } from './model.ts';
+import type { LedgerRecord, Requirement } from './model.ts';
+import type { CheckList } from './checks/index.ts';
 import { normalizeText, tokenSimilarity } from './registry.ts';
 import { validate, findDependencyCycles, DUPLICATE_THRESHOLD, summarizeByRule } from './validate.ts';
 import { levelCandidateCounts } from './select.ts';
+
+/** What the three registry reports read. Shared because they take the same data. */
+export interface RegistryReportOptions {
+  records?: Requirement[];
+  removed?: LedgerRecord[];
+  deferred?: LedgerRecord[];
+  checks?: CheckList | null;
+  /** YYYY-MM-DD. Defaults to now, so a test can pin it. */
+  today?: string;
+}
+
+export interface MetricsOptions extends RegistryReportOptions {
+  /** Aggregate figures from a benchmark run. Never defaulted to a flattering value. */
+  benchmarks?: Record<string, unknown> | null;
+}
+
+export interface StaleOptions {
+  records?: Requirement[];
+  today?: string;
+}
+
+export interface SourceOptions {
+  records?: Requirement[];
+}
 
 function countBy(records, get) {
   const out = {};
@@ -29,7 +55,7 @@ function hasAutomatedCheck(record) {
  * Registry-quality report (brief section 2). Every number here is derived; none
  * is written into documentation by hand.
  */
-export function qualityReport({ records, removed = [], deferred = [], checks = null, today = undefined } = {}) {
+export function qualityReport({ records, removed = [], deferred = [], checks = null, today = undefined }: RegistryReportOptions = {}) {
   const validation = validate({ records, removed, deferred, checks, today });
 
   const normalizedTitles = new Map();
@@ -134,7 +160,7 @@ export function qualityReport({ records, removed = [], deferred = [], checks = n
  * present when a benchmark run supplied them; they are never defaulted to a
  * flattering value.
  */
-export function metricsReport({ records, removed = [], deferred = [], checks = null, benchmarks = null, today = undefined } = {}) {
+export function metricsReport({ records, removed = [], deferred = [], checks = null, benchmarks = null, today = undefined }: MetricsOptions = {}) {
   const quality = qualityReport({ records, removed, deferred, checks, today });
   const tested = records.filter(hasAutomatedCheck).length;
 
@@ -173,7 +199,7 @@ export function metricsReport({ records, removed = [], deferred = [], checks = n
 }
 
 /** Requirements whose external evidence is due for re-verification (brief 16). */
-export function staleReport({ records, today = new Date().toISOString().slice(0, 10) } = {}) {
+export function staleReport({ records, today = new Date().toISOString().slice(0, 10) }: StaleOptions = {}) {
   const now = Date.parse(today);
   const rows = [];
   for (const record of records) {
@@ -204,7 +230,7 @@ export function staleReport({ records, today = new Date().toISOString().slice(0,
 }
 
 /** The source manifest (brief section 5). One row per citation. */
-export function sourceManifest({ records } = {}) {
+export function sourceManifest({ records }: SourceOptions = {}) {
   const rows = [];
   for (const record of records) {
     for (const source of record.sources || []) {
@@ -244,11 +270,19 @@ export function sourceManifest({ records } = {}) {
  * Verify that every cited URL is reachable. Real network I/O: a failure is
  * reported as a failure, never silently treated as verified.
  */
-export async function checkSources({ records, concurrency = 6, timeoutMs = 15000, fetchImpl = fetch } = {}) {
+export async function checkSources({ records, concurrency = 6, timeoutMs = 15000, fetchImpl = fetch }: SourceOptions & { concurrency?: number; timeoutMs?: number; fetchImpl?: typeof fetch } = {}) {
   const manifest = sourceManifest({ records });
   const urls = [...new Set(manifest.rows.map((r) => r.url))];
   const results = [];
   let cursor = 0;
+
+  const attempt = async (url, signal) => {
+    const response = await fetchImpl(url, { method: 'HEAD', redirect: 'follow', signal });
+    if (response.status === 405 || response.status === 501) {
+      return fetchImpl(url, { method: 'GET', redirect: 'follow', signal });
+    }
+    return response;
+  };
 
   const worker = async () => {
     while (cursor < urls.length) {
@@ -258,10 +292,23 @@ export async function checkSources({ records, concurrency = 6, timeoutMs = 15000
       const timer = setTimeout(() => controller.abort(), timeoutMs);
       const requirementIds = manifest.rows.filter((r) => r.url === url).map((r) => r.requirement_id);
       try {
-        let response = await fetchImpl(url, { method: 'HEAD', redirect: 'follow', signal: controller.signal });
-        if (response.status === 405 || response.status === 501) {
-          response = await fetchImpl(url, { method: 'GET', redirect: 'follow', signal: controller.signal });
+        // One retry, because a dropped connection is not a dead citation. Firing
+        // 130+ requests concurrently enough to be polite still trips rate
+        // limiters and TLS resets on healthy hosts, and reporting those as broken
+        // citations would make this command fail on a network flake and train
+        // everyone to ignore it.
+        let response;
+        let lastError = null;
+        for (let tries = 0; tries < 2; tries += 1) {
+          try {
+            response = await attempt(url, controller.signal);
+            lastError = null;
+            break;
+          } catch (error) {
+            lastError = error;
+          }
         }
+        if (lastError) throw lastError;
         results.push({
           url,
           requirement_ids: requirementIds,
